@@ -19,8 +19,8 @@ export const createStripePaymentIntent = asyncHandler(
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
-      currency: 'usd',
+      amount: Math.round(amount * 100), // Convert to smallest currency unit (cents)
+      currency: 'kes',
       metadata: {
         orderId,
         userId: req.user?.id || 'guest',

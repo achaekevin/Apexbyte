@@ -10,6 +10,8 @@ import productService from '../services/productService';
 import { formatCurrency } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 
+import api from '../services/api';
+
 const Home = () => {
   const { addItem } = useCartStore();
 
@@ -29,9 +31,7 @@ const Home = () => {
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: () =>
-      fetch('http://localhost:3000/api/categories')
-        .then((res) => res.json())
-        .then((data) => data.data),
+      api.get('/categories').then((res: any) => res.data || res),
   });
 
   const testimonials = [
@@ -426,7 +426,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: 'Free Shipping', desc: 'On orders over $500', icon: '🚚' },
+              { title: 'Free Shipping', desc: 'On orders over KSh 50,000', icon: '🚚' },
               { title: '24/7 Support', desc: 'Expert assistance anytime', icon: '💬' },
               { title: 'Secure Payment', desc: 'Safe & encrypted checkout', icon: '🔒' },
             ].map((feature, index) => (

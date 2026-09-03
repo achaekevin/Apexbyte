@@ -13,7 +13,9 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     limit = 12,
     search,
     brandId,
+    brand,
     categoryId,
+    category,
     minPrice,
     maxPrice,
     ram,
@@ -45,8 +47,27 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     ];
   }
 
-  if (brandId) where.brandId = brandId as string;
-  if (categoryId) where.categoryId = categoryId as string;
+  const targetBrand = (brandId || brand) as string;
+  if (targetBrand) {
+    where.brand = {
+      OR: [
+        { id: targetBrand },
+        { slug: targetBrand },
+        { name: targetBrand },
+      ],
+    };
+  }
+
+  const targetCategory = (categoryId || category) as string;
+  if (targetCategory) {
+    where.category = {
+      OR: [
+        { id: targetCategory },
+        { slug: targetCategory },
+        { name: targetCategory },
+      ],
+    };
+  }
 
   if (minPrice || maxPrice) {
     where.price = {};

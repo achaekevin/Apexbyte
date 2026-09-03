@@ -39,7 +39,7 @@ const CheckoutForm = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'United States',
+    country: 'Kenya',
   });
 
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'mpesa'>('card');
@@ -47,7 +47,7 @@ const CheckoutForm = () => {
 
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = subtotal > 500 ? 0 : 25;
+  const shippingCost = subtotal > 50000 ? 0 : 1500;
   const tax = subtotal * 0.08;
   const total = subtotal + shippingCost + tax;
 

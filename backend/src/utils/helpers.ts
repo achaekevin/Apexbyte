@@ -57,12 +57,12 @@ export const calculateTax = (amount: number, taxRate: number = 0): number => {
 
 export const formatCurrency = (
   amount: number,
-  currency: string = 'USD'
+  currency: string = 'KES'
 ): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(amount);
+  if (isNaN(amount) || amount === null || amount === undefined) {
+    return 'KSh 0';
+  }
+  return `KSh ${Math.round(amount).toLocaleString('en-KE')}`;
 };
 
 export const getPagination = (page: number = 1, limit: number = 10) => {

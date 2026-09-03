@@ -11,6 +11,7 @@ import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
 import { formatCurrency } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
+import api from '../services/api';
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,18 +39,14 @@ const Shop = () => {
   const { data: brands } = useQuery({
     queryKey: ['brands'],
     queryFn: () =>
-      fetch('http://localhost:3000/api/brands')
-        .then((res) => res.json())
-        .then((data) => data.data),
+      api.get('/brands').then((res: any) => res.data || res),
   });
 
   // Fetch categories
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: () =>
-      fetch('http://localhost:3000/api/categories')
-        .then((res) => res.json())
-        .then((data) => data.data),
+      api.get('/categories').then((res: any) => res.data || res),
   });
 
   // Fetch products with filters
@@ -152,7 +149,7 @@ const Shop = () => {
         <title>Shop Laptops - Premium Laptop Store</title>
         <meta
           name="description"
-          content="Browse our extensive collection of premium laptops. Filter by brand, price, specs, and more. Free shipping on orders over $500."
+          content="Browse our extensive collection of premium laptops. Filter by brand, price, specs, and more. Free shipping on orders over KSh 50,000."
         />
       </Helmet>
 
@@ -276,7 +273,7 @@ const Shop = () => {
                         <div className="grid grid-cols-2 gap-2">
                           <Input
                             type="number"
-                            placeholder="Min"
+                            placeholder="Min (KSh)"
                             value={filters.minPrice}
                             onChange={(e) =>
                               handleFilterChange('minPrice', e.target.value)
@@ -284,7 +281,7 @@ const Shop = () => {
                           />
                           <Input
                             type="number"
-                            placeholder="Max"
+                            placeholder="Max (KSh)"
                             value={filters.maxPrice}
                             onChange={(e) =>
                               handleFilterChange('maxPrice', e.target.value)

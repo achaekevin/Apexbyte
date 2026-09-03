@@ -21,7 +21,7 @@ const Cart = () => {
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
-  const shippingCost = subtotal > 500 ? 0 : 25;
+  const shippingCost = subtotal > 50000 ? 0 : 1500;
   const tax = (subtotal - discountAmount) * 0.08; // 8% tax
   const total = subtotal - discountAmount + shippingCost + tax;
 
@@ -348,9 +348,9 @@ const Cart = () => {
                     </span>
                   </div>
 
-                  {subtotal < 500 && shippingCost > 0 && (
+                  {subtotal < 50000 && shippingCost > 0 && (
                     <p className="text-xs text-gray-600 dark:text-gray-400">
-                      Add {formatCurrency(500 - subtotal)} more for free shipping!
+                      Add {formatCurrency(50000 - subtotal)} more for free shipping!
                     </p>
                   )}
 
@@ -412,7 +412,7 @@ const Cart = () => {
               </Card>
 
               {/* Free Shipping Banner */}
-              {subtotal < 500 && (
+              {subtotal < 50000 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -423,10 +423,10 @@ const Cart = () => {
                       <div className="text-3xl">🚚</div>
                       <div>
                         <p className="font-medium text-sm">
-                          Free Shipping on orders over $500!
+                          Free Shipping on orders over KSh 50,000!
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">
-                          You're only {formatCurrency(500 - subtotal)} away
+                          You're only {formatCurrency(50000 - subtotal)} away
                         </p>
                       </div>
                     </div>

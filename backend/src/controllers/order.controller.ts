@@ -91,7 +91,7 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
 
   const afterDiscount = subtotal - discount;
   const tax = calculateTax(afterDiscount, 8); // 8% tax rate
-  const shippingCost = afterDiscount > 500 ? 0 : 25; // Free shipping over $500
+  const shippingCost = afterDiscount > 50000 ? 0 : 1500; // Free shipping over KSh 50,000
   const total = afterDiscount + tax + shippingCost;
 
   // Create order
