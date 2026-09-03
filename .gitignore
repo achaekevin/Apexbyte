@@ -1,3 +1,9 @@
+# Root level files (maintain only frontend, backend, nginx, and .gitignore in root)
+/package.json
+/package-lock.json
+/.prettierrc
+/docker-compose.yml
+
 # Dependencies
 node_modules/
 */node_modules/
