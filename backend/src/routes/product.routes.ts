@@ -10,11 +10,15 @@ import {
   updateProduct,
   deleteProduct,
   uploadProductImages,
+  uploadGeneralProductImages,
   getFiltersData,
 } from '../controllers/product.controller';
 import { getProductReviews } from '../controllers/review.controller';
 
 const router = Router();
+
+// Admin image upload (must be before /:id)
+router.post('/upload-images', authenticate, authorize('ADMIN', 'SUPER_ADMIN'), uploadMultiple, uploadGeneralProductImages);
 
 // Public routes
 router.get('/', optionalAuth, getProducts);

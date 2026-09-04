@@ -1,3 +1,4 @@
+import path from 'path';
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -61,6 +62,9 @@ app.use(compression());
 // Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve uploaded media statically
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Cookie parser
 app.use(cookieParser());

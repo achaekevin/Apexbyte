@@ -543,6 +543,25 @@ export const uploadProductImages = asyncHandler(
   }
 );
 
+// Upload product images generally (Admin)
+export const uploadGeneralProductImages = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length === 0) {
+      throw new AppError('No images provided', 400);
+    }
+
+    const uploadedImages = await uploadMultipleImages(files, 'products');
+
+    res.json({
+      success: true,
+      message: 'Images uploaded successfully',
+      data: uploadedImages.map((img) => img.url),
+    });
+  }
+);
+
 // Get filters data
 export const getFiltersData = asyncHandler(async (req: Request, res: Response) => {
   const [brands, categories, priceRange, ramOptions, storageOptions] = await Promise.all([

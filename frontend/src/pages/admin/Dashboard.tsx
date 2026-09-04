@@ -184,7 +184,7 @@ const AdminDashboard = () => {
                   View Customer Storefront
                 </h4>
                 <p className="text-sm text-gray-500 mt-1">
-                  Browse the live shop with real verified customer reviews and natural laptop photos.
+                  Browse the live storefront with verified customer reviews and full laptop inventory.
                 </p>
               </div>
               <FiEye className="text-gray-400 group-hover:text-emerald-500 transition-all" size={20} />

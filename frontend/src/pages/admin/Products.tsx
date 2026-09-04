@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -10,6 +10,9 @@ import {
   FiPackage,
   FiX,
   FiEye,
+  FiUploadCloud,
+  FiImage,
+  FiLoader,
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import productService from '../../services/productService';
@@ -104,6 +107,9 @@ const AdminProducts = () => {
   // Form State
   const [formData, setFormData] = useState<LaptopFormData>(INITIAL_FORM);
   const [imageInput, setImageInput] = useState('');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formError, setFormError] = useState('');
 
   // Fetch products
@@ -262,6 +268,57 @@ const AdminProducts = () => {
     }));
   };
 
+  const handleSetMainImage = (index: number) => {
+    setFormData((prev) => {
+      const selected = prev.images[index];
+      const rest = prev.images.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        images: [selected, ...rest],
+      };
+    });
+  };
+
+  const handleFileUpload = async (files: FileList | File[]) => {
+    const fileArray = Array.from(files).filter((f) => f.type.startsWith('image/'));
+    if (fileArray.length === 0) return;
+
+    setIsUploadingImage(true);
+    setFormError('');
+
+    try {
+      const uploadData = new FormData();
+      fileArray.forEach((file) => uploadData.append('images', file));
+
+      const res = await productService.uploadImages(uploadData);
+      const newUrls: string[] = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+
+      if (newUrls.length > 0) {
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...newUrls],
+        }));
+      } else {
+        // Local preview fallback
+        const localUrls = fileArray.map((file) => URL.createObjectURL(file));
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...localUrls],
+        }));
+      }
+    } catch (err: any) {
+      console.warn('Backend image upload error, using local previews:', err);
+      const localUrls = fileArray.map((file) => URL.createObjectURL(file));
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...localUrls],
+      }));
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
@@ -327,7 +384,7 @@ const AdminProducts = () => {
             <FiPackage className="text-primary-500" /> Laptop Inventory & Pricing Control
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Add new laptops, edit prices in Kenyan Shillings, manage specs, and update natural product photos
+            Add new laptops, edit prices in Kenyan Shillings (KSh), manage hardware specs, and upload product photos
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -663,7 +720,7 @@ const AdminProducts = () => {
                     {selectedProduct ? `Edit Laptop: ${selectedProduct.name}` : 'Add New Laptop to Store'}
                   </h2>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    Configure pricing in KES, processor, RAM, SSD, display, and natural photographs
+                    Configure pricing in KES, technical specifications, inventory, and product photos
                   </p>
                 </div>
                 <button
@@ -977,71 +1034,164 @@ const AdminProducts = () => {
                   </div>
                 </div>
 
-                {/* 4. Natural Photos / Images */}
+                {/* 4. Product Images & Gallery */}
                 <div>
-                  <h3 className="text-sm font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2">
-                    4. Natural Laptop Photographs
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-3">
-                    Use natural real-life photographs (e.g. /laptops/dell-vostro-natural.png or authentic desk photo URLs)
-                  </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">
+                      4. Product Images ({formData.images.length})
+                    </h3>
+                    <span className="text-xs text-gray-500">
+                      The primary photo is displayed as the main storefront thumbnail
+                    </span>
+                  </div>
 
-                  <div className="flex gap-2 mb-3">
+                  {/* Hidden Native File Input */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        handleFileUpload(e.target.files);
+                      }
+                    }}
+                    accept="image/png,image/jpeg,image/webp,image/jpg"
+                    multiple
+                    className="hidden"
+                  />
+
+                  {/* Clickable Drag & Drop Upload Module */}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setIsDragging(true);
+                    }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setIsDragging(false);
+                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        handleFileUpload(e.dataTransfer.files);
+                      }
+                    }}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${
+                      isDragging
+                        ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/20 scale-[1.01]'
+                        : 'border-gray-300 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-gray-750'
+                    }`}
+                  >
+                    {isUploadingImage ? (
+                      <div className="flex flex-col items-center justify-center py-4 text-primary-600">
+                        <FiLoader className="animate-spin mb-2 text-primary-500" size={32} />
+                        <p className="text-sm font-semibold">Uploading photos to catalog...</p>
+                        <p className="text-xs text-gray-500 mt-1">Please wait while images are processed</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-2">
+                        <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3 shadow-inner">
+                          <FiUploadCloud size={26} />
+                        </div>
+                        <p className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                          Click to browse photos or drag and drop files here
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          PNG, JPG, JPEG, WEBP up to 10MB (select one or multiple images)
+                        </p>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            fileInputRef.current?.click();
+                          }}
+                          className="mt-3.5 px-4 py-2 text-xs font-semibold rounded-lg bg-primary-600 hover:bg-primary-700 text-white shadow transition-colors flex items-center gap-1.5"
+                        >
+                          <FiImage size={14} /> Browse Device Photos
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Direct Image URL Alternative */}
+                  <div className="mt-3 flex gap-2">
                     <Input
                       type="text"
                       value={imageInput}
                       onChange={(e) => setImageInput(e.target.value)}
-                      placeholder="Paste image URL (e.g. /laptops/dell-vostro-natural.png or https://...)"
+                      placeholder="Or paste an image web URL (e.g. https://... or /laptops/...)"
+                      className="text-xs"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddImage();
+                        }
+                      }}
                     />
-                    <Button type="button" variant="outline" onClick={handleAddImage}>
-                      Add Photo
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAddImage}
+                      className="whitespace-nowrap text-xs"
+                    >
+                      <FiPlus size={14} className="mr-1" /> Add URL
                     </Button>
                   </div>
 
-                  {/* Preset Natural Options */}
-                  <div className="flex items-center gap-2 mb-3 text-xs">
-                    <span className="text-gray-500">Quick presets:</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          images: ['/laptops/dell-vostro-natural.png', ...prev.images],
-                        }))
-                      }
-                      className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 text-gray-700 dark:text-gray-300"
-                    >
-                      + Dell Vostro Natural Photo
-                    </button>
-                  </div>
+                  {/* Uploaded Photos Gallery Preview */}
+                  {formData.images.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                        Product Gallery Preview ({formData.images.length} {formData.images.length === 1 ? 'photo' : 'photos'}):
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                        {formData.images.map((url, i) => (
+                          <div
+                            key={i}
+                            className={`relative group rounded-xl overflow-hidden border p-1 bg-white dark:bg-gray-800 transition-all shadow-sm ${
+                              i === 0
+                                ? 'border-primary-500 ring-2 ring-primary-500/30'
+                                : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
+                            }`}
+                          >
+                            <img
+                              src={url}
+                              alt={`Product photo ${i + 1}`}
+                              className="w-full h-24 object-cover rounded-lg"
+                              onError={(e) => {
+                                e.currentTarget.src = '/laptops/dell-vostro-natural.png';
+                              }}
+                            />
 
-                  {/* Image Thumbnails */}
-                  <div className="flex flex-wrap gap-3">
-                    {formData.images.map((url, i) => (
-                      <div key={i} className="relative group border border-gray-200 dark:border-gray-700 rounded-lg p-1 bg-white dark:bg-gray-800">
-                        <img
-                          src={url}
-                          alt="Laptop view"
-                          className="w-20 h-20 object-cover rounded"
-                          onError={(e) => {
-                            e.currentTarget.src = '/laptops/dell-vostro-natural.png';
-                          }}
-                        />
-                        {i === 0 && (
-                          <span className="absolute bottom-1.5 left-1.5 bg-primary-600 text-white text-[9px] px-1 rounded font-bold">
-                            Main
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(i)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow hover:bg-red-600"
-                        >
-                          ×
-                        </button>
+                            {/* Main badge or Set Main button */}
+                            {i === 0 ? (
+                              <span className="absolute top-2 left-2 bg-primary-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow">
+                                Main Photo
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleSetMainImage(i)}
+                                className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 bg-gray-900/85 hover:bg-black text-white text-[10px] px-2 py-0.5 rounded transition-opacity shadow"
+                                title="Set as main storefront photo"
+                              >
+                                Set Main
+                              </button>
+                            )}
+
+                            {/* Delete Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(i)}
+                              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow transition-transform hover:scale-110"
+                              title="Remove photo"
+                            >
+                              <FiX size={14} />
+                            </button>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 5. Descriptions & Highlights */}

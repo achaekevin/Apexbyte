@@ -54,6 +54,11 @@ export const productService = {
   deleteProduct: (id: string): Promise<any> =>
     api.delete<any, any>(`/products/${id}`).then((res: any) => res.data || res),
 
+  uploadImages: (formData: FormData): Promise<any> =>
+    api.post<any, any>('/products/upload-images', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then((res: any) => (res?.data || res)),
+
   getCategories: (): Promise<any> =>
     api.get<any, any>('/categories').then((res: any) => res.data || res),
 };
