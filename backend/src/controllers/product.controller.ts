@@ -6,6 +6,18 @@ import { uploadImage, uploadMultipleImages } from '../config/cloudinary';
 import { generateSlug, getPagination, getPaginationMeta } from '../utils/helpers';
 import { cacheGet, cacheSet, cacheDel } from '../config/redis';
 
+export const formatProductImages = (product: any) => {
+  if (!product) return product;
+  const images = Array.isArray(product.images)
+    ? product.images.map((img: any) => (typeof img === 'string' ? img : img.url))
+    : [];
+  return {
+    ...product,
+    images,
+    imageObjects: product.images,
+  };
+};
+
 // Get all products with filtering, sorting, and pagination
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const {
@@ -112,17 +124,6 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     prisma.product.count({ where }),
   ]);
 
-const formatProductImages = (product: any) => {
-  const images = Array.isArray(product.images)
-    ? product.images.map((img: any) => (typeof img === 'string' ? img : img.url))
-    : [];
-  return {
-    ...product,
-    images,
-    imageObjects: product.images,
-  };
-};
-
   const productsWithRatings = products.map((product) => {
     const avgRating =
       product.reviews.length > 0
@@ -158,8 +159,10 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
     return res.json(cached);
   }
 
-  const product = await prisma.product.findUnique({
-    where: { id },
+  const product = await prisma.product.findFirst({
+    where: {
+      OR: [{ id }, { slug: id }],
+    },
     include: {
       images: { orderBy: { order: 'asc' } },
       videos: { orderBy: { order: 'asc' } },
@@ -183,7 +186,7 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
 
   // Increment view count
   await prisma.product.update({
-    where: { id },
+    where: { id: product.id },
     data: { viewCount: { increment: 1 } },
   });
 
@@ -258,9 +261,11 @@ export const getProductBySlug = asyncHandler(async (req: Request, res: Response)
 export const getRelatedProducts = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const product = await prisma.product.findUnique({
-    where: { id },
-    select: { categoryId: true, brandId: true, price: true },
+  const product = await prisma.product.findFirst({
+    where: {
+      OR: [{ id }, { slug: id }],
+    },
+    select: { id: true, categoryId: true, brandId: true, price: true },
   });
 
   if (!product) {
@@ -269,7 +274,7 @@ export const getRelatedProducts = asyncHandler(async (req: Request, res: Respons
 
   const relatedProducts = await prisma.product.findMany({
     where: {
-      id: { not: id },
+      id: { not: product.id },
       status: 'PUBLISHED',
       OR: [
         { categoryId: product.categoryId },

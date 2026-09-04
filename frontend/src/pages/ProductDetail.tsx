@@ -16,7 +16,8 @@ import { useAuthStore } from '../store/authStore';
 import { useComparisonStore } from '../store/comparisonStore';
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  const productId = id || slug;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { addItem } = useCartStore();
@@ -32,31 +33,31 @@ const ProductDetail = () => {
 
   // Fetch product details
   const { data: product, isLoading } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => productService.getProduct(id!),
-    enabled: !!id,
+    queryKey: ['product', productId],
+    queryFn: () => productService.getProduct(productId!),
+    enabled: !!productId,
   });
 
   // Fetch product reviews
   const { data: reviewsData } = useQuery({
-    queryKey: ['reviews', id],
-    queryFn: () => reviewService.getProductReviews(id!),
-    enabled: !!id,
+    queryKey: ['reviews', product?.id || productId],
+    queryFn: () => reviewService.getProductReviews(product?.id || productId!),
+    enabled: !!(product?.id || productId),
   });
 
   // Fetch related products
   const { data: relatedProducts } = useQuery({
-    queryKey: ['relatedProducts', id],
-    queryFn: () => productService.getRelatedProducts(id!),
-    enabled: !!id,
+    queryKey: ['relatedProducts', product?.id || productId],
+    queryFn: () => productService.getRelatedProducts(product?.id || productId!),
+    enabled: !!(product?.id || productId),
   });
 
   // Submit review mutation
   const submitReviewMutation = useMutation({
     mutationFn: (formData: FormData) => reviewService.createReview(formData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews', id] });
-      queryClient.invalidateQueries({ queryKey: ['product', id] });
+      queryClient.invalidateQueries({ queryKey: ['reviews', product?.id || productId] });
+      queryClient.invalidateQueries({ queryKey: ['product', productId] });
       setReviewRating(5);
       setReviewText('');
       setReviewImages([]);
@@ -68,7 +69,7 @@ const ProductDetail = () => {
   const markHelpfulMutation = useMutation({
     mutationFn: (reviewId: string) => reviewService.markAsHelpful(reviewId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews', id] });
+      queryClient.invalidateQueries({ queryKey: ['reviews', product?.id || productId] });
     },
   });
 
@@ -103,7 +104,7 @@ const ProductDetail = () => {
     }
 
     const formData = new FormData();
-    formData.append('productId', id!);
+    formData.append('productId', product?.id || productId!);
     formData.append('rating', reviewRating.toString());
     formData.append('comment', reviewText);
     reviewImages.forEach((image) => {

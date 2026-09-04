@@ -7,8 +7,18 @@ import { getPagination, getPaginationMeta } from '../utils/helpers';
 
 export const getProductReviews = asyncHandler(
   async (req: Request, res: Response) => {
-    const { productId } = req.params;
+    let { productId } = req.params;
     const { page = 1, limit = 10, rating, sortBy = 'createdAt' } = req.query;
+
+    if (productId) {
+      const prod = await prisma.product.findFirst({
+        where: { OR: [{ id: productId }, { slug: productId }] },
+        select: { id: true },
+      });
+      if (prod) {
+        productId = prod.id;
+      }
+    }
 
     const { skip, take } = getPagination(Number(page), Number(limit));
 
