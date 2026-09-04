@@ -12,6 +12,7 @@ import {
   uploadProductImages,
   getFiltersData,
 } from '../controllers/product.controller';
+import { getProductReviews } from '../controllers/review.controller';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.get('/', optionalAuth, getProducts);
 router.get('/filters', getFiltersData);
 router.get('/:id', optionalAuth, getProduct);
 router.get('/:id/related', getRelatedProducts);
+router.get('/:productId/reviews', optionalAuth, getProductReviews);
 router.get('/slug/:slug', optionalAuth, getProductBySlug);
 
 // Admin routes

@@ -50,10 +50,16 @@ export const getProductReviews = asyncHandler(
       _count: true,
     });
 
+    const formattedReviews = reviews.map((r) => ({
+      ...r,
+      isVerifiedPurchase: r.isVerified,
+      images: r.images.map((img) => (typeof img === 'string' ? img : img.url)),
+    }));
+
     res.json({
       success: true,
       data: {
-        reviews,
+        reviews: formattedReviews,
         averageRating: avgRating._avg.rating || 0,
         totalReviews: total,
         ratingDistribution,
@@ -67,8 +73,9 @@ export const createReview = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const userId = req.user.id;
     const { productId, rating, title, comment } = req.body;
+    const numRating = Number(rating);
 
-    if (rating < 1 || rating > 5) {
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
       throw new AppError('Rating must be between 1 and 5', 400);
     }
 
@@ -90,7 +97,7 @@ export const createReview = asyncHandler(
       throw new AppError('You have already reviewed this product', 400);
     }
 
-    // Check if user purchased this product (optional but recommended)
+    // Check if user purchased this product
     const hasPurchased = await prisma.orderItem.findFirst({
       where: {
         productId,
@@ -105,10 +112,11 @@ export const createReview = asyncHandler(
       data: {
         productId,
         userId,
-        rating,
-        title,
+        rating: numRating,
+        title: title || '',
         comment,
         isVerified: !!hasPurchased,
+        isApproved: true,
       },
       include: {
         user: {
@@ -119,13 +127,17 @@ export const createReview = asyncHandler(
             avatar: true,
           },
         },
+        images: true,
       },
     });
 
     res.status(201).json({
       success: true,
       message: 'Review submitted successfully',
-      data: review,
+      data: {
+        ...review,
+        isVerifiedPurchase: review.isVerified,
+      },
     });
   }
 );
@@ -336,3 +348,129 @@ export const replyToReview = asyncHandler(
     });
   }
 );
+
+// Get all approved reviews across products
+export const getAllReviews = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { page = 1, limit = 12, rating, featured } = req.query;
+    const { skip, take } = getPagination(Number(page), Number(limit));
+
+    const where: any = { isApproved: true };
+    if (rating) where.rating = Number(rating);
+    if (featured === 'true') where.rating = { gte: 4 };
+
+    const [reviews, total] = await Promise.all([
+      prisma.review.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+          product: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              price: true,
+              brand: {
+                select: { id: true, name: true, slug: true },
+              },
+              images: {
+                where: { isMain: true },
+                take: 1,
+              },
+            },
+          },
+          images: true,
+        },
+        orderBy: [{ helpfulCount: 'desc' }, { createdAt: 'desc' }],
+        skip,
+        take,
+      }),
+      prisma.review.count({ where }),
+    ]);
+
+    const formattedReviews = reviews.map((r) => ({
+      ...r,
+      isVerifiedPurchase: r.isVerified,
+      product: r.product
+        ? {
+            ...r.product,
+            image:
+              r.product.images[0]?.url ||
+              'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
+            images: r.product.images.map((img) => img.url),
+          }
+        : null,
+    }));
+
+    res.json({
+      success: true,
+      data: formattedReviews,
+      pagination: getPaginationMeta(total, Number(page), Number(limit)),
+    });
+  }
+);
+
+// Get featured top-rated real customer reviews for homepage showcase
+export const getFeaturedReviews = asyncHandler(
+  async (req: Request, res: Response) => {
+    const limit = Number(req.query.limit) || 6;
+    const reviews = await prisma.review.findMany({
+      where: { isApproved: true, rating: { gte: 4 } },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            brand: {
+              select: { id: true, name: true, slug: true },
+            },
+            images: {
+              where: { isMain: true },
+              take: 1,
+            },
+          },
+        },
+        images: true,
+      },
+      orderBy: [{ helpfulCount: 'desc' }, { createdAt: 'desc' }],
+      take: limit,
+    });
+
+    const formattedReviews = reviews.map((r) => ({
+      ...r,
+      isVerifiedPurchase: r.isVerified,
+      product: r.product
+        ? {
+            ...r.product,
+            image:
+              r.product.images[0]?.url ||
+              'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
+            images: r.product.images.map((img) => img.url),
+          }
+        : null,
+    }));
+
+    res.json({
+      success: true,
+      data: formattedReviews,
+    });
+  }
+);
+

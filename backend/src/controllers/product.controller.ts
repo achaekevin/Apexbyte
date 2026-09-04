@@ -112,18 +112,29 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     prisma.product.count({ where }),
   ]);
 
+const formatProductImages = (product: any) => {
+  const images = Array.isArray(product.images)
+    ? product.images.map((img: any) => (typeof img === 'string' ? img : img.url))
+    : [];
+  return {
+    ...product,
+    images,
+    imageObjects: product.images,
+  };
+};
+
   const productsWithRatings = products.map((product) => {
     const avgRating =
       product.reviews.length > 0
         ? product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length
         : 0;
 
-    return {
+    return formatProductImages({
       ...product,
       reviews: undefined,
       averageRating: Math.round(avgRating * 10) / 10,
       reviewCount: product.reviews.length,
-    };
+    });
   });
 
   const response = {
@@ -183,11 +194,11 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
 
   const response = {
     success: true,
-    data: {
+    data: formatProductImages({
       ...product,
       averageRating: Math.round(avgRating * 10) / 10,
       reviewCount: product.reviews.length,
-    },
+    }),
   };
 
   await cacheSet(cacheKey, response, 600); // Cache for 10 minutes
@@ -235,11 +246,11 @@ export const getProductBySlug = asyncHandler(async (req: Request, res: Response)
 
   res.json({
     success: true,
-    data: {
+    data: formatProductImages({
       ...product,
       averageRating: Math.round(avgRating * 10) / 10,
       reviewCount: product.reviews.length,
-    },
+    }),
   });
 });
 
@@ -280,7 +291,7 @@ export const getRelatedProducts = asyncHandler(async (req: Request, res: Respons
 
   res.json({
     success: true,
-    data: relatedProducts,
+    data: relatedProducts.map(formatProductImages),
   });
 });
 

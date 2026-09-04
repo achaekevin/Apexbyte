@@ -3,6 +3,8 @@ import { authenticate, authorize, optionalAuth } from '../middleware/auth';
 import { uploadMultiple } from '../middleware/upload';
 import {
   getProductReviews,
+  getAllReviews,
+  getFeaturedReviews,
   createReview,
   updateReview,
   deleteReview,
@@ -14,6 +16,8 @@ import {
 
 const router = Router();
 
+router.get('/', getAllReviews);
+router.get('/featured', getFeaturedReviews);
 router.get('/product/:productId', optionalAuth, getProductReviews);
 router.post('/', authenticate, createReview);
 router.put('/:id', authenticate, updateReview);
