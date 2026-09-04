@@ -27,8 +27,19 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.coupon.deleteMany();
 
-  // 1. Create Admin User
+  // 1. Create Admin Users (Owner + Default Admin)
   const adminPassword = await hashPassword('Admin@12345');
+  await prisma.user.create({
+    data: {
+      email: 'achaekevin@gmail.com',
+      password: adminPassword,
+      firstName: 'Kevin',
+      lastName: 'Achae',
+      role: UserRole.SUPER_ADMIN,
+      isVerified: true,
+    },
+  });
+
   await prisma.user.create({
     data: {
       email: 'admin@laptopstore.com',

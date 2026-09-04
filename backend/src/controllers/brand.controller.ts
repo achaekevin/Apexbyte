@@ -49,7 +49,7 @@ export const getBrand = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const createBrand = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const { name, description, website } = req.body;
+  const { name, description, website, logo } = req.body;
 
   const slug = generateSlug(name);
 
@@ -58,10 +58,14 @@ export const createBrand = asyncHandler(async (req: AuthRequest, res: Response) 
     throw new AppError('Brand already exists', 400);
   }
 
-  let logoUrl: string | undefined;
+  let logoUrl: string | undefined = logo || req.body.logoUrl;
   if (req.file) {
     const uploaded = await uploadImage(req.file, 'brands');
     logoUrl = uploaded.url;
+  }
+
+  if (!logoUrl) {
+    logoUrl = 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200';
   }
 
   const brand = await prisma.brand.create({
@@ -83,14 +87,14 @@ export const createBrand = asyncHandler(async (req: AuthRequest, res: Response) 
 
 export const updateBrand = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const { name, description, website, isActive } = req.body;
+  const { name, description, website, isActive, logo } = req.body;
 
   const brand = await prisma.brand.findUnique({ where: { id } });
   if (!brand) {
     throw new AppError('Brand not found', 404);
   }
 
-  let logoUrl = brand.logo;
+  let logoUrl = logo || req.body.logoUrl || brand.logo;
   if (req.file) {
     const uploaded = await uploadImage(req.file, 'brands');
     logoUrl = uploaded.url;
@@ -101,10 +105,10 @@ export const updateBrand = asyncHandler(async (req: AuthRequest, res: Response) 
     data: {
       name: name || brand.name,
       slug: name ? generateSlug(name) : brand.slug,
-      description,
-      website,
+      description: description !== undefined ? description : brand.description,
+      website: website !== undefined ? website : brand.website,
       logo: logoUrl,
-      isActive,
+      isActive: isActive !== undefined ? Boolean(isActive) : brand.isActive,
     },
   });
 
