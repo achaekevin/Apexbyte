@@ -106,7 +106,7 @@ const Cart = () => {
   return (
     <>
       <Helmet>
-        <title>Shopping Cart ({items.length} items) - Premium Laptop Store</title>
+        <title>{`Shopping Cart (${items.length} items) - Apexbyte Laptops`}</title>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">

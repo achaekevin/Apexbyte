@@ -14,6 +14,7 @@ import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useComparisonStore } from '../store/comparisonStore';
+import toast from 'react-hot-toast';
 
 const ProductDetail = () => {
   const { id, slug } = useParams<{ id?: string; slug?: string }>();
@@ -83,6 +84,23 @@ const ProductDetail = () => {
       quantity,
       stock: product.stock,
     });
+    toast.success(
+      (t) => (
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span>Added <strong>{product.name}</strong> to cart!</span>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              navigate('/cart');
+            }}
+            className="px-3 py-1 bg-amber-500 text-gray-950 font-bold rounded-lg hover:bg-amber-400 text-xs shadow-sm whitespace-nowrap"
+          >
+            View Cart
+          </button>
+        </div>
+      ),
+      { duration: 4000 }
+    );
   };
 
   const handleBuyNow = () => {
@@ -152,11 +170,11 @@ const ProductDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{product.name} - Premium Laptop Store</title>
+        <title>{`${product.name} - Apexbyte Laptops`}</title>
         <meta name="description" content={product.description} />
         <meta property="og:title" content={product.name} />
         <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={product.images[0]} />
+        <meta property="og:image" content={getProductImage(product)} />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -238,7 +256,7 @@ const ProductDetail = () => {
                   <div>
                     {product.brand && (
                       <Link
-                        to={`/shop?brand=${product.brand.id}`}
+                        to={`/shop?brand=${product.brand.slug || product.brand.id}`}
                         className="text-primary-600 hover:underline font-medium"
                       >
                         {product.brand.name}

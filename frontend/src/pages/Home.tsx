@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { FiAward, FiArrowRight } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -14,6 +16,7 @@ import { useCartStore } from '../store/cartStore';
 import api from '../services/api';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { addItem } = useCartStore();
 
   // Fetch featured products
@@ -41,6 +44,13 @@ const Home = () => {
     queryFn: () => reviewService.getFeaturedReviews(6),
   });
 
+  // Fetch brands
+  const { data: brands } = useQuery({
+    queryKey: ['home-brands'],
+    queryFn: () =>
+      api.get('/brands').then((res: any) => res.data || res),
+  });
+
   const handleAddToCart = (product: any) => {
     addItem({
       productId: product.id,
@@ -50,6 +60,23 @@ const Home = () => {
       quantity: 1,
       stock: product.stock,
     });
+    toast.success(
+      (t) => (
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <span>Added <strong>{product.name}</strong> to cart!</span>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              navigate('/cart');
+            }}
+            className="px-3 py-1 bg-amber-500 text-gray-950 font-bold rounded-lg hover:bg-amber-400 text-xs shadow-sm whitespace-nowrap"
+          >
+            View Cart
+          </button>
+        </div>
+      ),
+      { duration: 4000 }
+    );
   };
 
   return (
@@ -252,6 +279,44 @@ const Home = () => {
                   </Card>
                 </Link>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Official Laptop Brand Stores (Jumia Style) */}
+      <section className="py-14 bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800 mb-2">
+                <FiAward size={14} /> Official Stores
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Shop by Brand</h2>
+              <p className="text-sm text-gray-500 mt-1">100% genuine laptops with authorized distributor warranty</p>
+            </div>
+            <Link to="/shop" className="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center gap-1">
+              Explore All Brands <FiArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+            {(brands || []).map((brand: any) => (
+              <Link
+                key={brand.id}
+                to={`/shop?brand=${brand.slug || brand.id}`}
+                className="group block p-4 bg-gray-50 dark:bg-gray-750 hover:bg-white dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:border-amber-500 rounded-2xl text-center transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 mx-auto rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 flex items-center justify-center p-2 mb-3 shadow-inner group-hover:border-amber-500">
+                  {brand.logo ? (
+                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+                  ) : (
+                    <span className="font-bold text-xs text-gray-700 dark:text-gray-200">{brand.name.substring(0, 3)}</span>
+                  )}
+                </div>
+                <h3 className="font-bold text-sm text-gray-900 dark:text-white group-hover:text-amber-600 transition-colors">{brand.name}</h3>
+                <span className="text-[11px] text-gray-500 line-clamp-1 mt-0.5">Official Store</span>
+              </Link>
             ))}
           </div>
         </div>

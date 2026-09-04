@@ -61,7 +61,7 @@ const Compare = () => {
   return (
     <>
       <Helmet>
-        <title>Compare {products.length} Laptops - Premium Laptop Store</title>
+        <title>{`Compare ${products.length} Laptops - Apexbyte Store`}</title>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">

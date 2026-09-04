@@ -64,8 +64,10 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     where.brand = {
       OR: [
         { id: targetBrand },
+        { slug: targetBrand.toLowerCase() },
         { slug: targetBrand },
         { name: targetBrand },
+        { name: { contains: targetBrand } },
       ],
     };
   }
