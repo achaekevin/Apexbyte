@@ -237,28 +237,78 @@ export const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-export const DEFAULT_LAPTOP_IMAGE =
-  '/laptops/dell-vostro-natural.png';
+export const DEFAULT_LAPTOP_IMAGE = '/laptops/hp-pavilion-natural.jpg';
+
+export const getBrandNaturalImage = (nameOrBrand: string, index: number = 0): string => {
+  const text = (nameOrBrand || '').toLowerCase();
+  if (text.includes('apple') || text.includes('macbook')) {
+    return index > 0 ? 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800' : '/laptops/macbook-pro-natural.jpg';
+  }
+  if (text.includes('hp') || text.includes('pavilion') || text.includes('spectre') || text.includes('envy') || text.includes('omen')) {
+    return index > 0 ? 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800' : '/laptops/hp-pavilion-natural.jpg';
+  }
+  if (text.includes('lenovo') || text.includes('thinkpad') || text.includes('yoga') || text.includes('legion')) {
+    return index > 0 ? 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800' : '/laptops/lenovo-thinkpad-natural.jpg';
+  }
+  if (text.includes('samsung') || text.includes('galaxy')) {
+    return index > 0 ? 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800' : '/laptops/samsung-galaxybook-natural.jpg';
+  }
+  if (text.includes('asus') || text.includes('rog') || text.includes('zenbook') || text.includes('tuf')) {
+    return index > 0 ? 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800' : '/laptops/asus-rog-natural.jpg';
+  }
+  if (text.includes('dell') || text.includes('xps') || text.includes('vostro') || text.includes('inspiron') || text.includes('alienware')) {
+    return index > 0 ? '/laptops/dell-vostro-natural.png' : '/laptops/dell-xps-natural.jpg';
+  }
+  return index > 0 ? '/laptops/dell-xps-natural.jpg' : '/laptops/hp-pavilion-natural.jpg';
+};
+
+// Filter out known cyber neon / AI-rendered stock images
+const isArtificialNeonUrl = (url: string): boolean => {
+  if (!url) return true;
+  return (
+    url.includes('1531297484001') || // neon synthwave laptop
+    url.includes('1550745165') ||    // retro neon pink arcade
+    url.includes('1587202372')       // cyber neon keyboard
+  );
+};
 
 export const getProductImage = (item: any, index: number = 0): string => {
   if (!item) return DEFAULT_LAPTOP_IMAGE;
+
+  // Direct valid image string
   if (typeof item === 'string' && item.trim().length > 0 && !item.includes('[object Object]')) {
-    return item;
+    if (!isArtificialNeonUrl(item)) return item;
   }
-  if (item.url && typeof item.url === 'string') {
-    return item.url;
-  }
-  if (Array.isArray(item.images) && item.images.length > 0) {
-    const target = item.images[index] || item.images[0];
-    if (typeof target === 'string' && !target.includes('[object Object]')) return target;
-    if (target?.url && typeof target.url === 'string') return target.url;
-  }
-  if (item.image && typeof item.image === 'string' && !item.image.includes('[object Object]')) {
-    return item.image;
-  }
+
+  // Nested in product property
   if (item.product) {
     return getProductImage(item.product, index);
   }
-  return DEFAULT_LAPTOP_IMAGE;
+
+  const nameOrBrand =
+    item.name ||
+    item.brand?.name ||
+    (typeof item.brand === 'string' ? item.brand : '') ||
+    '';
+
+  // Check images array
+  if (Array.isArray(item.images) && item.images.length > 0) {
+    const target = item.images[index] || item.images[0];
+    const url = typeof target === 'string' ? target : target?.url;
+    if (url && typeof url === 'string' && !url.includes('[object Object]') && !isArtificialNeonUrl(url)) {
+      return url;
+    }
+  }
+
+  // Check direct image or url property
+  if (item.url && typeof item.url === 'string' && !isArtificialNeonUrl(item.url)) {
+    return item.url;
+  }
+  if (item.image && typeof item.image === 'string' && !item.image.includes('[object Object]') && !isArtificialNeonUrl(item.image)) {
+    return item.image;
+  }
+
+  // Brand-aware natural photography fallback
+  return getBrandNaturalImage(nameOrBrand, index);
 };
 

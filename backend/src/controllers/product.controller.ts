@@ -161,10 +161,9 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
     return res.json(cached);
   }
 
-  const product = await prisma.product.findFirst({
-    where: {
-      OR: [{ id }, { slug: id }],
-    },
+  // Deterministic product retrieval: first by exact ID, fallback by exact slug
+  let product = await prisma.product.findUnique({
+    where: { id },
     include: {
       images: { orderBy: { order: 'asc' } },
       videos: { orderBy: { order: 'asc' } },
@@ -181,6 +180,27 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
       },
     },
   });
+
+  if (!product) {
+    product = await prisma.product.findUnique({
+      where: { slug: id },
+      include: {
+        images: { orderBy: { order: 'asc' } },
+        videos: { orderBy: { order: 'asc' } },
+        brand: true,
+        category: true,
+        reviews: {
+          include: {
+            user: {
+              select: { id: true, firstName: true, lastName: true, avatar: true },
+            },
+            images: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
+  }
 
   if (!product) {
     throw new AppError('Product not found', 404);

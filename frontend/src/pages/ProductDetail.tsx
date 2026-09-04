@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -32,11 +32,19 @@ const ProductDetail = () => {
   const [reviewText, setReviewText] = useState('');
   const [reviewImages, setReviewImages] = useState<File[]>([]);
 
+  // Instant scroll-to-top and reset on product navigation
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    setSelectedImage(0);
+    setQuantity(1);
+  }, [productId]);
+
   // Fetch product details
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productService.getProduct(productId!),
     enabled: !!productId,
+    staleTime: 0,
   });
 
   // Fetch product reviews

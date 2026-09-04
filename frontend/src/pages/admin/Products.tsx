@@ -486,7 +486,7 @@ const AdminProducts = () => {
                             alt={product.name}
                             className="w-14 h-14 rounded-lg object-cover bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 flex-shrink-0"
                             onError={(e) => {
-                              e.currentTarget.src = '/laptops/dell-vostro-natural.png';
+                              e.currentTarget.src = getProductImage(product);
                             }}
                           />
                           <div className="min-w-0">
