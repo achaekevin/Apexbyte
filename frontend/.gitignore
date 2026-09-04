@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.cert
+!*.example
+
+# Build & cache
+dist/
+build/
+.eslintcache

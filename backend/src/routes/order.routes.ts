@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, authorize, optionalAuth } from '../middleware/auth';
+import { createOrderLimiter } from '../middleware/rateLimiter';
 import {
   createOrder,
   getOrders,
@@ -14,7 +15,7 @@ const router = Router();
 // Customer routes
 router.get('/', authenticate, getOrders);
 router.get('/:id', authenticate, getOrder);
-router.post('/', optionalAuth, createOrder);
+router.post('/', createOrderLimiter, optionalAuth, createOrder);
 router.put('/:id/cancel', authenticate, cancelOrder);
 
 // Admin routes

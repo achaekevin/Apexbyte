@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate, authorize, optionalAuth } from '../middleware/auth';
 import { uploadMultiple } from '../middleware/upload';
+import { reviewLimiter } from '../middleware/rateLimiter';
 import {
   getProductReviews,
   getAllReviews,
@@ -19,7 +20,7 @@ const router = Router();
 router.get('/', getAllReviews);
 router.get('/featured', getFeaturedReviews);
 router.get('/product/:productId', optionalAuth, getProductReviews);
-router.post('/', authenticate, uploadMultiple, createReview);
+router.post('/', reviewLimiter, authenticate, uploadMultiple, createReview);
 router.put('/:id', authenticate, updateReview);
 router.delete('/:id', authenticate, deleteReview);
 router.post('/:id/helpful', authenticate, markReviewHelpful);

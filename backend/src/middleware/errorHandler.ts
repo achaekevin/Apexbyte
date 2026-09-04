@@ -15,6 +15,17 @@ export class AppError extends Error {
   }
 }
 
+// Helper to scrub credentials, tokens, or sensitive patterns from error strings
+const scrubSensitiveInfo = (text: string): string => {
+  if (!text) return text;
+  return text
+    .replace(/mysql:\/\/[^@]+@/gi, 'mysql://***:***@')
+    .replace(/postgres:\/\/[^@]+@/gi, 'postgres://***:***@')
+    .replace(/mongodb(\+srv)?:\/\/[^@]+@/gi, 'mongodb://***:***@')
+    .replace(/bearer\s+[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*/gi, 'Bearer [REDACTED]')
+    .replace(/(password|secret|key|token)\s*[:=]\s*['"][^'"]+['"]/gi, '$1: "[REDACTED]"');
+};
+
 export const errorHandler = (
   err: any,
   req: Request,
@@ -24,14 +35,15 @@ export const errorHandler = (
   let error = { ...err };
   error.message = err.message;
 
-  // Log error
-  logger.error({
-    message: err.message,
-    stack: err.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip,
-  });
+  // Body-parser malformed JSON
+  if (err instanceof SyntaxError && (err as any).status === 400 && 'body' in err) {
+    error = new AppError('Invalid or malformed JSON payload in request body', 400);
+  }
+
+  // Body-parser payload too large
+  if (err && (err.type === 'entity.too.large' || err.status === 413)) {
+    error = new AppError('Payload too large: Request body exceeds the allowed size limit', 413);
+  }
 
   // Prisma errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -78,15 +90,23 @@ export const errorHandler = (
     }
   }
 
+  // Log error with scrubbed credentials
+  logger.error({
+    message: scrubSensitiveInfo(err.message || ''),
+    url: req.url,
+    method: req.method,
+    ip: req.ip,
+  });
+
   const statusCode = error.statusCode || err.statusCode || 500;
-  const message = error.message || 'Internal server error';
+  const rawMessage = error.message || 'Internal server error';
+  const cleanMessage = scrubSensitiveInfo(rawMessage);
 
   res.status(statusCode).json({
     success: false,
-    message,
-    ...(process.env.NODE_ENV === 'development' && {
-      stack: err.stack,
-      error: err,
+    message: cleanMessage,
+    ...(process.env.NODE_ENV === 'development' && statusCode !== 500 && {
+      details: cleanMessage,
     }),
   });
 };

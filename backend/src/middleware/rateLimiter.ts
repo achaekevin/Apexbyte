@@ -19,6 +19,8 @@ export const authLimiter = rateLimit({
     message: 'Too many authentication attempts, please try again later.',
   },
   skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 export const strictLimiter = rateLimit({
@@ -28,6 +30,8 @@ export const strictLimiter = rateLimit({
     success: false,
     message: 'Too many requests, please try again later.',
   },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 export const createOrderLimiter = rateLimit({
@@ -37,5 +41,28 @@ export const createOrderLimiter = rateLimit({
     success: false,
     message: 'Too many order attempts, please try again later.',
   },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
+export const reviewLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: {
+    success: false,
+    message: 'Too many reviews submitted, please try again later.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+export const searchLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 40,
+  message: {
+    success: false,
+    message: 'Too many search requests, please slow down.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

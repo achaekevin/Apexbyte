@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.cert
+*.crt
+*.pfx
+!*.example
+
+# Build & runtime
+dist/
+build/
+logs/
+*.log
+uploads/
+test-*
+start-debug.js
+prisma/migrations/dev.db*
+*.db
+*.sqlite

@@ -24,8 +24,8 @@ export const getPosts = asyncHandler(async (req: AuthRequest, res: Response) => 
   if (featured !== undefined) where.isFeatured = featured === 'true';
   if (search) {
     where.OR = [
-      { title: { contains: String(search), mode: 'insensitive' } },
-      { content: { contains: String(search), mode: 'insensitive' } },
+      { title: { contains: String(search) } },
+      { content: { contains: String(search) } },
     ];
   }
 

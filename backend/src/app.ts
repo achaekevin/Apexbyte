@@ -8,6 +8,10 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { errorHandler, notFound } from './middleware/errorHandler';
 import { apiLimiter } from './middleware/rateLimiter';
+import { botProtection } from './middleware/botProtection';
+import { payloadGuard, payloadErrorHandler } from './middleware/payloadGuard';
+import { sanitizeInput } from './middleware/sanitize';
+import { responseTrimmer } from './middleware/responseTrimmer';
 import logger from './config/logger';
 
 // Import passport configuration
@@ -35,7 +39,7 @@ import supportRoutes from './routes/support.routes';
 
 const app: Application = express();
 
-// Security middleware
+// Security headers with Helmet
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
   contentSecurityPolicy: {
@@ -59,9 +63,21 @@ app.use(cors(corsOptions));
 // Compression
 app.use(compression());
 
-// Body parser
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Strict body parsing limits to prevent DoS & memory exhaustion
+app.use(express.json({ limit: '500kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+
+// Immediate body-parser error handler (catches malformed JSON and 413 oversized payloads)
+app.use(payloadErrorHandler);
+
+// Prevent deep nesting and excessive keys in JSON payloads
+app.use(payloadGuard);
+
+// Universal input sanitization across req.body, req.query, req.params (XSS, prototype pollution, null bytes)
+app.use(sanitizeInput);
+
+// Global response trimmer (deep-scrubs passwords, tokens, internal secrets from all JSON responses)
+app.use(responseTrimmer);
 
 // Serve uploaded media statically
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -85,7 +101,10 @@ if (process.env.NODE_ENV === 'development') {
 // Passport initialization
 app.use(passport.initialize());
 
-// Rate limiting
+// Bot protection (blocks scrapers, malicious scanners, missing User-Agents on mutations, and honeypot traps)
+app.use('/api', botProtection);
+
+// Global rate limiting
 app.use('/api', apiLimiter);
 
 // Health check
