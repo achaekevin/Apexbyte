@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiShoppingCart,
@@ -21,15 +21,46 @@ import Button from '../ui/Button';
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
   const { isAuthenticated, user, logout } = useAuthStore();
   const { getTotalItems } = useCartStore();
   const { isDarkMode, toggleTheme } = useThemeStore();
   const { products: comparisonProducts } = useComparisonStore();
   const navigate = useNavigate();
 
+  // Close user dropdown when clicking outside on the main page
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
+
+  // Close menus on page navigation
+  useEffect(() => {
+    setIsUserMenuOpen(false);
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const cartItemsCount = getTotalItems();
 
   const handleLogout = () => {
+    setIsUserMenuOpen(false);
     logout();
     navigate('/');
   };
@@ -129,9 +160,11 @@ const Header = () => {
 
             {/* User Menu */}
             {isAuthenticated ? (
-              <div className="relative">
+              <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  aria-expanded={isUserMenuOpen}
+                  aria-haspopup="true"
                   className="flex items-center space-x-2 p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   {user?.avatar ? (
@@ -151,22 +184,25 @@ const Header = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-premium border border-gray-200 dark:border-gray-700 py-2"
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-premium border border-gray-200 dark:border-gray-700 py-2 z-50"
                     >
                       <Link
                         to="/dashboard"
+                        onClick={() => setIsUserMenuOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Dashboard
                       </Link>
                       <Link
                         to="/dashboard/orders"
+                        onClick={() => setIsUserMenuOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Orders
                       </Link>
                       <Link
                         to="/dashboard/profile"
+                        onClick={() => setIsUserMenuOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Profile
@@ -174,6 +210,7 @@ const Header = () => {
                       {(user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
                         <Link
                           to="/admin"
+                          onClick={() => setIsUserMenuOpen(false)}
                           className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           Admin Panel
