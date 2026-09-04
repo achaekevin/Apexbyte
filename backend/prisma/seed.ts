@@ -196,54 +196,54 @@ async function main() {
   console.log('✅ Categories created (6 categories)');
 
   // Curated High-Definition Unsplash Photo URLs for Laptop Galleries
-  const laptopImageGalleries: Record<string, string[]> = {
+  const brandImages: Record<string, string[]> = {
     apple: [
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800',
-      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800',
       'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800',
       'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800',
     ],
     dell: [
+      '/laptops/dell-vostro-natural.png',
       'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800',
-      'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800',
-      'https://images.unsplash.com/photo-1593642532400-2682810df593?w=800',
       'https://images.unsplash.com/photo-1593642634315-48f5414c3ad9?w=800',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
     ],
     hp: [
       'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
-      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800',
       'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=800',
       'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800',
     ],
     lenovo: [
-      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800',
       'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?w=800',
       'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800',
-      'https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=800',
     ],
     asus: [
       'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800',
       'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800',
       'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800',
-      'https://images.unsplash.com/photo-1602080858428-57174f9431cf?w=800',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
     ],
     acer: [
-      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
       'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800',
       'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=800',
+      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800',
       'https://images.unsplash.com/photo-1516542076529-1ea3854896f2?w=800',
     ],
     msi: [
-      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800',
       'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800',
       'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
       'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
     ],
     razer: [
       'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800',
       'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800',
-      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800',
       'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800',
     ],
     microsoft: [
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800',
@@ -252,8 +252,8 @@ async function main() {
       'https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?w=800',
     ],
     samsung: [
-      'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800',
       'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=800',
+      'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800',
       'https://images.unsplash.com/photo-1593642634361-83e5275d40c5?w=800',
       'https://images.unsplash.com/photo-1537498425277-c283d32ef9db?w=800',
     ],
@@ -375,8 +375,9 @@ async function main() {
     best?: boolean;
   }
 
-  // --- 2. DELL (15 models: KSh 48,000 to KSh 420,000) ---
+  // --- 2. DELL (16 models: KSh 48,000 to KSh 420,000) ---
   const dellModels: BrandDefItem[] = [
+    { name: 'Dell Vostro 14 (Core i5 11th Gen, 8GB, 512GB SSD)', cat: 'student-laptops', price: 54000, ram: 8, storage: 512, cpu: 'Intel Core i5-1135G7', cpuBrand: ProcessorBrand.INTEL, gpu: 'Intel Iris Xe', gpuBrand: GPUBrand.INTEL, size: 14.0, res: '1920 x 1080', color: 'Carbon Gray', feat: true, best: true, newArr: true },
     { name: 'Dell Inspiron 15 3520 (Intel i3, 8GB, 256GB)', cat: 'student-laptops', price: 48000, ram: 8, storage: 256, cpu: 'Intel Core i3-1215U', cpuBrand: ProcessorBrand.INTEL, gpu: 'Intel UHD Graphics', gpuBrand: GPUBrand.INTEL, size: 15.6, res: '1920 x 1080', color: 'Carbon Black' },
     { name: 'Dell Inspiron 15 3520 (Intel i5, 16GB, 512GB)', cat: 'student-laptops', price: 68000, ram: 16, storage: 512, cpu: 'Intel Core i5-1235U', cpuBrand: ProcessorBrand.INTEL, gpu: 'Intel Iris Xe', gpuBrand: GPUBrand.INTEL, size: 15.6, res: '1920 x 1080', color: 'Platinum Silver', best: true },
     { name: 'Dell Inspiron 16 5630 (Intel i7, 16GB, 1TB)', cat: 'business-laptops', price: 118000, ram: 16, storage: 1000, cpu: 'Intel Core i7-1360P', cpuBrand: ProcessorBrand.INTEL, gpu: 'Intel Iris Xe', gpuBrand: GPUBrand.INTEL, size: 16.0, res: '1920 x 1200', color: 'Platinum Silver' },

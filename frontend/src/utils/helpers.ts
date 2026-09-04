@@ -238,7 +238,7 @@ export const sleep = (ms: number): Promise<void> => {
 };
 
 export const DEFAULT_LAPTOP_IMAGE =
-  'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800';
+  '/laptops/dell-vostro-natural.png';
 
 export const getProductImage = (item: any, index: number = 0): string => {
   if (!item) return DEFAULT_LAPTOP_IMAGE;
