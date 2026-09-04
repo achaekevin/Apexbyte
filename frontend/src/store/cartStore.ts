@@ -2,13 +2,14 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface CartItem {
-  id: string;
+  id?: string;
   productId: string;
   name: string;
   price: number;
   quantity: number;
   image: string;
-  slug: string;
+  slug?: string;
+  stock?: number;
 }
 
 interface CartState {
@@ -25,8 +26,13 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (item) =>
+      addItem: (item: any) =>
         set((state) => {
+          const cleanImage =
+            typeof item.image === 'string' && !item.image.includes('[object Object]')
+              ? item.image
+              : item.image?.url || 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800';
+          const cleanItem = { ...item, image: cleanImage };
           const existingItem = state.items.find(
             (i) => i.productId === item.productId
           );
@@ -35,13 +41,13 @@ export const useCartStore = create<CartState>()(
             return {
               items: state.items.map((i) =>
                 i.productId === item.productId
-                  ? { ...i, quantity: i.quantity + item.quantity }
+                  ? { ...i, quantity: i.quantity + item.quantity, image: cleanImage }
                   : i
               ),
             };
           }
 
-          return { items: [...state.items, item] };
+          return { items: [...state.items, cleanItem] };
         }),
       removeItem: (productId) =>
         set((state) => ({

@@ -16,11 +16,11 @@ export interface CreateOrderData {
 export const orderService = {
   createOrder: (data: CreateOrderData) => api.post('/orders', data),
   
-  getOrders: (params?: { page?: number; limit?: number; status?: string } | number, limit: number = 10) => {
+  getOrders: (params?: { page?: number; limit?: number; status?: string } | number, limit: number = 10): Promise<any> => {
     if (typeof params === 'object' && params !== null) {
-      return api.get('/orders', { params });
+      return api.get<any, any>('/orders', { params });
     }
-    return api.get('/orders', { params: { page: params || 1, limit } });
+    return api.get<any, any>('/orders', { params: { page: params || 1, limit } });
   },
   
   getOrder: (id: string) => api.get(`/orders/${id}`),

@@ -5,6 +5,7 @@ import clsx from 'clsx';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
@@ -14,6 +15,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = ({
   variant = 'primary',
   size = 'md',
+  fullWidth = false,
   isLoading = false,
   leftIcon,
   rightIcon,
@@ -38,14 +40,17 @@ const Button = ({
     lg: 'px-8 py-4 text-lg',
   };
 
+  const MotionButton: any = motion.button;
+
   return (
-    <motion.button
+    <MotionButton
       whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
       className={clsx(
         baseClasses,
         variantClasses[variant],
         sizeClasses[size],
+        fullWidth && 'w-full',
         className
       )}
       disabled={disabled || isLoading}
@@ -82,7 +87,7 @@ const Button = ({
           {rightIcon && <span className="ml-2">{rightIcon}</span>}
         </>
       )}
-    </motion.button>
+    </MotionButton>
   );
 };
 

@@ -1,6 +1,6 @@
 export const formatCurrency = (
   amount: number,
-  currency: string = 'KES'
+  _currency: string = 'KES'
 ): string => {
   if (isNaN(amount) || amount === null || amount === undefined) {
     return 'KSh 0';
@@ -124,10 +124,10 @@ export const downloadFile = (url: string, filename: string) => {
 
 export const getOrderStatusColor = (
   status: string
-): 'primary' | 'success' | 'warning' | 'error' | 'default' => {
+): 'primary' | 'success' | 'warning' | 'error' | 'info' => {
   const statusMap: Record<
     string,
-    'primary' | 'success' | 'warning' | 'error' | 'default'
+    'primary' | 'success' | 'warning' | 'error' | 'info'
   > = {
     PENDING: 'warning',
     CONFIRMED: 'primary',
@@ -135,26 +135,26 @@ export const getOrderStatusColor = (
     SHIPPED: 'primary',
     DELIVERED: 'success',
     CANCELLED: 'error',
-    REFUNDED: 'default',
+    REFUNDED: 'info',
   };
 
-  return statusMap[status] || 'default';
+  return statusMap[status] || 'info';
 };
 
 export const getPaymentStatusColor = (
   status: string
-): 'primary' | 'success' | 'warning' | 'error' | 'default' => {
+): 'primary' | 'success' | 'warning' | 'error' | 'info' => {
   const statusMap: Record<
     string,
-    'primary' | 'success' | 'warning' | 'error' | 'default'
+    'primary' | 'success' | 'warning' | 'error' | 'info'
   > = {
     PENDING: 'warning',
     PAID: 'success',
     FAILED: 'error',
-    REFUNDED: 'default',
+    REFUNDED: 'info',
   };
 
-  return statusMap[status] || 'default';
+  return statusMap[status] || 'info';
 };
 
 export const parseQueryString = (queryString: string): Record<string, string> => {
@@ -236,3 +236,29 @@ export const randomId = (): string => {
 export const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
+export const DEFAULT_LAPTOP_IMAGE =
+  'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800';
+
+export const getProductImage = (item: any, index: number = 0): string => {
+  if (!item) return DEFAULT_LAPTOP_IMAGE;
+  if (typeof item === 'string' && item.trim().length > 0 && !item.includes('[object Object]')) {
+    return item;
+  }
+  if (item.url && typeof item.url === 'string') {
+    return item.url;
+  }
+  if (Array.isArray(item.images) && item.images.length > 0) {
+    const target = item.images[index] || item.images[0];
+    if (typeof target === 'string' && !target.includes('[object Object]')) return target;
+    if (target?.url && typeof target.url === 'string') return target.url;
+  }
+  if (item.image && typeof item.image === 'string' && !item.image.includes('[object Object]')) {
+    return item.image;
+  }
+  if (item.product) {
+    return getProductImage(item.product, index);
+  }
+  return DEFAULT_LAPTOP_IMAGE;
+};
+

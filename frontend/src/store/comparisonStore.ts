@@ -6,14 +6,16 @@ interface ComparisonProduct {
   name: string;
   price: number;
   image: string;
-  slug: string;
+  slug?: string;
+  [key: string]: any;
 }
 
 interface ComparisonState {
   products: ComparisonProduct[];
-  addProduct: (product: ComparisonProduct) => void;
+  addProduct: (product: any) => void;
   removeProduct: (productId: string) => void;
   clearComparison: () => void;
+  clearAll: () => void;
   isInComparison: (productId: string) => boolean;
 }
 
@@ -36,6 +38,7 @@ export const useComparisonStore = create<ComparisonState>()(
           products: state.products.filter((p) => p.id !== productId),
         })),
       clearComparison: () => set({ products: [] }),
+      clearAll: () => set({ products: [] }),
       isInComparison: (productId) => {
         const state = get();
         return state.products.some((p) => p.id === productId);

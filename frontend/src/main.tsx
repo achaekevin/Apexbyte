@@ -49,7 +49,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             }}
           />
         </BrowserRouter>
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        {(import.meta as any).env?.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </HelmetProvider>
   </React.StrictMode>

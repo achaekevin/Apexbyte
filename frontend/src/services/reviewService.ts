@@ -67,6 +67,22 @@ export interface ReviewsResponse {
 
 class ReviewService {
   /**
+   * Get featured reviews for homepage showcase
+   */
+  async getFeaturedReviews(limit = 6): Promise<any[]> {
+    const response = await api.get<any, any>('/reviews/featured', { params: { limit } });
+    return response.data || response;
+  }
+
+  /**
+   * Get all reviews with filters
+   */
+  async getAllReviews(params?: any): Promise<any> {
+    const response = await api.get<any, any>('/reviews', { params });
+    return response.data || response;
+  }
+
+  /**
    * Get reviews for a product
    */
   async getProductReviews(
@@ -74,14 +90,14 @@ class ReviewService {
     page = 1,
     limit = 10,
     sort = 'recent'
-  ): Promise<ReviewsResponse['data']> {
-    const response = await api.get<any, ReviewsResponse>(
-      `/products/${productId}/reviews`,
+  ): Promise<any> {
+    const response = await api.get<any, any>(
+      `/reviews/product/${productId}`,
       {
         params: { page, limit, sort },
       }
     );
-    return response.data;
+    return response.data || response;
   }
 
   /**
@@ -89,7 +105,8 @@ class ReviewService {
    */
   async getReviewStats(productId: string): Promise<ReviewStats> {
     const response = await api.get<any, { success: boolean; data: ReviewStats }>(
-      `/products/${productId}/reviews/stats`
+      `/reviews/product/${productId}`,
+      { params: { limit: 1 } }
     );
     return response.data;
   }
@@ -97,9 +114,10 @@ class ReviewService {
   /**
    * Create a review
    */
-  async createReview(data: CreateReviewData): Promise<Review> {
-    const response = await api.post<any, ReviewResponse>('/reviews', data);
-    return response.data;
+  async createReview(data: CreateReviewData | FormData): Promise<any> {
+    const headers = data instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {};
+    const response = await api.post<any, any>('/reviews', data, { headers });
+    return response.data || response;
   }
 
   /**
@@ -125,6 +143,10 @@ class ReviewService {
    */
   async markHelpful(reviewId: string): Promise<void> {
     await api.post(`/reviews/${reviewId}/helpful`);
+  }
+
+  async markAsHelpful(reviewId: string): Promise<void> {
+    return this.markHelpful(reviewId);
   }
 
   /**

@@ -9,7 +9,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = ({ children, hover = false, glass = false, className, ...props }: CardProps) => {
-  const Component = hover ? motion.div : 'div';
+  const Component: any = hover ? motion.div : 'div';
 
   return (
     <Component

@@ -4,32 +4,47 @@ export interface ProductFilters {
   page?: number;
   limit?: number;
   search?: string;
+  brand?: string;
+  category?: string;
   brandId?: string;
   categoryId?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  ram?: number[];
-  storage?: number[];
-  processorBrand?: string[];
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  ram?: number[] | string;
+  storage?: number[] | string;
+  processorBrand?: string[] | string;
+  processor?: string;
+  sort?: string;
+  order?: string;
   sortBy?: string;
+  isFeatured?: boolean;
+  isNewArrival?: boolean;
+  isBestSeller?: boolean;
+  [key: string]: any;
 }
 
 export const productService = {
-  getProducts: (filters: ProductFilters) =>
-    api.get('/products', { params: filters }),
+  getProducts: (filters: ProductFilters): Promise<any> =>
+    api.get<any, any>('/products', { params: filters }),
   
-  getProduct: (id: string) => api.get(`/products/${id}`),
+  getProduct: (id: string): Promise<any> =>
+    api.get<any, any>(`/products/${id}`).then((res: any) => res.data || res),
   
-  getProductBySlug: (slug: string) => api.get(`/products/slug/${slug}`),
+  getProductBySlug: (slug: string): Promise<any> =>
+    api.get<any, any>(`/products/slug/${slug}`).then((res: any) => res.data || res),
   
-  getFeaturedProducts: () => api.get('/products?isFeatured=true&limit=8'),
+  getFeaturedProducts: (): Promise<any> =>
+    api.get<any, any>('/products?isFeatured=true&limit=8'),
   
-  getNewArrivals: () => api.get('/products?isNewArrival=true&limit=8'),
+  getNewArrivals: (): Promise<any> =>
+    api.get<any, any>('/products?isNewArrival=true&limit=8'),
   
-  getBestSellers: () => api.get('/products?isBestSeller=true&limit=8'),
+  getBestSellers: (): Promise<any> =>
+    api.get<any, any>('/products?isBestSeller=true&limit=8'),
   
-  getRelatedProducts: (productId: string) =>
-    api.get(`/products/${productId}/related`),
+  getRelatedProducts: (productId: string): Promise<any> =>
+    api.get<any, any>(`/products/${productId}/related`).then((res: any) => res.data || res),
 };
 
 export default productService;
+
