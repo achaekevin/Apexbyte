@@ -26,23 +26,23 @@ interface LaptopFormData {
   brandId: string;
   categoryId: string;
   sku: string;
-  price: number;
-  compareAtPrice?: number;
-  costPrice?: number;
-  stock: number;
+  price: string;
+  compareAtPrice: string;
+  costPrice?: string;
+  stock: string;
   processor: string;
   processorBrand: 'INTEL' | 'AMD' | 'APPLE';
   processorGen?: string;
-  ram: number;
+  ram: string;
   ramType: string;
-  storage: number;
+  storage: string;
   storageType: string;
   gpu?: string;
   gpuBrand?: 'INTEL' | 'AMD' | 'NVIDIA' | 'APPLE';
-  displaySize: number;
+  displaySize: string;
   displayResolution: string;
   displayType?: string;
-  refreshRate?: number;
+  refreshRate?: string;
   color?: string;
   os: 'WINDOWS_11' | 'MACOS' | 'LINUX';
   batteryLife?: string;
@@ -59,22 +59,22 @@ const INITIAL_FORM: LaptopFormData = {
   brandId: '',
   categoryId: '',
   sku: '',
-  price: 65000,
-  compareAtPrice: 72000,
-  stock: 10,
+  price: '65000',
+  compareAtPrice: '72000',
+  stock: '10',
   processor: 'Intel Core i5-1135G7',
   processorBrand: 'INTEL',
   processorGen: '11th Generation',
-  ram: 8,
+  ram: '8',
   ramType: 'DDR4',
-  storage: 512,
+  storage: '512',
   storageType: 'SSD NVMe',
   gpu: 'Intel Iris Xe Graphics',
   gpuBrand: 'INTEL',
-  displaySize: 14.0,
+  displaySize: '14.0',
   displayResolution: '1920 x 1080',
   displayType: 'FHD IPS',
-  refreshRate: 60,
+  refreshRate: '60',
   color: 'Dark Gray',
   os: 'WINDOWS_11',
   batteryLife: 'Up to 9 hours',
@@ -98,8 +98,8 @@ const AdminProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isQuickPriceOpen, setIsQuickPriceOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
-  const [quickPrice, setQuickPrice] = useState<number>(0);
-  const [quickComparePrice, setQuickComparePrice] = useState<number>(0);
+  const [quickPrice, setQuickPrice] = useState<string>('');
+  const [quickComparePrice, setQuickComparePrice] = useState<string>('');
 
   // Form State
   const [formData, setFormData] = useState<LaptopFormData>(INITIAL_FORM);
@@ -178,6 +178,12 @@ const AdminProducts = () => {
     setSelectedProduct(null);
     setFormData({
       ...INITIAL_FORM,
+      price: '54000',
+      compareAtPrice: '62000',
+      stock: '10',
+      ram: '8',
+      storage: '512',
+      displaySize: '14.0',
       brandId: brands && brands.length > 0 ? brands[0].id : '',
       categoryId: categories && categories.length > 0 ? categories[0].id : '',
     });
@@ -193,23 +199,23 @@ const AdminProducts = () => {
       brandId: product.brandId || product.brand?.id || '',
       categoryId: product.categoryId || product.category?.id || '',
       sku: product.sku || '',
-      price: Number(product.price) || 0,
-      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : undefined,
-      costPrice: product.costPrice ? Number(product.costPrice) : undefined,
-      stock: product.stock ?? 10,
+      price: product.price ? String(Math.round(Number(product.price))) : '',
+      compareAtPrice: product.compareAtPrice && Number(product.compareAtPrice) > 0 ? String(Math.round(Number(product.compareAtPrice))) : '',
+      costPrice: product.costPrice ? String(Math.round(Number(product.costPrice))) : '',
+      stock: product.stock !== undefined && product.stock !== null ? String(product.stock) : '10',
       processor: product.processor || '',
       processorBrand: product.processorBrand || 'INTEL',
       processorGen: product.processorGen || '',
-      ram: product.ram || 8,
+      ram: product.ram ? String(product.ram) : '8',
       ramType: product.ramType || 'DDR4',
-      storage: product.storage || 512,
+      storage: product.storage ? String(product.storage) : '512',
       storageType: product.storageType || 'SSD',
       gpu: product.gpu || '',
       gpuBrand: product.gpuBrand || 'INTEL',
-      displaySize: Number(product.displaySize) || 14.0,
+      displaySize: product.displaySize ? String(product.displaySize) : '14.0',
       displayResolution: product.displayResolution || '1920 x 1080',
       displayType: product.displayType || 'FHD IPS',
-      refreshRate: product.refreshRate || 60,
+      refreshRate: product.refreshRate ? String(product.refreshRate) : '60',
       color: product.color || 'Dark Gray',
       os: product.os || 'WINDOWS_11',
       batteryLife: product.batteryLife || 'Up to 9 hours',
@@ -229,8 +235,8 @@ const AdminProducts = () => {
 
   const openQuickPriceModal = (product: any) => {
     setSelectedProduct(product);
-    setQuickPrice(Number(product.price) || 0);
-    setQuickComparePrice(product.compareAtPrice ? Number(product.compareAtPrice) : 0);
+    setQuickPrice(product.price ? String(Math.round(Number(product.price))) : '');
+    setQuickComparePrice(product.compareAtPrice && Number(product.compareAtPrice) > 0 ? String(Math.round(Number(product.compareAtPrice))) : '');
     setIsQuickPriceOpen(true);
   };
 
@@ -262,31 +268,46 @@ const AdminProducts = () => {
       setFormError('Laptop name is required');
       return;
     }
-    if (!formData.price || formData.price <= 0) {
+    const priceNum = Number(formData.price);
+    if (!priceNum || priceNum <= 0) {
       setFormError('Valid price in KSh is required');
       return;
     }
 
+    const payload = {
+      ...formData,
+      price: priceNum,
+      compareAtPrice: formData.compareAtPrice ? Number(formData.compareAtPrice) : null,
+      stock: formData.stock ? Number(formData.stock) : 0,
+      ram: formData.ram ? Number(formData.ram) : 8,
+      storage: formData.storage ? Number(formData.storage) : 256,
+      displaySize: formData.displaySize ? Number(formData.displaySize) : 14.0,
+      refreshRate: formData.refreshRate ? Number(formData.refreshRate) : null,
+    };
+
     if (selectedProduct) {
-      updateMutation.mutate({ id: selectedProduct.id, data: formData });
+      updateMutation.mutate({ id: selectedProduct.id, data: payload as any });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(payload as any);
     }
   };
 
   const handleQuickPriceSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProduct) return;
-    if (quickPrice <= 0) {
+    const priceNum = Number(quickPrice);
+    if (!priceNum || priceNum <= 0) {
       alert('Price must be greater than 0');
       return;
     }
 
+    const compareNum = quickComparePrice ? Number(quickComparePrice) : null;
+
     updateMutation.mutate({
       id: selectedProduct.id,
       data: {
-        price: quickPrice,
-        compareAtPrice: quickComparePrice > 0 ? quickComparePrice : undefined,
+        price: priceNum,
+        compareAtPrice: compareNum && compareNum > 0 ? compareNum : null,
       } as any,
     });
   };
@@ -585,12 +606,11 @@ const AdminProducts = () => {
                     Selling Price (KES / KSh) *
                   </label>
                   <Input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     value={quickPrice}
-                    onChange={(e) => setQuickPrice(Number(e.target.value))}
+                    onChange={(e) => setQuickPrice(e.target.value.replace(/[^0-9]/g, ''))}
                     required
-                    min={1}
-                    step={100}
                     placeholder="e.g. 54000"
                   />
                 </div>
@@ -600,11 +620,10 @@ const AdminProducts = () => {
                     Compare At / Regular Price (KES / KSh)
                   </label>
                   <Input
-                    type="number"
-                    value={quickComparePrice || ''}
-                    onChange={(e) => setQuickComparePrice(Number(e.target.value))}
-                    min={0}
-                    step={100}
+                    type="text"
+                    inputMode="numeric"
+                    value={quickComparePrice}
+                    onChange={(e) => setQuickComparePrice(e.target.value.replace(/[^0-9]/g, ''))}
                     placeholder="Original price before discount, e.g. 62000"
                   />
                 </div>
@@ -756,11 +775,11 @@ const AdminProducts = () => {
                         Selling Price (KSh) *
                       </label>
                       <Input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                        placeholder="54000"
-                        min={1}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value.replace(/[^0-9]/g, '') })}
+                        placeholder="e.g. 54000"
                         required
                       />
                     </div>
@@ -770,10 +789,11 @@ const AdminProducts = () => {
                         Original Price (KSh)
                       </label>
                       <Input
-                        type="number"
-                        value={formData.compareAtPrice || ''}
-                        onChange={(e) => setFormData({ ...formData, compareAtPrice: Number(e.target.value) })}
-                        placeholder="62000"
+                        type="text"
+                        inputMode="numeric"
+                        value={formData.compareAtPrice}
+                        onChange={(e) => setFormData({ ...formData, compareAtPrice: e.target.value.replace(/[^0-9]/g, '') })}
+                        placeholder="e.g. 62000"
                       />
                     </div>
 
@@ -782,10 +802,11 @@ const AdminProducts = () => {
                         Stock Quantity *
                       </label>
                       <Input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={formData.stock}
-                        onChange={(e) => setFormData({ ...formData, stock: Number(e.target.value) })}
-                        min={0}
+                        onChange={(e) => setFormData({ ...formData, stock: e.target.value.replace(/[^0-9]/g, '') })}
+                        placeholder="e.g. 10"
                         required
                       />
                     </div>
@@ -843,10 +864,11 @@ const AdminProducts = () => {
                         RAM Size (GB) *
                       </label>
                       <Input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={formData.ram}
-                        onChange={(e) => setFormData({ ...formData, ram: Number(e.target.value) })}
-                        placeholder="8 or 16"
+                        onChange={(e) => setFormData({ ...formData, ram: e.target.value.replace(/[^0-9]/g, '') })}
+                        placeholder="e.g. 8 or 16"
                         required
                       />
                     </div>
@@ -868,10 +890,11 @@ const AdminProducts = () => {
                         Storage Size (GB) *
                       </label>
                       <Input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={formData.storage}
-                        onChange={(e) => setFormData({ ...formData, storage: Number(e.target.value) })}
-                        placeholder="256, 512, 1000"
+                        onChange={(e) => setFormData({ ...formData, storage: e.target.value.replace(/[^0-9]/g, '') })}
+                        placeholder="e.g. 256, 512, 1000"
                         required
                       />
                     </div>
@@ -893,11 +916,11 @@ const AdminProducts = () => {
                         Display Size (Inches)
                       </label>
                       <Input
-                        type="number"
-                        step="0.1"
+                        type="text"
+                        inputMode="decimal"
                         value={formData.displaySize}
-                        onChange={(e) => setFormData({ ...formData, displaySize: Number(e.target.value) })}
-                        placeholder="14.0 or 15.6"
+                        onChange={(e) => setFormData({ ...formData, displaySize: e.target.value.replace(/[^0-9.]/g, '') })}
+                        placeholder="e.g. 14.0 or 15.6"
                       />
                     </div>
 
