@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useComparisonStore } from '../store/comparisonStore';
 import { useCartStore } from '../store/cartStore';
 
@@ -17,7 +17,7 @@ const Compare = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: getProductImage(product),
       quantity: 1,
       stock: product.stock,
     });
@@ -92,10 +92,13 @@ const Compare = () => {
                   <Card className="h-full">
                     <div className="relative">
                       <Link to={`/products/${product.id}`}>
-                        <div className="aspect-square overflow-hidden rounded-t-xl">
+                        <div className="aspect-square overflow-hidden rounded-t-xl bg-gray-100 dark:bg-gray-800">
                           <img
-                            src={product.images[0]}
+                            src={getProductImage(product)}
                             alt={product.name}
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                            }}
                             className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                           />
                         </div>

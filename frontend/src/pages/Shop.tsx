@@ -9,7 +9,7 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import api from '../services/api';
 
@@ -96,7 +96,7 @@ const Shop = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: getProductImage(product),
       quantity: 1,
       stock: product.stock,
     });
@@ -432,10 +432,13 @@ const Shop = () => {
                       >
                         <Card className="group hover:shadow-premium transition-all duration-300 h-full flex flex-col">
                           <Link to={`/products/${product.id}`}>
-                            <div className="relative overflow-hidden rounded-t-xl aspect-square">
+                            <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
                               <img
-                                src={product.images[0]}
+                                src={getProductImage(product)}
                                 alt={product.name}
+                                onError={(e) => {
+                                  e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                                }}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                               <div className="absolute top-2 right-2 flex flex-col gap-2">

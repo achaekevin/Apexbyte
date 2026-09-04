@@ -8,7 +8,7 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import orderService from '../../services/orderService';
-import { formatCurrency, getOrderStatusColor } from '../../utils/helpers';
+import { formatCurrency, getOrderStatusColor, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 
 const Orders = () => {
   const [filter, setFilter] = useState<string>('all');
@@ -109,13 +109,16 @@ const Orders = () => {
                     {order.items.slice(0, 2).map((item: any) => (
                       <div key={item.id} className="flex gap-3">
                         <img
-                          src={item.product.images[0]}
-                          alt={item.product.name}
-                          className="w-16 h-16 object-cover rounded"
+                          src={getProductImage(item.productImage || item.product)}
+                          alt={item.product?.name || item.productName}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
+                          className="w-16 h-16 object-cover rounded bg-gray-100 dark:bg-gray-800"
                         />
                         <div className="flex-1">
                           <p className="font-medium line-clamp-1">
-                            {item.product.name}
+                            {item.product?.name || item.productName}
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             Qty: {item.quantity} × {formatCurrency(item.price)}

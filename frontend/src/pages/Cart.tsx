@@ -7,7 +7,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Badge from '../components/ui/Badge';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import couponService from '../services/couponService';
 
@@ -59,7 +59,7 @@ const Cart = () => {
 
     if (newQuantity < 1) {
       removeItem(productId);
-    } else if (newQuantity <= item.stock) {
+    } else if (!item.stock || newQuantity <= item.stock) {
       updateQuantity(productId, newQuantity);
     }
   };
@@ -144,9 +144,12 @@ const Cart = () => {
                           className="flex-shrink-0"
                         >
                           <img
-                            src={item.image}
+                            src={getProductImage(item.image)}
                             alt={item.name}
-                            className="w-24 h-24 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                            }}
+                            className="w-24 h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-800"
                           />
                         </Link>
 
@@ -197,18 +200,18 @@ const Cart = () => {
                                   )
                                 }
                                 className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                disabled={item.quantity >= item.stock}
+                                disabled={item.stock !== undefined && item.quantity >= item.stock}
                               >
                                 +
                               </button>
                             </div>
                             <span className="text-sm text-gray-600 dark:text-gray-400">
-                              {item.stock} available
+                              {item.stock !== undefined ? `${item.stock} available` : 'In stock'}
                             </span>
                           </div>
 
                           {/* Stock Warning */}
-                          {item.quantity > item.stock && (
+                          {item.stock !== undefined && item.quantity > item.stock && (
                             <p className="text-sm text-red-600 mt-2">
                               Only {item.stock} available in stock
                             </p>
@@ -403,10 +406,10 @@ const Cart = () => {
                     We accept
                   </p>
                   <div className="flex items-center justify-center gap-3 flex-wrap">
-                    <Badge variant="default">Visa</Badge>
-                    <Badge variant="default">Mastercard</Badge>
-                    <Badge variant="default">PayPal</Badge>
-                    <Badge variant="default">MPesa</Badge>
+                    <Badge variant="info">Visa</Badge>
+                    <Badge variant="info">Mastercard</Badge>
+                    <Badge variant="info">PayPal</Badge>
+                    <Badge variant="info">MPesa</Badge>
                   </div>
                 </div>
               </Card>

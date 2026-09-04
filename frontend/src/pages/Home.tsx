@@ -7,7 +7,8 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import productService from '../services/productService';
-import { formatCurrency } from '../utils/helpers';
+import reviewService from '../services/reviewService';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE, getInitials } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 
 import api from '../services/api';
@@ -34,36 +35,18 @@ const Home = () => {
       api.get('/categories').then((res: any) => res.data || res),
   });
 
-  const testimonials = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Graphic Designer',
-      image: 'https://i.pravatar.cc/150?img=1',
-      rating: 5,
-      text: 'Amazing experience! Found the perfect laptop for my design work. Fast shipping and excellent customer service.',
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Software Developer',
-      image: 'https://i.pravatar.cc/150?img=2',
-      rating: 5,
-      text: 'Best prices and great selection. The product descriptions were accurate and helpful in making my decision.',
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'Student',
-      image: 'https://i.pravatar.cc/150?img=3',
-      rating: 5,
-      text: 'Affordable options for students. The laptop I bought has been perfect for all my coursework and projects.',
-    },
-  ];
+  // Fetch real customer reviews from the database
+  const { data: realReviews, isLoading: loadingReviews } = useQuery({
+    queryKey: ['reviews', 'featured'],
+    queryFn: () => reviewService.getFeaturedReviews(6),
+  });
 
   const handleAddToCart = (product: any) => {
     addItem({
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: getProductImage(product),
       quantity: 1,
       stock: product.stock,
     });
@@ -153,10 +136,13 @@ const Home = () => {
                 >
                   <Card className="group hover:shadow-premium transition-all duration-300">
                     <Link to={`/products/${product.id}`}>
-                      <div className="relative overflow-hidden rounded-t-xl aspect-square">
+                      <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
                         <img
-                          src={product.images[0]}
+                          src={getProductImage(product)}
                           alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         {product.isFeatured && (
@@ -304,10 +290,13 @@ const Home = () => {
                 >
                   <Card className="group hover:shadow-premium transition-all duration-300">
                     <Link to={`/products/${product.id}`}>
-                      <div className="relative overflow-hidden rounded-t-xl aspect-square">
+                      <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
                         <img
-                          src={product.images[0]}
+                          src={getProductImage(product)}
                           alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         {product.isNewArrival && (
@@ -363,7 +352,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Real Customer Reviews */}
       <section className="py-16 bg-gradient-hero text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -372,52 +361,104 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium mb-3 border border-white/20">
+              <span className="text-yellow-400">★</span> Real Verified Buyers
+            </div>
             <h2 className="text-4xl font-bold mb-4">What Our Customers Say</h2>
-            <p className="text-blue-100">
-              Join thousands of satisfied customers worldwide
+            <p className="text-blue-100 max-w-2xl mx-auto">
+              Authentic reviews from verified buyers who upgraded their setup with our premium laptops
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full">
-                  <div className="flex items-center gap-4 mb-4">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-12 h-12 rounded-full"
-                    />
-                    <div>
-                      <h4 className="font-semibold text-white">{testimonial.name}</h4>
-                      <p className="text-sm text-blue-100">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center mb-3">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={`text-lg ${
-                          star <= testimonial.rating
-                            ? 'text-yellow-400'
-                            : 'text-gray-400'
-                        }`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-blue-50">{testimonial.text}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          {loadingReviews ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-56 bg-white/10 animate-pulse rounded-2xl" />
+              ))}
+            </div>
+          ) : realReviews && realReviews.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {realReviews.slice(0, 6).map((review: any, index: number) => {
+                const authorName = review.user
+                  ? `${review.user.firstName} ${review.user.lastName}`
+                  : 'Verified Customer';
+                return (
+                  <motion.div
+                    key={review.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="bg-white/10 backdrop-blur-lg border-white/20 h-full flex flex-col justify-between p-6 hover:bg-white/15 transition-all duration-300">
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            {review.user?.avatar ? (
+                              <img
+                                src={review.user.avatar}
+                                alt={authorName}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                                className="w-12 h-12 rounded-full object-cover ring-2 ring-white/30"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full bg-primary-500 text-white font-bold flex items-center justify-center ring-2 ring-white/30 text-sm">
+                                {review.user ? getInitials(review.user.firstName, review.user.lastName) : 'VC'}
+                              </div>
+                            )}
+                            <div>
+                              <h4 className="font-semibold text-white leading-tight">{authorName}</h4>
+                              <span className="inline-flex items-center gap-1 text-xs text-emerald-300 font-medium">
+                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                Verified Purchase
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex text-yellow-400 text-sm">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span key={star} className={star <= review.rating ? 'text-yellow-400' : 'text-gray-400'}>
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {review.title && (
+                          <h5 className="font-bold text-white mb-2 text-base line-clamp-1">
+                            "{review.title}"
+                          </h5>
+                        )}
+
+                        <p className="text-blue-50 text-sm leading-relaxed mb-4 line-clamp-4">
+                          {review.comment}
+                        </p>
+                      </div>
+
+                      {review.product && (
+                        <Link
+                          to={`/products/${review.product.id}`}
+                          className="pt-3 border-t border-white/10 flex items-center gap-2 group text-xs text-blue-200 hover:text-white transition-colors"
+                        >
+                          <span className="text-blue-300">Reviewed:</span>
+                          <span className="font-medium underline underline-offset-2 truncate">
+                            {review.product.name}
+                          </span>
+                        </Link>
+                      )}
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-blue-100">
+              No customer reviews submitted yet. Be the first to review your purchase!
+            </div>
+          )}
         </div>
       </section>
 

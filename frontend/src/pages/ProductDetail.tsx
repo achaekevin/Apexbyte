@@ -10,7 +10,7 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useComparisonStore } from '../store/comparisonStore';
@@ -78,7 +78,7 @@ const ProductDetail = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: getProductImage(product),
       quantity,
       stock: product.stock,
     });
@@ -193,30 +193,39 @@ const ProductDetail = () => {
                   className="aspect-square mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800"
                 >
                   <img
-                    src={product.images[selectedImage]}
+                    src={getProductImage(product, selectedImage)}
                     alt={product.name}
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                    }}
                     className="w-full h-full object-cover"
                   />
                 </motion.div>
 
                 <div className="grid grid-cols-4 gap-2">
-                  {product.images.map((image: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index
-                          ? 'border-primary-600'
-                          : 'border-transparent hover:border-gray-300'
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
+                  {(product.images || [product]).map((_imgItem: any, index: number) => {
+                    const imgUrl = getProductImage(product, index);
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all bg-gray-100 dark:bg-gray-800 ${
+                          selectedImage === index
+                            ? 'border-primary-600'
+                            : 'border-transparent hover:border-gray-300'
+                        }`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`${product.name} ${index + 1}`}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
               </Card>
             </div>
@@ -472,9 +481,9 @@ const ProductDetail = () => {
                     </h2>
                     {product.specifications ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {Object.entries(product.specifications).map(
+                        {(Object.entries(product.specifications) as [string, any][]).map(
                           ([key, value]) =>
-                            value && (
+                            value ? (
                               <div
                                 key={key}
                                 className="border-b border-gray-200 dark:border-gray-700 pb-3"
@@ -483,9 +492,11 @@ const ProductDetail = () => {
                                   {key.charAt(0).toUpperCase() +
                                     key.slice(1).replace(/([A-Z])/g, ' $1')}
                                 </div>
-                                <div className="font-medium">{value}</div>
+                                <div className="font-medium">
+                                  {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                                </div>
                               </div>
-                            )
+                            ) : null
                         )}
                       </div>
                     ) : (
@@ -591,84 +602,105 @@ const ProductDetail = () => {
                       </form>
                     )}
 
-                    {/* Reviews List */}
+                    {/* Reviews List                    {/* Reviews List */}
                     <div className="space-y-6">
-                      {reviewsData?.data.map((review: any) => (
-                        <div
-                          key={review.id}
-                          className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0"
-                        >
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                                <span className="font-bold text-primary-600">
-                                  {review.user.firstName[0]}
-                                  {review.user.lastName[0]}
-                                </span>
-                              </div>
-                              <div>
-                                <div className="font-medium">
-                                  {review.user.firstName} {review.user.lastName}
-                                  {review.isVerifiedPurchase && (
-                                    <Badge
-                                      variant="success"
-                                      size="sm"
-                                      className="ml-2"
-                                    >
-                                      Verified Purchase
-                                    </Badge>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="flex">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                      <span
-                                        key={star}
-                                        className={`text-sm ${
-                                          star <= review.rating
-                                            ? 'text-yellow-400'
-                                            : 'text-gray-300'
-                                        }`}
-                                      >
-                                        ★
-                                      </span>
-                                    ))}
-                                  </div>
-                                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                                    {new Date(review.createdAt).toLocaleDateString()}
+                      {(() => {
+                        const reviewsList: any[] = Array.isArray(reviewsData?.reviews)
+                          ? reviewsData.reviews
+                          : Array.isArray(reviewsData?.data)
+                          ? reviewsData.data
+                          : Array.isArray(reviewsData)
+                          ? reviewsData
+                          : [];
+
+                        if (reviewsList.length === 0) {
+                          return (
+                            <p className="text-center text-gray-600 dark:text-gray-400 py-8">
+                              No reviews yet. Be the first to review this product!
+                            </p>
+                          );
+                        }
+
+                        return reviewsList.map((review: any) => (
+                          <div
+                            key={review.id}
+                            className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0"
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                                  <span className="font-bold text-primary-600">
+                                    {review.user?.firstName?.[0] || 'U'}
+                                    {review.user?.lastName?.[0] || 'C'}
                                   </span>
                                 </div>
+                                <div>
+                                  <div className="font-medium">
+                                    {review.user?.firstName} {review.user?.lastName}
+                                    {(review.isVerifiedPurchase || review.isVerified) && (
+                                      <Badge
+                                        variant="success"
+                                        size="sm"
+                                        className="ml-2"
+                                      >
+                                        Verified Purchase
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
+                                          key={star}
+                                          className={`text-sm ${
+                                            star <= review.rating
+                                              ? 'text-yellow-400'
+                                              : 'text-gray-300'
+                                          }`}
+                                        >
+                                          ★
+                                        </span>
+                                      ))}
+                                    </div>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                                      {new Date(review.createdAt).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
+                            {review.title && (
+                              <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+                                {review.title}
+                              </h4>
+                            )}
+                            <p className="text-gray-700 dark:text-gray-300 mb-3">
+                              {review.comment}
+                            </p>
+                            {review.images && review.images.length > 0 && (
+                              <div className="flex gap-2 mb-3">
+                                {review.images.map((img: any, i: number) => {
+                                  const imgUrl = typeof img === 'string' ? img : img.url;
+                                  return (
+                                    <img
+                                      key={i}
+                                      src={imgUrl}
+                                      alt=""
+                                      className="w-20 h-20 object-cover rounded"
+                                    />
+                                  );
+                                })}
+                              </div>
+                            )}
+                            <button
+                              onClick={() => markHelpfulMutation.mutate(review.id)}
+                              className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600"
+                            >
+                              Helpful ({review.helpfulCount || 0})
+                            </button>
                           </div>
-                          <p className="text-gray-700 dark:text-gray-300 mb-3">
-                            {review.comment}
-                          </p>
-                          {review.images && review.images.length > 0 && (
-                            <div className="flex gap-2 mb-3">
-                              {review.images.map((img: string, i: number) => (
-                                <img
-                                  key={i}
-                                  src={img}
-                                  alt=""
-                                  className="w-20 h-20 object-cover rounded"
-                                />
-                              ))}
-                            </div>
-                          )}
-                          <button
-                            onClick={() => markHelpfulMutation.mutate(review.id)}
-                            className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600"
-                          >
-                            Helpful ({review.helpfulCount})
-                          </button>
-                        </div>
-                      ))}
-                      {reviewsData?.data.length === 0 && (
-                        <p className="text-center text-gray-600 dark:text-gray-400 py-8">
-                          No reviews yet. Be the first to review this product!
-                        </p>
-                      )}
+                        ));
+                      })()}
                     </div>
                   </Card>
                 </motion.div>
@@ -684,10 +716,13 @@ const ProductDetail = () => {
                 {relatedProducts.map((relatedProduct: any) => (
                   <Link key={relatedProduct.id} to={`/products/${relatedProduct.id}`}>
                     <Card className="group hover:shadow-premium transition-all duration-300 h-full">
-                      <div className="relative overflow-hidden rounded-t-xl aspect-square">
+                      <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
                         <img
-                          src={relatedProduct.images[0]}
+                          src={getProductImage(relatedProduct)}
                           alt={relatedProduct.name}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>

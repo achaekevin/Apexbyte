@@ -6,7 +6,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import wishlistService from '../../services/wishlistService';
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 import { useCartStore } from '../../store/cartStore';
 
 const Wishlist = () => {
@@ -30,7 +30,7 @@ const Wishlist = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: getProductImage(product),
       quantity: 1,
       stock: product.stock,
     });
@@ -83,10 +83,13 @@ const Wishlist = () => {
                 <Card className="group hover:shadow-premium transition-all">
                   <div className="relative">
                     <Link to={`/products/${item.product.id}`}>
-                      <div className="aspect-square overflow-hidden rounded-t-xl">
+                      <div className="aspect-square overflow-hidden rounded-t-xl bg-gray-100 dark:bg-gray-800">
                         <img
-                          src={item.product.images[0]}
+                          src={getProductImage(item.product)}
                           alt={item.product.name}
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                          }}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>

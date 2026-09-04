@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,14 +8,14 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import orderService from '../services/orderService';
 import paymentService from '../services/paymentService';
 
 // Initialize Stripe (use your publishable key)
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_...');
+const stripePromise = loadStripe((import.meta as any).env?.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_...');
 
 type Step = 'shipping' | 'payment' | 'review';
 
@@ -66,9 +66,10 @@ const CheckoutForm = () => {
       };
       return orderService.createOrder(orderData);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       clearCart();
-      navigate(`/orders/${data.id}`, { state: { orderSuccess: true } });
+      const orderId = data?.id || data?.data?.id;
+      navigate(`/orders/${orderId}`, { state: { orderSuccess: true } });
     },
     onError: (error: any) => {
       alert(error.response?.data?.message || 'Failed to create order');
@@ -518,9 +519,12 @@ const CheckoutForm = () => {
                   {items.map((item) => (
                     <div key={item.productId} className="flex gap-3">
                       <img
-                        src={item.image}
+                        src={getProductImage(item.image)}
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                        }}
+                        className="w-16 h-16 object-cover rounded bg-gray-100 dark:bg-gray-800"
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium line-clamp-2">
