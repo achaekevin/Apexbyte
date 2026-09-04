@@ -15,6 +15,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useThemeStore } from '../../store/themeStore';
+import { useComparisonStore } from '../../store/comparisonStore';
 import Button from '../ui/Button';
 
 const Header = () => {
@@ -23,6 +24,7 @@ const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
   const { getTotalItems } = useCartStore();
   const { isDarkMode, toggleTheme } = useThemeStore();
+  const { products: comparisonProducts } = useComparisonStore();
   const navigate = useNavigate();
 
   const cartItemsCount = getTotalItems();
@@ -61,9 +63,14 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors"
+                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors relative flex items-center gap-1.5"
               >
-                {link.label}
+                <span>{link.label}</span>
+                {link.path === '/compare' && comparisonProducts.length > 0 && (
+                  <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                    {comparisonProducts.length}
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
@@ -225,10 +232,15 @@ const Header = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="flex items-center justify-between px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
+                  {link.path === '/compare' && comparisonProducts.length > 0 && (
+                    <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center">
+                      {comparisonProducts.length}
+                    </span>
+                  )}
                 </Link>
               ))}
               {!isAuthenticated && (

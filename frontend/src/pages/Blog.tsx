@@ -144,7 +144,7 @@ const Blog = () => {
                                     `${post.author.firstName} ${post.author.lastName}`}
                                 </span>
                                 <span>
-                                  {new Date(post.publishedAt).toLocaleDateString()}
+                                  {new Date(post.publishedAt || post.createdAt).toLocaleDateString()}
                                 </span>
                               </div>
                             </div>

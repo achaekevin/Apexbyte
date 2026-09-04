@@ -22,9 +22,11 @@ import {
 const router = Router();
 
 // Public routes
+router.get('/', getPosts);
 router.get('/posts', getPosts);
-router.get('/posts/:slug', getPost);
 router.get('/categories', getCategories);
+router.get('/posts/:slug', getPost);
+router.get('/:slug', getPost);
 
 // Authenticated routes - Comments
 router.post(

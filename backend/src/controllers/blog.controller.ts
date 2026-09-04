@@ -29,41 +29,45 @@ export const getPosts = asyncHandler(async (req: AuthRequest, res: Response) => 
     ];
   }
 
-  const [posts, total] = await Promise.all([
+  const [posts, total, categories] = await Promise.all([
     prisma.blogPost.findMany({
       where,
-      include: {
-        author: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            avatar: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        _count: {
-          select: {
-            comments: true,
-          },
-        },
-      },
       orderBy: { createdAt: 'desc' },
       skip,
       take: Number(limit),
     }),
     prisma.blogPost.count({ where }),
+    prisma.blogCategory.findMany(),
   ]);
+
+  const catMap = new Map(categories.map((c) => [c.id, c]));
+
+  // Fetch authors
+  const authorIds = Array.from(new Set(posts.map((p) => p.authorId).filter(Boolean))) as string[];
+  const users = authorIds.length > 0
+    ? await prisma.user.findMany({
+        where: { id: { in: authorIds } },
+        select: { id: true, firstName: true, lastName: true, avatar: true },
+      })
+    : [];
+  const userMap = new Map(users.map((u) => [u.id, u]));
+
+  const enrichedPosts = posts.map((post) => ({
+    ...post,
+    views: post.viewCount || 0,
+    category: post.categoryId ? catMap.get(post.categoryId) || null : null,
+    author: (post.authorId && userMap.get(post.authorId)) || {
+      id: 'admin',
+      firstName: 'Apexbyte',
+      lastName: 'Editorial',
+      avatar: null,
+    },
+    _count: { comments: 0 },
+  }));
 
   res.json({
     success: true,
-    data: posts,
+    data: enrichedPosts,
     pagination: {
       page: Number(page),
       limit: Number(limit),
@@ -78,51 +82,57 @@ export const getPost = asyncHandler(async (req: AuthRequest, res: Response) => {
 
   const post = await prisma.blogPost.findUnique({
     where: { slug },
-    include: {
-      author: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          avatar: true,
-        },
-      },
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      comments: {
-        where: { isApproved: true },
-        include: {
-          user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              avatar: true,
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      },
-    },
   });
 
   if (!post) {
     throw new AppError('Blog post not found', 404);
   }
 
-  await prisma.blogPost.update({
-    where: { slug },
-    data: { views: { increment: 1 } },
-  });
+  // Increment viewCount safely
+  await prisma.blogPost
+    .update({
+      where: { id: post.id },
+      data: { viewCount: { increment: 1 } },
+    })
+    .catch(() => {});
+
+  let category = null;
+  if (post.categoryId) {
+    category = await prisma.blogCategory.findUnique({ where: { id: post.categoryId } });
+  }
+
+  let author = {
+    id: 'admin',
+    firstName: 'Apexbyte',
+    lastName: 'Editorial',
+    avatar: null,
+  };
+  if (post.authorId) {
+    const user = await prisma.user.findUnique({
+      where: { id: post.authorId },
+      select: { id: true, firstName: true, lastName: true, avatar: true },
+    });
+    if (user) author = user as any;
+  }
+
+  // Fetch approved comments
+  const comments = await prisma.blogComment
+    .findMany({
+      where: { postId: post.id, isApproved: true },
+      orderBy: { createdAt: 'desc' },
+    })
+    .catch(() => []);
 
   res.json({
     success: true,
-    data: post,
+    data: {
+      ...post,
+      views: (post.viewCount || 0) + 1,
+      category,
+      author,
+      comments,
+      _count: { comments: comments.length },
+    },
   });
 });
 
@@ -288,19 +298,31 @@ export const deletePost = asyncHandler(
 export const getCategories = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const categories = await prisma.blogCategory.findMany({
-      include: {
-        _count: {
-          select: {
-            posts: true,
-          },
-        },
-      },
       orderBy: { name: 'asc' },
     });
 
+    // Safely aggregate posts count per category
+    const posts = await prisma.blogPost.findMany({
+      where: { status: 'PUBLISHED' },
+      select: { categoryId: true },
+    });
+    const countMap: Record<string, number> = {};
+    posts.forEach((p) => {
+      if (p.categoryId) {
+        countMap[p.categoryId] = (countMap[p.categoryId] || 0) + 1;
+      }
+    });
+
+    const enrichedCategories = categories.map((cat) => ({
+      ...cat,
+      _count: {
+        posts: countMap[cat.id] || 0,
+      },
+    }));
+
     res.json({
       success: true,
-      data: categories,
+      data: enrichedCategories,
     });
   }
 );

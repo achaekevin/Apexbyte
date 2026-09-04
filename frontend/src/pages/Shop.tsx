@@ -19,12 +19,14 @@ import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
+import { useComparisonStore } from '../store/comparisonStore';
 import api from '../services/api';
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addItem } = useCartStore();
+  const { addProduct, removeProduct, isInComparison, products: comparisonProducts } = useComparisonStore();
 
   // Extract query params as single source of truth
   const brandParam = searchParams.get('brand') || '';
@@ -173,6 +175,36 @@ const Shop = () => {
       ),
       { duration: 4000 }
     );
+  };
+
+  const handleToggleCompare = (product: any) => {
+    if (isInComparison(product.id)) {
+      removeProduct(product.id);
+      toast.success(`Removed ${product.name} from comparison.`);
+    } else {
+      if (comparisonProducts.length >= 4) {
+        toast.error('You can compare up to 4 laptops at once.');
+        return;
+      }
+      addProduct(product);
+      toast.success(
+        (t) => (
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <span>Added to comparison ({comparisonProducts.length + 1}/4)</span>
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                navigate('/compare');
+              }}
+              className="px-2.5 py-1 bg-primary-600 text-white font-bold rounded hover:bg-primary-700 text-xs shadow-sm whitespace-nowrap"
+            >
+              Compare Now
+            </button>
+          </div>
+        ),
+        { duration: 4000 }
+      );
+    }
   };
 
   const handlePageChange = (newPage: number) => {
@@ -698,15 +730,29 @@ const Shop = () => {
                                   )}
                                 </div>
 
-                                <button
-                                  type="button"
-                                  onClick={() => handleAddToCart(product)}
-                                  disabled={product.stock === 0}
-                                  className="w-full mt-2 py-2 px-3 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-2 shadow-sm uppercase tracking-wider"
-                                >
-                                  <FiShoppingCart size={15} />
-                                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                                </button>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAddToCart(product)}
+                                    disabled={product.stock === 0}
+                                    className="flex-1 py-2 px-2.5 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-1.5 shadow-sm uppercase tracking-wider"
+                                  >
+                                    <FiShoppingCart size={14} />
+                                    {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleToggleCompare(product)}
+                                    className={`py-2 px-2.5 rounded-lg border text-xs font-semibold transition-colors flex items-center justify-center whitespace-nowrap ${
+                                      isInComparison(product.id)
+                                        ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 font-bold'
+                                        : 'border-gray-200 dark:border-gray-700 hover:border-primary-400 text-gray-600 dark:text-gray-300'
+                                    }`}
+                                    title={isInComparison(product.id) ? 'Remove from comparison' : 'Add to comparison'}
+                                  >
+                                    {isInComparison(product.id) ? '✓ Compared' : '+ Compare'}
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </Card>
@@ -747,6 +793,30 @@ const Shop = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Comparison Dock */}
+      {comparisonProducts.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white dark:bg-gray-800 dark:text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 border border-gray-700 dark:border-gray-600 backdrop-blur-md"
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-black">
+              {comparisonProducts.length}
+            </span>
+            <span className="text-xs sm:text-sm font-semibold">
+              Laptop{comparisonProducts.length > 1 ? 's' : ''} in comparison
+            </span>
+          </div>
+          <Link
+            to="/compare"
+            className="px-3.5 py-1.5 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-colors shadow flex items-center gap-1 whitespace-nowrap"
+          >
+            Compare Now →
+          </Link>
+        </motion.div>
+      )}
     </>
   );
 };
