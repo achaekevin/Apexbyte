@@ -102,10 +102,22 @@ const Home = () => {
                 Discover premium laptops from top brands. Gaming, business, or everyday use - we have it all.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" onClick={() => window.location.href = '/shop'}>
+                <Button size="lg" onClick={() => navigate('/shop')}>
                   Shop Now
                 </Button>
-                <Button variant="outline" size="lg" className="!text-white !border-white hover:!bg-white hover:!text-primary-600">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => {
+                    const el = document.getElementById('official-brand-stores') || document.getElementById('store-guarantees');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      navigate('/about');
+                    }
+                  }}
+                  className="!text-white !border-white hover:!bg-white hover:!text-primary-600 cursor-pointer transition-all duration-200"
+                >
                   Learn More
                 </Button>
               </div>
@@ -285,7 +297,7 @@ const Home = () => {
       </section>
 
       {/* Official Laptop Brand Stores (Jumia Style) */}
-      <section className="py-14 bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
+      <section id="official-brand-stores" className="py-14 bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
@@ -427,11 +439,11 @@ const Home = () => {
             className="text-center mb-12"
           >
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium mb-3 border border-white/20">
-              <span className="text-yellow-400">★</span> Real Verified Buyers
+              <span className="text-yellow-400">★</span> 100% Verified Buyer Reviews
             </div>
-            <h2 className="text-4xl font-bold mb-4">What Our Customers Say</h2>
+            <h2 className="text-4xl font-bold mb-4">Customer Reviews & Ratings</h2>
             <p className="text-blue-100 max-w-2xl mx-auto">
-              Authentic reviews from verified buyers who upgraded their setup with our premium laptops
+              Real feedback and ratings submitted exclusively by verified purchasers following delivery
             </p>
           </motion.div>
 
@@ -520,15 +532,65 @@ const Home = () => {
               })}
             </div>
           ) : (
-            <div className="text-center py-8 text-blue-100">
-              No customer reviews submitted yet. Be the first to review your purchase!
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-2xl">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 text-3xl mb-5 shadow-inner">
+                🛡️
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                100% Genuine Purchaser Reviews Policy
+              </h3>
+              <p className="text-blue-100 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+                We strictly prohibit artificial, seeded, or simulated reviews. Every review is strictly linked to a verified delivered purchase so you can shop with complete peace of mind. Real purchaser reviews will appear here as orders are completed.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-8">
+                <div className="bg-white/10 rounded-xl p-5 border border-white/15">
+                  <div className="text-2xl mb-2">🔒</div>
+                  <h4 className="font-bold text-white mb-1 text-sm sm:text-base">Verified Buyers Only</h4>
+                  <p className="text-blue-200 text-xs sm:text-sm">
+                    Only customers who placed and received their order can submit verified reviews.
+                  </p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-5 border border-white/15">
+                  <div className="text-2xl mb-2">⚖️</div>
+                  <h4 className="font-bold text-white mb-1 text-sm sm:text-base">Zero Fake Feedback</h4>
+                  <p className="text-blue-200 text-xs sm:text-sm">
+                    No fabricated or seeded reviews. Real performance and hands-on impressions only.
+                  </p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-5 border border-white/15">
+                  <div className="text-2xl mb-2">📦</div>
+                  <h4 className="font-bold text-white mb-1 text-sm sm:text-base">Post-Delivery Reviews</h4>
+                  <p className="text-blue-200 text-xs sm:text-sm">
+                    Purchasers can rate their laptop and attach genuine photos directly after delivery.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/shop')}
+                  className="bg-white !text-primary-600 hover:!bg-blue-50 font-bold shadow-lg"
+                >
+                  Explore Laptops
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate('/about')}
+                  className="!text-white !border-white/50 hover:!bg-white/10"
+                >
+                  Learn About Our Guarantee
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16">
+      <section id="store-guarantees" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[

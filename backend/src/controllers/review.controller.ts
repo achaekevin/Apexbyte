@@ -118,15 +118,33 @@ export const createReview = asyncHandler(
       },
     });
 
+    const files = req.files as Express.Multer.File[];
+    let uploadedImages: { url: string }[] = [];
+    if (files && files.length > 0) {
+      try {
+        const uploadResults = await uploadMultipleImages(files, 'reviews');
+        uploadedImages = uploadResults.map((r) => ({ url: r.url }));
+      } catch (uploadError) {
+        console.error('Error uploading review images:', uploadError);
+      }
+    }
+
     const review = await prisma.review.create({
       data: {
         productId,
         userId,
         rating: numRating,
         title: title || '',
-        comment,
+        comment: comment || '',
         isVerified: !!hasPurchased,
         isApproved: true,
+        ...(uploadedImages.length > 0
+          ? {
+              images: {
+                create: uploadedImages,
+              },
+            }
+          : {}),
       },
       include: {
         user: {

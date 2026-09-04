@@ -19,7 +19,7 @@ const router = Router();
 router.get('/', getAllReviews);
 router.get('/featured', getFeaturedReviews);
 router.get('/product/:productId', optionalAuth, getProductReviews);
-router.post('/', authenticate, createReview);
+router.post('/', authenticate, uploadMultiple, createReview);
 router.put('/:id', authenticate, updateReview);
 router.delete('/:id', authenticate, deleteReview);
 router.post('/:id/helpful', authenticate, markReviewHelpful);

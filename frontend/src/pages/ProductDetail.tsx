@@ -67,10 +67,16 @@ const ProductDetail = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', product?.id || productId] });
       queryClient.invalidateQueries({ queryKey: ['product', productId] });
+      queryClient.invalidateQueries({ queryKey: ['reviews', 'featured'] });
       setReviewRating(5);
       setReviewText('');
       setReviewImages([]);
-      alert('Review submitted successfully!');
+      toast.success('Thank you! Your verified review has been submitted successfully.');
+    },
+    onError: (error: any) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to submit review. Please try again.'
+      );
     },
   });
 
@@ -124,7 +130,7 @@ const ProductDetail = () => {
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      alert('Please login to submit a review');
+      toast.error('Please log in to submit a review');
       navigate('/login');
       return;
     }
@@ -133,6 +139,7 @@ const ProductDetail = () => {
     formData.append('productId', product?.id || productId!);
     formData.append('rating', reviewRating.toString());
     formData.append('comment', reviewText);
+    formData.append('title', reviewRating >= 4 ? 'Great Experience' : 'Customer Review');
     reviewImages.forEach((image) => {
       formData.append('images', image);
     });
