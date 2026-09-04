@@ -3,15 +3,18 @@ import { motion } from 'framer-motion';
 import {
   FiHome,
   FiPackage,
+  FiTag,
   FiShoppingBag,
   FiUsers,
   FiSettings,
+  FiExternalLink,
 } from 'react-icons/fi';
 import Header from '../components/layout/Header';
 
 const menuItems = [
   { path: '/admin', label: 'Dashboard', icon: FiHome },
-  { path: '/admin/products', label: 'Products', icon: FiPackage },
+  { path: '/admin/products', label: 'Laptops', icon: FiPackage },
+  { path: '/admin/brands', label: 'Brands', icon: FiTag },
   { path: '/admin/orders', label: 'Orders', icon: FiShoppingBag },
   { path: '/admin/customers', label: 'Customers', icon: FiUsers },
   { path: '/admin/settings', label: 'Settings', icon: FiSettings },
@@ -28,7 +31,7 @@ const AdminLayout = () => {
         <motion.aside
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700"
+          className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col justify-between"
         >
           <div className="p-6">
             <h2 className="text-2xl font-bold gradient-text mb-6">Admin Panel</h2>
@@ -53,6 +56,17 @@ const AdminLayout = () => {
                 );
               })}
             </nav>
+          </div>
+
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+            <Link
+              to="/"
+              target="_blank"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 transition-colors"
+            >
+              <FiExternalLink size={16} />
+              <span>View Live Store</span>
+            </Link>
           </div>
         </motion.aside>
 

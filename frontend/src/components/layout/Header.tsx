@@ -110,6 +110,16 @@ const Header = () => {
               )}
             </Link>
 
+            {/* Admin Direct Button */}
+            {isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+              <Link
+                to="/admin"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold rounded-lg shadow-sm transition-all"
+              >
+                <span>Owner Admin</span>
+              </Link>
+            )}
+
             {/* User Menu */}
             {isAuthenticated ? (
               <div className="relative">
