@@ -21,7 +21,9 @@ const idParamValidation = [
 ];
 
 router.get('/', getWishlist);
+router.post('/', validate(addItemValidation), addToWishlist);
 router.post('/items', validate(addItemValidation), addToWishlist);
+router.delete('/:id', validate(idParamValidation), removeFromWishlist);
 router.delete('/items/:id', validate(idParamValidation), removeFromWishlist);
 
 export default router;

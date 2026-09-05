@@ -108,16 +108,31 @@ export const removeFromWishlist = asyncHandler(
     const userId = req.user.id;
     const { id } = req.params;
 
-    const item = await prisma.wishlistItem.findUnique({
+    let item = await prisma.wishlistItem.findUnique({
       where: { id },
       include: { wishlist: true },
     });
+
+    if (!item) {
+      const userWishlist = await prisma.wishlist.findUnique({ where: { userId } });
+      if (userWishlist) {
+        item = await prisma.wishlistItem.findUnique({
+          where: {
+            wishlistId_productId: {
+              wishlistId: userWishlist.id,
+              productId: id,
+            },
+          },
+          include: { wishlist: true },
+        });
+      }
+    }
 
     if (!item || item.wishlist.userId !== userId) {
       throw new AppError('Item not found', 404);
     }
 
-    await prisma.wishlistItem.delete({ where: { id } });
+    await prisma.wishlistItem.delete({ where: { id: item.id } });
 
     res.json({
       success: true,

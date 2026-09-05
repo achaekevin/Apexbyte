@@ -37,25 +37,32 @@ class WishlistService {
    * Get user's wishlist
    */
   async getWishlist(): Promise<WishlistItem[]> {
-    const response = await api.get<any, WishlistResponse>('/wishlist');
-    return response.data;
+    const response: any = await api.get('/wishlist');
+    const payload = response?.data !== undefined ? response.data : response;
+    if (Array.isArray(payload)) {
+      return payload;
+    }
+    if (payload?.items && Array.isArray(payload.items)) {
+      return payload.items;
+    }
+    return [];
   }
 
   /**
    * Add product to wishlist
    */
   async addToWishlist(productId: string): Promise<WishlistItem> {
-    const response = await api.post<any, WishlistItemResponse>('/wishlist', {
+    const response: any = await api.post('/wishlist/items', {
       productId,
     });
-    return response.data;
+    return response?.data || response;
   }
 
   /**
    * Remove product from wishlist
    */
-  async removeFromWishlist(productId: string): Promise<void> {
-    await api.delete(`/wishlist/${productId}`);
+  async removeFromWishlist(idOrProductId: string): Promise<void> {
+    await api.delete(`/wishlist/items/${idOrProductId}`);
   }
 
   /**
@@ -64,7 +71,9 @@ class WishlistService {
   async isInWishlist(productId: string): Promise<boolean> {
     try {
       const wishlist = await this.getWishlist();
-      return wishlist.some((item) => item.productId === productId);
+      return wishlist.some(
+        (item: any) => item.productId === productId || item.product?.id === productId
+      );
     } catch (error) {
       return false;
     }
@@ -95,7 +104,7 @@ class WishlistService {
   async clearWishlist(): Promise<void> {
     const wishlist = await this.getWishlist();
     await Promise.all(
-      wishlist.map((item) => this.removeFromWishlist(item.productId))
+      wishlist.map((item: any) => this.removeFromWishlist(item.id || item.productId))
     );
   }
 
