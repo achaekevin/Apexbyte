@@ -270,7 +270,7 @@ const Shop = () => {
                 <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
                   Official Brand Stores
                 </span>
-                <span className="text-[11px] text-gray-400 hidden sm:inline">
+                <span className="text-xs sm:text-sm font-medium text-gray-300 hidden sm:inline">
                   • 100% Genuine Laptops with Full Manufacturer Warranty
                 </span>
               </div>
@@ -392,7 +392,7 @@ const Shop = () => {
                     <div className="space-y-6">
                       {/* Search */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Keyword Search
                         </label>
                         <Input
@@ -407,11 +407,11 @@ const Shop = () => {
 
                       {/* Brand Dropdown / List */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Brand
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3.5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base font-medium focus:ring-2 focus:ring-primary-500"
                           value={activeBrandObj?.slug || filters.brand}
                           onChange={(e) =>
                             handleFilterChange('brand', e.target.value)
@@ -428,11 +428,11 @@ const Shop = () => {
 
                       {/* Category */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Category
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3.5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base font-medium focus:ring-2 focus:ring-primary-500"
                           value={filters.category}
                           onChange={(e) =>
                             handleFilterChange('category', e.target.value)
@@ -449,7 +449,7 @@ const Shop = () => {
 
                       {/* Price Range (KSh) */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Price Range (KSh)
                         </label>
                         <div className="grid grid-cols-2 gap-2">
@@ -474,7 +474,7 @@ const Shop = () => {
 
                       {/* RAM */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           RAM Capacity
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -487,7 +487,7 @@ const Shop = () => {
                                 onClick={() =>
                                   handleFilterChange('ram', isSelected ? '' : ram)
                                 }
-                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                                className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-all ${
                                   isSelected
                                     ? 'bg-primary-600 border-primary-600 text-white shadow'
                                     : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-500'
@@ -502,7 +502,7 @@ const Shop = () => {
 
                       {/* Storage */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Storage (SSD)
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -516,7 +516,7 @@ const Shop = () => {
                                 onClick={() =>
                                   handleFilterChange('storage', isSelected ? '' : storage)
                                 }
-                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                                className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-all ${
                                   isSelected
                                     ? 'bg-primary-600 border-primary-600 text-white shadow'
                                     : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-500'
@@ -531,11 +531,11 @@ const Shop = () => {
 
                       {/* Processor */}
                       <div>
-                        <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+                        <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">
                           Processor
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3.5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base font-medium focus:ring-2 focus:ring-primary-500"
                           value={filters.processor}
                           onChange={(e) =>
                             handleFilterChange('processor', e.target.value)
@@ -672,59 +672,59 @@ const Shop = () => {
                             {/* Content */}
                             <div className="p-4 flex-1 flex flex-col justify-between">
                               <div>
-                                {/* Brand Name */}
-                                <div className="flex items-center justify-between gap-2 mb-1">
-                                  <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">
+                                {/* Brand Name & Stock */}
+                                <div className="flex items-center justify-between gap-2 mb-1.5">
+                                  <span className="text-xs font-black uppercase tracking-wider text-primary-600 dark:text-primary-400">
                                     {product.brand?.name || 'LAPTOP'}
                                   </span>
-                                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                     In Stock
                                   </span>
                                 </div>
 
                                 {/* Title */}
                                 <Link to={`/products/${product.id}`}>
-                                  <h3 className="font-bold text-gray-900 dark:text-white text-sm hover:text-primary-600 transition-colors line-clamp-2 mb-1.5 leading-snug">
+                                  <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors line-clamp-2 mb-2 leading-snug">
                                     {product.name}
                                   </h3>
                                 </Link>
 
                                 {/* Specs Snippet */}
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-1">
+                                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium mb-2.5 line-clamp-1">
                                   {product.processor || ''} {product.ram ? `• ${product.ram}GB RAM` : ''} {product.storage ? `• ${product.storage}GB SSD` : ''}
                                 </p>
 
                                 {/* Rating */}
-                                <div className="flex items-center gap-1.5 mb-3">
-                                  <div className="flex text-amber-400 text-xs">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="flex text-amber-400 text-sm">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                       <span
                                         key={star}
                                         className={
                                           star <= Math.round(product.averageRating || 5)
                                             ? 'text-amber-400'
-                                            : 'text-gray-300'
+                                            : 'text-gray-300 dark:text-gray-600'
                                         }
                                       >
                                         ★
                                       </span>
                                     ))}
                                   </div>
-                                  <span className="text-[11px] text-gray-500">
-                                    ({product.reviewCount || 1})
+                                  <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                                    ({product.reviewCount || 1} reviews)
                                   </span>
                                 </div>
                               </div>
 
                               {/* Price & Action */}
-                              <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
-                                <div className="flex items-baseline gap-2 mb-1">
-                                  <span className="text-xl font-extrabold text-gray-900 dark:text-white">
+                              <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <div className="flex items-baseline gap-2.5 mb-2">
+                                  <span className="text-2xl font-black text-gray-900 dark:text-white">
                                     {formatCurrency(product.price)}
                                   </span>
                                   {product.compareAtPrice && product.compareAtPrice > product.price && (
-                                    <span className="text-xs text-gray-400 line-through">
+                                    <span className="text-sm text-gray-400 dark:text-gray-500 line-through font-medium">
                                       {formatCurrency(product.compareAtPrice)}
                                     </span>
                                   )}
@@ -735,18 +735,18 @@ const Shop = () => {
                                     type="button"
                                     onClick={() => handleAddToCart(product)}
                                     disabled={product.stock === 0}
-                                    className="flex-1 py-2 px-2.5 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-1.5 shadow-sm uppercase tracking-wider"
+                                    className="flex-1 py-2.5 px-3 rounded-lg font-bold text-sm bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-1.5 shadow-sm uppercase tracking-wider"
                                   >
-                                    <FiShoppingCart size={14} />
+                                    <FiShoppingCart size={16} />
                                     {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleToggleCompare(product)}
-                                    className={`py-2 px-2.5 rounded-lg border text-xs font-semibold transition-colors flex items-center justify-center whitespace-nowrap ${
+                                    className={`py-2.5 px-3 rounded-lg border text-sm font-bold transition-colors flex items-center justify-center whitespace-nowrap ${
                                       isInComparison(product.id)
-                                        ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400 font-bold'
-                                        : 'border-gray-200 dark:border-gray-700 hover:border-primary-400 text-gray-600 dark:text-gray-300'
+                                        ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
+                                        : 'border-gray-300 dark:border-gray-600 hover:border-primary-500 text-gray-700 dark:text-gray-200'
                                     }`}
                                     title={isInComparison(product.id) ? 'Remove from comparison' : 'Add to comparison'}
                                   >

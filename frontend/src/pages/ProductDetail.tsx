@@ -272,12 +272,12 @@ const ProductDetail = () => {
                     {product.brand && (
                       <Link
                         to={`/shop?brand=${product.brand.slug || product.brand.id}`}
-                        className="text-primary-600 hover:underline font-medium"
+                        className="text-primary-600 dark:text-primary-400 hover:underline font-bold text-base"
                       >
                         {product.brand.name}
                       </Link>
                     )}
-                    <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 leading-tight">{product.name}</h1>
                   </div>
                   <div className="flex flex-col gap-2">
                     {product.isFeatured && <Badge variant="primary">Featured</Badge>}
@@ -286,7 +286,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Rating */}
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2.5 mb-5">
                   <div className="flex items-center">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
@@ -294,22 +294,22 @@ const ProductDetail = () => {
                         className={`text-xl ${
                           star <= product.averageRating
                             ? 'text-yellow-400'
-                            : 'text-gray-300'
+                            : 'text-gray-300 dark:text-gray-600'
                         }`}
                       >
                         ★
                       </span>
                     ))}
                   </div>
-                  <span className="text-gray-600 dark:text-gray-400">
-                    {product.averageRating.toFixed(1)} ({product.reviewCount} reviews)
+                  <span className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                    {product.averageRating.toFixed(1)} ({product.reviewCount} verified reviews)
                   </span>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-4xl font-bold text-primary-600">
+                    <span className="text-4xl sm:text-5xl font-black text-primary-600 dark:text-primary-400">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
@@ -318,7 +318,7 @@ const ProductDetail = () => {
                       <>
                         <Badge variant="success">In Stock</Badge>
                         {product.stock < 10 && (
-                          <span className="text-sm text-orange-600">
+                          <span className="text-base font-bold text-orange-600 dark:text-orange-400">
                             Only {product.stock} left!
                           </span>
                         )}
@@ -330,7 +330,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                   {product.description}
                 </p>
 
@@ -414,34 +414,34 @@ const ProductDetail = () => {
                 {/* Key Features */}
                 {product.specifications && (
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                    <h3 className="font-bold mb-3">Key Specifications</h3>
-                    <div className="space-y-2 text-sm">
+                    <h3 className="font-bold text-lg mb-4 text-gray-900 dark:text-white">Key Specifications</h3>
+                    <div className="space-y-3 text-base">
                       {product.specifications.processor && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-800">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
                             Processor:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-bold text-gray-900 dark:text-white">
                             {product.specifications.processor}
                           </span>
                         </div>
                       )}
                       {product.specifications.ram && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-800">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
                             RAM:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-bold text-gray-900 dark:text-white">
                             {product.specifications.ram}GB
                           </span>
                         </div>
                       )}
                       {product.specifications.storage && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-800">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
                             Storage:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-bold text-gray-900 dark:text-white">
                             {parseInt(product.specifications.storage) >= 1024
                               ? `${parseInt(product.specifications.storage) / 1024}TB`
                               : `${product.specifications.storage}GB`}{' '}
@@ -450,21 +450,21 @@ const ProductDetail = () => {
                         </div>
                       )}
                       {product.specifications.gpu && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-800">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
                             Graphics:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-bold text-gray-900 dark:text-white">
                             {product.specifications.gpu}
                           </span>
                         </div>
                       )}
                       {product.specifications.display && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-800">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
                             Display:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-bold text-gray-900 dark:text-white">
                             {product.specifications.display}
                           </span>
                         </div>
@@ -481,7 +481,7 @@ const ProductDetail = () => {
             <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
               <button
                 onClick={() => setActiveTab('specs')}
-                className={`pb-3 px-4 font-medium transition-colors ${
+                className={`pb-3.5 px-5 text-base sm:text-lg font-bold transition-colors ${
                   activeTab === 'specs'
                     ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -491,7 +491,7 @@ const ProductDetail = () => {
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`pb-3 px-4 font-medium transition-colors ${
+                className={`pb-3.5 px-5 text-base sm:text-lg font-bold transition-colors ${
                   activeTab === 'reviews'
                     ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -509,8 +509,8 @@ const ProductDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <Card className="p-6">
-                    <h2 className="text-2xl font-bold mb-6">
+                  <Card className="p-6 sm:p-8">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-gray-900 dark:text-white">
                       Technical Specifications
                     </h2>
                     {product.specifications ? (
@@ -520,13 +520,13 @@ const ProductDetail = () => {
                             value ? (
                               <div
                                 key={key}
-                                className="border-b border-gray-200 dark:border-gray-700 pb-3"
+                                className="border-b border-gray-200 dark:border-gray-700 pb-3.5"
                               >
-                                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                <div className="text-sm sm:text-base font-semibold text-gray-600 dark:text-gray-400 mb-1">
                                   {key.charAt(0).toUpperCase() +
                                     key.slice(1).replace(/([A-Z])/g, ' $1')}
                                 </div>
-                                <div className="font-medium">
+                                <div className="font-bold text-base sm:text-lg text-gray-900 dark:text-white">
                                   {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                                 </div>
                               </div>
@@ -534,7 +534,7 @@ const ProductDetail = () => {
                         )}
                       </div>
                     ) : (
-                      <p className="text-gray-600 dark:text-gray-400">
+                      <p className="text-base text-gray-600 dark:text-gray-400">
                         No specifications available.
                       </p>
                     )}

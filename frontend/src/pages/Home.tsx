@@ -156,33 +156,33 @@ const Home = () => {
       {/* Human Retail Trust Strip - Fully Responsive to Light & Dark Modes */}
       <section className="bg-gray-100 text-slate-900 border-b border-gray-200 dark:bg-gray-950 dark:text-white dark:border-gray-800 py-4 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs sm:text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm sm:text-base">
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🏬</span>
+              <span className="text-2xl">🏬</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-xs sm:text-sm">Mocha Place Showroom</span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Test before you pay</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Mocha Place Showroom</span>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Test before you pay</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🛡️</span>
+              <span className="text-2xl">🛡️</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-xs sm:text-sm">1-Year Local Warranty</span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Authorized service centers</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">1-Year Local Warranty</span>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Authorized service centers</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🚚</span>
+              <span className="text-2xl">🚚</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-xs sm:text-sm">Same-Day Kisii Delivery</span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Dispatched in 2-3 hours</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Same-Day Kisii Delivery</span>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Dispatched in 2-3 hours</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">⚡</span>
+              <span className="text-2xl">⚡</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-xs sm:text-sm">Free RAM/SSD Installation</span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Free labor with purchase</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Free RAM/SSD Installation</span>
+                <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Free labor with purchase</span>
               </div>
             </div>
           </div>
@@ -238,18 +238,18 @@ const Home = () => {
                         )}
                       </div>
                     </Link>
-                    <div className="p-4">
+                    <div className="p-5">
                       <Link to={`/products/${product.id}`}>
-                        <h3 className="font-semibold mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2">
+                        <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
                           {product.name}
                         </h3>
                       </Link>
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <div className="flex items-center">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
-                              className={`text-sm ${
+                              className={`text-base ${
                                 star <= product.averageRating
                                   ? 'text-amber-400'
                                   : 'text-gray-300 dark:text-gray-600'
@@ -259,12 +259,12 @@ const Home = () => {
                             </span>
                           ))}
                         </div>
-                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                        <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                           ({product.reviewCount})
                         </span>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                        <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
                           {formatCurrency(product.price)}
                         </span>
                         {product.stock < 10 && product.stock > 0 && (
@@ -277,7 +277,7 @@ const Home = () => {
                         fullWidth
                         onClick={() => handleAddToCart(product)}
                         disabled={product.stock === 0}
-                        className="bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm sm:text-base py-2.5 shadow-sm"
                       >
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </Button>
@@ -374,8 +374,8 @@ const Home = () => {
                     <span className="font-bold text-xs text-slate-900 dark:text-white">{brand.name.substring(0, 3)}</span>
                   )}
                 </div>
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:underline transition-colors">{brand.name}</h3>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">Official Store</span>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:underline transition-colors">{brand.name}</h3>
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 line-clamp-1 mt-0.5">Official Store</span>
               </Link>
             ))}
           </div>
@@ -398,14 +398,14 @@ const Home = () => {
           </motion.div>
 
           {loadingNew ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <LoadingSkeleton key={i} />
+                <div key={i} className="h-80 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-2xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {newArrivals?.data.map((product: any, index: number) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {newArrivals?.data.slice(0, 4).map((product: any, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -413,36 +413,39 @@ const Home = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="group hover:shadow-premium transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                    <Link to={`/products/${product.id}`}>
-                      <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
-                        <img
-                          src={getProductImage(product)}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
-                          }}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {product.isNewArrival && (
-                          <Badge className="absolute top-2 right-2" variant="success">
-                            New
+                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                    <Link to={`/products/${product.id}`} className="block relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <img
+                        src={getProductImage(product)}
+                        alt={product.name}
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                        }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-2 right-2 flex flex-col gap-1">
+                        <Badge variant="success" size="sm">
+                          New
+                        </Badge>
+                        {product.stock < 10 && product.stock > 0 && (
+                          <Badge variant="warning" size="sm">
+                            Only {product.stock} left
                           </Badge>
                         )}
                       </div>
                     </Link>
-                    <div className="p-4">
+                    <div className="p-5">
                       <Link to={`/products/${product.id}`}>
-                        <h3 className="font-semibold mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2">
+                        <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
                           {product.name}
                         </h3>
                       </Link>
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <div className="flex items-center">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
-                              className={`text-sm ${
+                              className={`text-base ${
                                 star <= product.averageRating
                                   ? 'text-amber-400'
                                   : 'text-gray-300 dark:text-gray-600'
@@ -452,12 +455,12 @@ const Home = () => {
                             </span>
                           ))}
                         </div>
-                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                        <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                           ({product.reviewCount})
                         </span>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                        <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
                           {formatCurrency(product.price)}
                         </span>
                       </div>
@@ -465,7 +468,7 @@ const Home = () => {
                         fullWidth
                         onClick={() => handleAddToCart(product)}
                         disabled={product.stock === 0}
-                        className="bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm sm:text-base py-2.5 shadow-sm"
                       >
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </Button>
@@ -642,10 +645,10 @@ const Home = () => {
       <section id="store-guarantees" className="py-16 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
               Why Kenyan & South Nyanza Professionals Choose Apexbyte
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 mt-3 text-base sm:text-lg">
               Certified retail store with a physical showroom and bench-tested inventory in Kisii
             </p>
           </div>
@@ -682,8 +685,8 @@ const Home = () => {
                 className="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 text-center hover:shadow-premium transition-all"
               >
                 <div className="text-4xl mb-3">{feature.icon}</div>
-                <h3 className="text-lg font-bold mb-2 text-slate-900 dark:text-white">{feature.title}</h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-lg sm:text-xl font-bold mb-2 text-slate-900 dark:text-white">{feature.title}</h3>
+                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
           </div>

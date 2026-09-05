@@ -169,7 +169,7 @@ const Compare = () => {
                           <button
                             type="button"
                             onClick={() => (alreadySelected ? removeProduct(laptop.id) : handleAddLaptop(laptop))}
-                            className={`mt-1.5 text-[11px] font-bold px-2 py-0.5 rounded flex items-center gap-1 ${
+                            className={`mt-1.5 text-xs font-bold px-2.5 py-1 rounded-md flex items-center gap-1 transition-colors ${
                               alreadySelected
                                 ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/50 hover:bg-red-100 hover:text-red-700'
                                 : 'text-primary-700 bg-primary-100 dark:bg-primary-900/50 hover:bg-primary-200'
@@ -177,11 +177,11 @@ const Compare = () => {
                           >
                             {alreadySelected ? (
                               <>
-                                <FiCheck size={12} /> Selected (Remove)
+                                <FiCheck size={13} /> Selected (Remove)
                               </>
                             ) : (
                               <>
-                                <FiPlus size={12} /> Add to Compare
+                                <FiPlus size={13} /> Add to Compare
                               </>
                             )}
                           </button>
@@ -244,7 +244,7 @@ const Compare = () => {
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                               {product.brand?.name && (
-                                <span className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase">
+                                <span className="absolute bottom-2 left-2 bg-black/75 text-white text-xs font-black px-2.5 py-1 rounded backdrop-blur-sm uppercase tracking-wide">
                                   {product.brand.name}
                                 </span>
                               )}
@@ -308,14 +308,14 @@ const Compare = () => {
                 </h3>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
+                  <table className="w-full text-left text-base">
                     <thead>
                       <tr className="border-b-2 border-gray-200 dark:border-gray-700">
-                        <th className="py-3 px-4 w-44 font-bold text-gray-500 uppercase text-xs">
+                        <th className="py-3.5 px-4 w-48 font-bold text-gray-700 dark:text-gray-300 uppercase text-xs sm:text-sm tracking-wider">
                           Specification
                         </th>
                         {products.map((product) => (
-                          <th key={product.id} className="py-3 px-4 w-72 sm:w-80 font-bold text-gray-900 dark:text-white">
+                          <th key={product.id} className="py-3.5 px-4 w-72 sm:w-80 font-bold text-gray-900 dark:text-white">
                             <span className="line-clamp-1">{product.name}</span>
                           </th>
                         ))}
@@ -324,9 +324,9 @@ const Compare = () => {
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                       {/* Price */}
                       <tr className="bg-primary-50/30 dark:bg-primary-950/20 font-bold">
-                        <td className="py-3 px-4 text-gray-700 dark:text-gray-300">Price</td>
+                        <td className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-bold">Price</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4 text-primary-600 dark:text-primary-400 text-base">
+                          <td key={p.id} className="py-3.5 px-4 text-primary-600 dark:text-primary-400 text-lg font-black">
                             {formatCurrency(p.price)}
                           </td>
                         ))}
@@ -334,9 +334,9 @@ const Compare = () => {
 
                       {/* Brand */}
                       <tr>
-                        <td className="py-3 px-4 font-medium text-gray-500">Brand</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Brand</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4 font-semibold">
+                          <td key={p.id} className="py-3.5 px-4 font-bold text-gray-900 dark:text-white">
                             {p.brand?.name || 'LAPTOP'}
                           </td>
                         ))}
@@ -344,9 +344,9 @@ const Compare = () => {
 
                       {/* Processor */}
                       <tr className="bg-gray-50/50 dark:bg-gray-800/30">
-                        <td className="py-3 px-4 font-medium text-gray-500">Processor</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Processor</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4">
+                          <td key={p.id} className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-medium">
                             {p.processor || p.specifications?.processor || '-'}
                             {p.processorGen ? ` (${p.processorGen})` : ''}
                           </td>
@@ -355,9 +355,9 @@ const Compare = () => {
 
                       {/* RAM */}
                       <tr>
-                        <td className="py-3 px-4 font-medium text-gray-500">RAM (Memory)</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">RAM (Memory)</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4 font-semibold">
+                          <td key={p.id} className="py-3.5 px-4 font-bold text-gray-900 dark:text-white">
                             {p.ram ? `${p.ram} GB ${p.ramType || 'DDR4'}` : p.specifications?.ram || '-'}
                           </td>
                         ))}
@@ -365,9 +365,9 @@ const Compare = () => {
 
                       {/* Storage */}
                       <tr className="bg-gray-50/50 dark:bg-gray-800/30">
-                        <td className="py-3 px-4 font-medium text-gray-500">Storage</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Storage</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4 font-semibold">
+                          <td key={p.id} className="py-3.5 px-4 font-bold text-gray-900 dark:text-white">
                             {p.storage ? `${p.storage} GB ${p.storageType || 'SSD'}` : p.specifications?.storage || '-'}
                           </td>
                         ))}
@@ -375,9 +375,9 @@ const Compare = () => {
 
                       {/* Graphics (GPU) */}
                       <tr>
-                        <td className="py-3 px-4 font-medium text-gray-500">Graphics</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Graphics</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4">
+                          <td key={p.id} className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-medium">
                             {p.gpu || (p.gpuBrand ? `${p.gpuBrand} ${p.gpuMemory ? `${p.gpuMemory}GB` : ''}` : 'Integrated Graphics')}
                           </td>
                         ))}
@@ -385,9 +385,9 @@ const Compare = () => {
 
                       {/* Display */}
                       <tr className="bg-gray-50/50 dark:bg-gray-800/30">
-                        <td className="py-3 px-4 font-medium text-gray-500">Display</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Display</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4">
+                          <td key={p.id} className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-medium">
                             {p.displaySize ? `${p.displaySize}"` : ''} {p.displayResolution || ''} {p.displayType || ''}{' '}
                             {p.refreshRate ? `(${p.refreshRate}Hz)` : ''}
                             {p.touchscreen ? ' • Touchscreen' : ''}
@@ -397,9 +397,9 @@ const Compare = () => {
 
                       {/* Operating System */}
                       <tr>
-                        <td className="py-3 px-4 font-medium text-gray-500">OS</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">OS</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4">
+                          <td key={p.id} className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-medium">
                             {p.operatingSystem ? p.operatingSystem.replace(/_/g, ' ') : 'Windows 11'}
                           </td>
                         ))}
@@ -407,9 +407,9 @@ const Compare = () => {
 
                       {/* Weight */}
                       <tr className="bg-gray-50/50 dark:bg-gray-800/30">
-                        <td className="py-3 px-4 font-medium text-gray-500">Weight</td>
+                        <td className="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300">Weight</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3 px-4">
+                          <td key={p.id} className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-medium">
                             {p.weight ? `${p.weight} kg` : 'Approx. 1.6 kg'}
                           </td>
                         ))}
