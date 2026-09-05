@@ -4,6 +4,7 @@ import prisma from '../config/database';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import { AuthRequest } from '../middleware/auth';
 import logger from '../config/logger';
+import { encrypt } from '../utils/encryption';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
@@ -12,17 +13,40 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 // Stripe: Create payment intent
 export const createStripePaymentIntent = asyncHandler(
   async (req: AuthRequest, res: Response) => {
-    const { amount, orderId } = req.body;
+    const { orderId } = req.body;
+    let payableAmount = req.body.amount;
 
-    if (!amount || amount <= 0) {
-      throw new AppError('Invalid amount', 400);
+    // Server-side price authority & IDOR check: if orderId is provided, enforce order total
+    if (orderId) {
+      const order = await prisma.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (!order) {
+        throw new AppError('Order not found', 404);
+      }
+
+      if (req.user && order.userId && order.userId !== req.user.id && req.user.role === 'CUSTOMER') {
+        throw new AppError('Access denied: You do not own this order', 403);
+      }
+
+      if (order.paymentStatus === 'PAID') {
+        throw new AppError('This order has already been paid', 400);
+      }
+
+      // Strictly enforce server-side database total - block any client-supplied price tampering
+      payableAmount = Number(order.total);
+    }
+
+    if (!payableAmount || payableAmount <= 0) {
+      throw new AppError('Invalid payable amount', 400);
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to smallest currency unit (cents)
+      amount: Math.round(payableAmount * 100), // Convert to smallest currency unit (cents)
       currency: 'kes',
       metadata: {
-        orderId,
+        orderId: orderId || '',
         userId: req.user?.id || 'guest',
       },
     });
@@ -145,6 +169,26 @@ export const capturePayPalPayment = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const { paypalOrderId, orderId } = req.body;
 
+    if (!orderId) {
+      throw new AppError('Order ID is required', 400);
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new AppError('Order not found', 404);
+    }
+
+    if (req.user && order.userId && order.userId !== req.user.id && req.user.role === 'CUSTOMER') {
+      throw new AppError('Access denied: You do not own this order', 403);
+    }
+
+    if (order.paymentStatus === 'PAID') {
+      throw new AppError('This order has already been paid', 400);
+    }
+
     // In production, capture the PayPal payment
     await prisma.order.update({
       where: { id: orderId },
@@ -158,7 +202,7 @@ export const capturePayPalPayment = asyncHandler(
     await prisma.payment.create({
       data: {
         orderId,
-        amount: 0, // Would get from PayPal response
+        amount: order.total,
         currency: 'USD',
         method: 'PAYPAL',
         status: 'PAID',
@@ -190,14 +234,31 @@ export const handlePayPalWebhook = asyncHandler(
 // MPesa: Initiate STK push
 export const initiateMpesaPayment = asyncHandler(
   async (req: AuthRequest, res: Response) => {
-    const { amount, phoneNumber, orderId } = req.body;
+    const { phoneNumber, orderId } = req.body;
 
     if (!phoneNumber || !phoneNumber.match(/^254\d{9}$/)) {
       throw new AppError('Invalid phone number format. Use 254XXXXXXXXX', 400);
     }
 
+    if (orderId) {
+      const order = await prisma.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (!order) {
+        throw new AppError('Order not found', 404);
+      }
+
+      if (req.user && order.userId && order.userId !== req.user.id && req.user.role === 'CUSTOMER') {
+        throw new AppError('Access denied: You do not own this order', 403);
+      }
+
+      if (order.paymentStatus === 'PAID') {
+        throw new AppError('This order has already been paid', 400);
+      }
+    }
+
     // In production, integrate with Safaricom MPesa API
-    // This is a mock implementation
     const checkoutRequestId = `MPESA-${Date.now()}`;
 
     res.json({
@@ -314,30 +375,42 @@ export const getPaymentMethods = asyncHandler(
   }
 );
 
-// Add payment method
+// Add payment method (with sensitive providerToken encryption)
 export const addPaymentMethod = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const userId = req.user.id;
     const { type, provider, last4, brand, expiryMonth, expiryYear, providerToken } =
       req.body;
 
+    // Encrypt sensitive provider token before storing at rest
+    const encryptedToken = providerToken ? encrypt(providerToken) : null;
+
     const paymentMethod = await prisma.paymentMethod.create({
       data: {
         userId,
-        type,
-        provider,
+        type: type || 'CARD',
+        provider: provider || 'STRIPE',
         last4,
         brand,
-        expiryMonth,
-        expiryYear,
-        providerToken,
+        expiryMonth: expiryMonth ? Number(expiryMonth) : null,
+        expiryYear: expiryYear ? Number(expiryYear) : null,
+        providerToken: encryptedToken,
       },
     });
 
     res.status(201).json({
       success: true,
       message: 'Payment method added',
-      data: paymentMethod,
+      data: {
+        id: paymentMethod.id,
+        type: paymentMethod.type,
+        provider: paymentMethod.provider,
+        last4: paymentMethod.last4,
+        brand: paymentMethod.brand,
+        expiryMonth: paymentMethod.expiryMonth,
+        expiryYear: paymentMethod.expiryYear,
+        isDefault: paymentMethod.isDefault,
+      },
     });
   }
 );
