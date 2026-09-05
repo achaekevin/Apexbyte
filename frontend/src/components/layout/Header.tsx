@@ -79,27 +79,27 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 transition-colors">
       {/* Top Authentic Store Notice Bar */}
-      <div className="bg-gray-100 text-gray-700 dark:bg-gray-950 dark:text-gray-300 text-[11px] sm:text-xs py-1.5 px-4 border-b border-gray-200 dark:border-gray-800 transition-colors">
+      <div className="bg-gray-100 text-gray-800 dark:bg-gray-950 dark:text-gray-200 text-xs sm:text-sm py-2 px-4 border-b border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 truncate">
-            <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold shrink-0">
+            <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Kisii CBD Showroom Open Today
             </span>
             <span className="hidden md:inline text-gray-400 dark:text-slate-600">•</span>
-            <span className="hidden md:inline text-gray-600 dark:text-slate-300">
+            <span className="hidden md:inline text-gray-700 dark:text-slate-200 font-medium">
               Mocha Place, 2nd Floor, Hospital Road, Kisii Town
             </span>
             <span className="hidden lg:inline text-gray-400 dark:text-slate-600">•</span>
-            <span className="hidden lg:inline text-amber-700 dark:text-amber-400 font-medium">
+            <span className="hidden lg:inline text-amber-700 dark:text-amber-400 font-semibold">
               🚚 Same-Day Delivery across Kisii, Nyamira & South Nyanza
             </span>
           </div>
 
-          <div className="flex items-center gap-4 shrink-0 text-gray-600 dark:text-slate-300">
+          <div className="flex items-center gap-4 shrink-0 text-gray-700 dark:text-slate-200">
             <a
               href="tel:+254104504692"
-              className="flex items-center gap-1 hover:text-primary-600 dark:hover:text-white transition-colors font-medium"
+              className="flex items-center gap-1 hover:text-primary-600 dark:hover:text-white transition-colors font-bold"
             >
               <FiPhone className="text-emerald-500" />
               <span>+254 104 504 692</span>
@@ -107,7 +107,7 @@ const Header = () => {
             <span className="hidden sm:inline text-gray-300 dark:text-slate-700">|</span>
             <Link
               to="/contact"
-              className="hidden sm:flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
+              className="hidden sm:flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-bold"
             >
               <FiMapPin className="text-amber-500" />
               <span>Directions</span>
@@ -137,7 +137,7 @@ const Header = () => {
               <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
                 Apex<span className="text-primary-600 dark:text-primary-400">byte</span>
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-widest text-amber-600 dark:text-amber-400 mt-0.5">
+              <span className="text-xs uppercase font-bold tracking-wider text-amber-600 dark:text-amber-400 mt-1">
                 Laptops Kenya
               </span>
             </div>
@@ -149,11 +149,11 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors relative flex items-center gap-1.5 text-sm"
+                className="text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors relative flex items-center gap-1.5 text-base"
               >
                 <span>{link.label}</span>
                 {link.path === '/compare' && comparisonProducts.length > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                  <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center animate-pulse">
                     {comparisonProducts.length}
                   </span>
                 )}
@@ -347,12 +347,12 @@ const Header = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="flex items-center justify-between px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  className="flex items-center justify-between px-4 py-2.5 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-base font-semibold"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <span>{link.label}</span>
                   {link.path === '/compare' && comparisonProducts.length > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center">
                       {comparisonProducts.length}
                     </span>
                   )}

@@ -11,43 +11,43 @@ const Footer = () => {
       <div className="border-b border-gray-200 dark:border-slate-800/80 bg-gray-200/40 dark:bg-slate-900/50 py-6 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-600 dark:text-primary-400 text-xl shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-600 dark:text-primary-400 text-xl shrink-0">
                 <FiMapPin />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider">Showroom Pickup</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Mocha Place, 2nd Flr, Kisii CBD</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Showroom Pickup</h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">Mocha Place, 2nd Flr, Kisii CBD</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xl shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xl shrink-0">
                 <FiShield />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider">1-Year Warranty</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Authorized local service center support</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">1-Year Warranty</h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">Authorized local service center support</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl shrink-0">
                 <FiTruck />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider">Same-Day Delivery</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Kisii, Nyamira & Migori (Courier nationwide)</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Same-Day Delivery</h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">Kisii, Nyamira & Migori (Courier nationwide)</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xl shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xl shrink-0">
                 <FiRefreshCw />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider">7-Point Inspection</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Thermal, battery, SSD & screen verified</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">7-Point Inspection</h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">Thermal, battery, SSD & screen verified</p>
               </div>
             </div>
           </div>
@@ -60,29 +60,29 @@ const Footer = () => {
           {/* Brand & Showroom Info (2 Cols on lg) */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white font-black text-sm shadow-md">
+              <div className="w-9 h-9 rounded-lg bg-primary-600 flex items-center justify-center text-white font-black text-base shadow-md">
                 A
               </div>
               <span className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
                 Apex<span className="text-primary-600 dark:text-primary-400">byte</span>
-                <span className="text-xs block font-bold tracking-widest text-amber-600 dark:text-amber-400 uppercase -mt-1">
+                <span className="text-xs block font-bold tracking-widest text-amber-600 dark:text-amber-400 uppercase -mt-0.5">
                   Laptops Kenya • Kisii
                 </span>
               </span>
             </Link>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm">
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed max-w-sm">
               Kisii's authentic electronics hub for verified brand-new and certified business laptops. We bench-test every machine thoroughly before handover and provide direct technician support.
             </p>
 
-            <div className="space-y-2 text-xs text-gray-700 dark:text-gray-300">
+            <div className="space-y-2.5 text-sm sm:text-base text-gray-800 dark:text-gray-200">
               <div className="flex items-start gap-2.5">
-                <FiMapPin className="text-amber-500 mt-0.5 shrink-0" />
+                <FiMapPin className="text-amber-500 mt-1 shrink-0" />
                 <span>Shop S14, 2nd Floor, Mocha Place, Hospital Road, Kisii Town CBD</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <FiPhone className="text-emerald-500 shrink-0" />
-                <a href="tel:+254104504692" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
+                <a href="tel:+254104504692" className="hover:text-primary-600 dark:hover:text-white transition-colors font-semibold">
                   +254 104 504 692
                 </a>
               </div>
@@ -92,14 +92,14 @@ const Footer = () => {
                   href="https://wa.me/254104504692"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-medium"
+                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-semibold"
                 >
                   WhatsApp Tech Desk: 0104 504 692
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <FiMail className="text-primary-500 shrink-0" />
-                <a href="mailto:support@apexbyte.co.ke" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <a href="mailto:support@apexbyte.co.ke" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   support@apexbyte.co.ke
                 </a>
               </div>
@@ -112,37 +112,37 @@ const Footer = () => {
 
           {/* Quick Shop Links */}
           <div>
-            <h3 className="text-gray-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-gray-900 dark:text-white font-bold text-base uppercase tracking-wider mb-4">
               Explore Laptops
             </h3>
-            <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-3 text-base text-gray-700 dark:text-gray-300">
               <li>
-                <Link to="/shop?brand=hp" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/shop?brand=hp" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   HP EliteBooks & Envy
                 </Link>
               </li>
               <li>
-                <Link to="/shop?brand=dell" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/shop?brand=dell" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Dell Latitude & Vostro
                 </Link>
               </li>
               <li>
-                <Link to="/shop?brand=lenovo" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/shop?brand=lenovo" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Lenovo ThinkPads
                 </Link>
               </li>
               <li>
-                <Link to="/shop?brand=apple" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/shop?brand=apple" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Apple MacBooks
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=gaming" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/shop?category=gaming" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   High Performance & Gaming
                 </Link>
               </li>
               <li>
-                <Link to="/compare" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/compare" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Side-by-Side Compare
                 </Link>
               </li>
@@ -151,37 +151,37 @@ const Footer = () => {
 
           {/* Customer Support */}
           <div>
-            <h3 className="text-gray-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-gray-900 dark:text-white font-bold text-base uppercase tracking-wider mb-4">
               Customer Desk
             </h3>
-            <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-3 text-base text-gray-700 dark:text-gray-300">
               <li>
-                <Link to="/contact" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/contact" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Showroom Location & Contact
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/about" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   The Apexbyte Story & Guarantee
                 </Link>
               </li>
               <li>
-                <Link to="/contact#faq" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/contact#faq" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Buyer FAQs & Inspection
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/blog" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Laptop Buying Guides (Kenya)
                 </Link>
               </li>
               <li>
-                <Link to="/contact#trade-in" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/contact#trade-in" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Trade-In & Upgrade Program
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/orders" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+                <Link to="/dashboard/orders" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
                   Track Delivery
                 </Link>
               </li>
@@ -190,26 +190,26 @@ const Footer = () => {
 
           {/* Payment & Security */}
           <div>
-            <h3 className="text-gray-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-gray-900 dark:text-white font-bold text-base uppercase tracking-wider mb-4">
               Payment & Dispatch
             </h3>
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
               We accept M-Pesa, Bank Transfer, Card, and Cash on Delivery within Kisii Town.
             </p>
-            <div className="space-y-2 text-xs">
-              <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-sm">
-                <span className="block font-bold text-emerald-600 dark:text-emerald-400 text-xs mb-1">
+            <div className="space-y-2.5">
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-sm">
+                <span className="block font-bold text-emerald-600 dark:text-emerald-400 text-sm mb-1">
                   LIPA NA M-PESA
                 </span>
-                <span className="text-[11px] text-gray-600 dark:text-gray-300">
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">
                   Buy Goods Till / Paybill available on delivery
                 </span>
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-sm">
-                <span className="block font-bold text-amber-600 dark:text-amber-400 text-xs mb-1">
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-sm">
+                <span className="block font-bold text-amber-600 dark:text-amber-400 text-sm mb-1">
                   COUNTRYWIDE PARCEL
                 </span>
-                <span className="text-[11px] text-gray-600 dark:text-gray-300">
+                <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">
                   Secured dispatch via Fargo Courier, Easy Coach, Transline Classic or G4S
                 </span>
               </div>
@@ -218,20 +218,20 @@ const Footer = () => {
         </div>
 
         {/* Bottom copyright */}
-        <div className="border-t border-gray-200 dark:border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 dark:text-gray-400 gap-4">
+        <div className="border-t border-gray-200 dark:border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-600 dark:text-gray-300 gap-4">
           <p>
             &copy; {currentYear} <strong>Apexbyte Laptops Kenya</strong>. All rights reserved. Located at Mocha Place, Hospital Road, Kisii Town CBD.
           </p>
-          <div className="flex items-center gap-4">
-            <Link to="/about" className="hover:text-primary-600 dark:hover:text-gray-300 transition-colors">
+          <div className="flex items-center gap-4 font-medium">
+            <Link to="/about" className="hover:text-primary-600 dark:hover:text-white transition-colors">
               About Showroom
             </Link>
             <span>•</span>
-            <Link to="/contact" className="hover:text-primary-600 dark:hover:text-gray-300 transition-colors">
+            <Link to="/contact" className="hover:text-primary-600 dark:hover:text-white transition-colors">
               Contact Tech Desk
             </Link>
             <span>•</span>
-            <Link to="/shop" className="hover:text-primary-600 dark:hover:text-gray-300 transition-colors">
+            <Link to="/shop" className="hover:text-primary-600 dark:hover:text-white transition-colors">
               Laptops in Kisii
             </Link>
           </div>
