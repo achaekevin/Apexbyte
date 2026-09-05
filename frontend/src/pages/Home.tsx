@@ -138,16 +138,16 @@ const Home = () => {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative"
+              className="relative flex justify-center"
             >
-              <div className="relative z-10">
+              <div className="relative z-10 w-full max-w-md lg:max-w-lg">
                 <img
-                  src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"
-                  alt="Apexbyte Premium Laptops Kisii"
-                  className="rounded-2xl shadow-2xl"
+                  src="/hero-laptops.png"
+                  alt="Apexbyte Showroom Tested Laptops Kisii"
+                  className="rounded-2xl shadow-2xl w-full max-h-[440px] sm:max-h-[500px] object-cover object-center border border-gray-200 dark:border-gray-800"
                 />
               </div>
-              <div className="absolute inset-0 bg-primary-500/10 dark:bg-slate-800 rounded-2xl transform rotate-6 opacity-40 transition-colors" />
+              <div className="absolute inset-0 bg-primary-500/10 dark:bg-slate-800 rounded-2xl transform rotate-2 sm:rotate-3 opacity-30 transition-colors" />
             </motion.div>
           </div>
         </div>
