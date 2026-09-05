@@ -5,6 +5,9 @@ console.log('📝 Loading environment variables...');
 import dotenv from 'dotenv';
 dotenv.config();
 
+import { validateEnv } from './config/envValidation';
+validateEnv();
+
 console.log('✅ Environment loaded');
 console.log('   PORT:', process.env.PORT);
 console.log('   NODE_ENV:', process.env.NODE_ENV);

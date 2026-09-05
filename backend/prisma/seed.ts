@@ -28,10 +28,11 @@ async function main() {
   await prisma.coupon.deleteMany();
 
   // 1. Create Admin Users (Owner + Default Admin)
-  const adminPassword = await hashPassword('Admin@12345');
+  const adminPasswordPlain = process.env.SEED_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'Admin@12345';
+  const adminPassword = await hashPassword(adminPasswordPlain);
   await prisma.user.create({
     data: {
-      email: 'achaekevin@gmail.com',
+      email: process.env.OWNER_EMAIL || 'achaekevin@gmail.com',
       password: adminPassword,
       firstName: 'Kevin',
       lastName: 'Achae',
@@ -42,7 +43,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: 'admin@laptopstore.com',
+      email: process.env.ADMIN_EMAIL || 'admin@laptopstore.com',
       password: adminPassword,
       firstName: 'Admin',
       lastName: 'User',
@@ -52,7 +53,8 @@ async function main() {
   });
 
   // 2. Create Test Customer
-  const customerPassword = await hashPassword('Customer@123');
+  const customerPasswordPlain = process.env.SEED_CUSTOMER_PASSWORD || 'Customer@123';
+  const customerPassword = await hashPassword(customerPasswordPlain);
   await prisma.user.create({
     data: {
       email: 'customer@example.com',

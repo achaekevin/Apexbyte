@@ -39,18 +39,63 @@ import supportRoutes from './routes/support.routes';
 
 const app: Application = express();
 
-// Security headers with Helmet
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
+// Trust reverse proxy (essential for rate limiting & secure cookie / HTTPS detection behind proxies)
+app.set('trust proxy', 1);
+
+// Force HTTPS in production
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    req.headers['x-forwarded-proto'] &&
+    req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+
+// Advanced Security Headers with Helmet
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", 'https:', 'data:'],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
+        imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+        objectSrc: ["'none'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https:'],
+        upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
+      },
     },
-  },
-}));
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    frameguard: {
+      action: 'deny',
+    },
+    noSniff: true,
+    referrerPolicy: {
+      policy: 'strict-origin-when-cross-origin',
+    },
+    xssFilter: true,
+    hidePoweredBy: true,
+  })
+);
+
+// Additional security headers (Permissions-Policy)
+app.use((_req, res, next) => {
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(self)');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+  next();
+});
 
 // CORS configuration
 const corsOptions = {
@@ -104,8 +149,8 @@ app.use(passport.initialize());
 // Bot protection (blocks scrapers, malicious scanners, missing User-Agents on mutations, and honeypot traps)
 app.use('/api', botProtection);
 
-// Global rate limiting
-app.use('/api', apiLimiter);
+// Global rate limiting across all endpoints
+app.use(apiLimiter);
 
 // Health check
 app.get('/health', (req, res) => {
