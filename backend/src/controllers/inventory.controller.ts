@@ -24,12 +24,6 @@ export const getInventoryLogs = asyncHandler(
               sku: true,
             },
           },
-          order: {
-            select: {
-              id: true,
-              orderNumber: true,
-            },
-          },
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -60,7 +54,7 @@ export const getLowStockProducts = asyncHandler(
         stock: {
           lte: Number(threshold),
         },
-        isActive: true,
+        status: 'PUBLISHED',
       },
       select: {
         id: true,
@@ -90,7 +84,7 @@ export const getOutOfStockProducts = asyncHandler(
     const products = await prisma.product.findMany({
       where: {
         stock: 0,
-        isActive: true,
+        status: 'PUBLISHED',
       },
       select: {
         id: true,
@@ -144,10 +138,12 @@ export const updateStock = asyncHandler(
       prisma.inventoryLog.create({
         data: {
           productId: id,
-          type,
-          quantityChange,
-          quantityAfter: newStock,
+          action: 'ADJUSTMENT',
+          quantity: Math.abs(quantityChange),
+          previousStock: product.stock,
+          newStock,
           reason: reason || 'Manual stock adjustment',
+          createdBy: req.user?.id,
         },
       }),
     ]);
@@ -212,10 +208,12 @@ export const bulkUpdateStock = asyncHandler(
           prisma.inventoryLog.create({
             data: {
               productId,
-              type: 'ADJUSTMENT',
-              quantityChange: Number(quantity),
-              quantityAfter: newStock,
+              action: 'ADJUSTMENT',
+              quantity: Math.abs(Number(quantity)),
+              previousStock: product.stock,
+              newStock,
               reason: reason || 'Bulk stock adjustment',
+              createdBy: req.user?.id,
             },
           }),
         ]);
@@ -252,21 +250,21 @@ export const getInventoryStats = asyncHandler(
       totalStockValue,
       recentLogs,
     ] = await Promise.all([
-      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { status: 'PUBLISHED' } }),
       prisma.product.count({
         where: {
           stock: { lte: 10, gt: 0 },
-          isActive: true,
+          status: 'PUBLISHED',
         },
       }),
       prisma.product.count({
         where: {
           stock: 0,
-          isActive: true,
+          status: 'PUBLISHED',
         },
       }),
       prisma.product.aggregate({
-        where: { isActive: true },
+        where: { status: 'PUBLISHED' },
         _sum: {
           stock: true,
         },
@@ -291,7 +289,7 @@ export const getInventoryStats = asyncHandler(
         totalProducts,
         lowStockCount,
         outOfStockCount,
-        totalStockUnits: totalStockValue._sum.stock || 0,
+        totalStockUnits: totalStockValue._sum?.stock || 0,
         recentLogs,
       },
     });
@@ -320,13 +318,6 @@ export const getStockHistory = asyncHandler(
         orderBy: { createdAt: 'desc' },
         skip,
         take: Number(limit),
-        include: {
-          order: {
-            select: {
-              orderNumber: true,
-            },
-          },
-        },
       }),
       prisma.inventoryLog.count({ where: { productId: id } }),
     ]);
@@ -349,54 +340,48 @@ export const getStockHistory = asyncHandler(
 
 export const createStockAlert = asyncHandler(
   async (req: AuthRequest, res: Response) => {
-    const { productId, threshold, enabled = true } = req.body;
+    const { productId, threshold } = req.body;
 
-    const product = await prisma.product.findUnique({
+    const product = await prisma.product.update({
       where: { id: productId },
-    });
-
-    if (!product) {
-      throw new AppError('Product not found', 404);
-    }
-
-    const alert = await prisma.stockAlert.create({
-      data: {
-        productId,
-        threshold: Number(threshold),
-        enabled,
-      },
+      data: { lowStockThreshold: Number(threshold) || 10 },
+      select: { id: true, name: true, sku: true, stock: true, lowStockThreshold: true },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Stock alert created successfully',
-      data: alert,
+      message: 'Low stock threshold configured successfully',
+      data: product,
     });
   }
 );
 
 export const getStockAlerts = asyncHandler(
   async (req: AuthRequest, res: Response) => {
-    const { triggered } = req.query;
-
-    const alerts = await prisma.stockAlert.findMany({
-      where: triggered === 'true' ? { isTriggered: true } : undefined,
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            sku: true,
-            stock: true,
-          },
-        },
+    const lowStockProducts = await prisma.product.findMany({
+      where: {
+        stock: { lte: 10 },
+        status: 'PUBLISHED',
       },
-      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        sku: true,
+        stock: true,
+        lowStockThreshold: true,
+      },
+      orderBy: { stock: 'asc' },
     });
 
     res.json({
       success: true,
-      data: alerts,
+      data: lowStockProducts.map((p) => ({
+        id: p.id,
+        productId: p.id,
+        threshold: p.lowStockThreshold,
+        enabled: true,
+        product: p,
+      })),
     });
   }
 );
@@ -404,20 +389,20 @@ export const getStockAlerts = asyncHandler(
 export const updateStockAlert = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
-    const { threshold, enabled } = req.body;
+    const { threshold } = req.body;
 
-    const alert = await prisma.stockAlert.update({
+    const product = await prisma.product.update({
       where: { id },
       data: {
-        threshold: threshold ? Number(threshold) : undefined,
-        enabled,
+        lowStockThreshold: threshold ? Number(threshold) : 10,
       },
+      select: { id: true, name: true, sku: true, stock: true, lowStockThreshold: true },
     });
 
     res.json({
       success: true,
-      message: 'Stock alert updated successfully',
-      data: alert,
+      message: 'Stock alert threshold updated successfully',
+      data: product,
     });
   }
 );
@@ -426,13 +411,14 @@ export const deleteStockAlert = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
 
-    await prisma.stockAlert.delete({
+    await prisma.product.update({
       where: { id },
+      data: { lowStockThreshold: 10 },
     });
 
     res.json({
       success: true,
-      message: 'Stock alert deleted successfully',
+      message: 'Stock alert reset to default successfully',
     });
   }
 );

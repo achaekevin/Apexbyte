@@ -176,8 +176,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/contact#trade-in" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
-                  Trade-In & Upgrade Program
+                <Link to="/returns" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
+                  Warranty & Returns Policy
                 </Link>
               </li>
               <li>
@@ -222,17 +222,25 @@ const Footer = () => {
           <p>
             &copy; {currentYear} <strong>Apexbyte Laptops Kenya</strong>. All rights reserved. Located at Mocha Place, Hospital Road, Kisii Town CBD.
           </p>
-          <div className="flex items-center gap-4 font-medium">
+          <div className="flex flex-wrap items-center gap-4 font-medium">
             <Link to="/about" className="hover:text-primary-600 dark:hover:text-white transition-colors">
               About Showroom
             </Link>
             <span>•</span>
-            <Link to="/contact" className="hover:text-primary-600 dark:hover:text-white transition-colors">
-              Contact Tech Desk
+            <Link to="/privacy" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+              Privacy Policy
             </Link>
             <span>•</span>
-            <Link to="/shop" className="hover:text-primary-600 dark:hover:text-white transition-colors">
-              Laptops in Kisii
+            <Link to="/terms" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+              Terms & Conditions
+            </Link>
+            <span>•</span>
+            <Link to="/returns" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+              Returns & Warranty
+            </Link>
+            <span>•</span>
+            <Link to="/contact" className="hover:text-primary-600 dark:hover:text-white transition-colors">
+              Contact Tech Desk
             </Link>
           </div>
         </div>

@@ -175,20 +175,13 @@ export const createPost = asyncHandler(
         featuredImage,
         categoryId,
         authorId: req.user!.id,
-        tags: tags ? JSON.parse(tags) : [],
+        keywords: tags ? (typeof tags === 'string' ? tags : JSON.stringify(tags)) : undefined,
         metaTitle,
         metaDescription,
-        isFeatured: isFeatured === 'true',
         status,
         publishedAt: status === 'PUBLISHED' ? new Date() : null,
       },
       include: {
-        author: {
-          select: {
-            firstName: true,
-            lastName: true,
-          },
-        },
         category: true,
       },
     });
@@ -248,21 +241,14 @@ export const updatePost = asyncHandler(
         excerpt,
         featuredImage,
         categoryId,
-        tags: tags ? JSON.parse(tags) : undefined,
+        keywords: tags ? (typeof tags === 'string' ? tags : JSON.stringify(tags)) : undefined,
         metaTitle,
         metaDescription,
-        isFeatured: isFeatured !== undefined ? isFeatured === 'true' : undefined,
         status,
         publishedAt:
           status === 'PUBLISHED' && !post.publishedAt ? new Date() : undefined,
       },
       include: {
-        author: {
-          select: {
-            firstName: true,
-            lastName: true,
-          },
-        },
         category: true,
       },
     });
@@ -441,14 +427,6 @@ export const getComments = asyncHandler(
       prisma.blogComment.findMany({
         where,
         include: {
-          user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              avatar: true,
-            },
-          },
           post: {
             select: {
               id: true,
@@ -490,21 +468,16 @@ export const createComment = asyncHandler(
       throw new AppError('Cannot comment on unpublished posts', 400);
     }
 
+    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+
     const comment = await prisma.blogComment.create({
       data: {
         postId,
         userId: req.user!.id,
-        content,
+        name: user ? `${user.firstName} ${user.lastName}` : 'Customer',
+        email: user?.email || 'customer@apexbyte.co.ke',
+        comment: content || req.body.comment || '',
         isApproved: false,
-      },
-      include: {
-        user: {
-          select: {
-            firstName: true,
-            lastName: true,
-            avatar: true,
-          },
-        },
       },
     });
 

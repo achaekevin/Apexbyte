@@ -44,6 +44,10 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import LaptopFinder from './pages/LaptopFinder';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Returns from './pages/Returns';
 import NotFound from './pages/NotFound';
 
 // Protected Route
@@ -76,10 +80,14 @@ function App() {
         <Route path="/product/:slug" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/compare" element={<Compare />} />
+        <Route path="/finder" element={<LaptopFinder />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/returns" element={<Returns />} />
       </Route>
 
       {/* Auth Routes */}
@@ -120,6 +128,18 @@ function App() {
         <Route path="wishlist" element={<Wishlist />} />
         <Route path="profile" element={<Profile />} />
         <Route path="addresses" element={<Addresses />} />
+      </Route>
+
+      {/* Direct Orders alias */}
+      <Route
+        path="/orders/:id"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<OrderDetail />} />
       </Route>
 
       {/* Admin Routes */}

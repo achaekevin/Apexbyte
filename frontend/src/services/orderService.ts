@@ -23,12 +23,23 @@ export const orderService = {
     return api.get<any, any>('/orders', { params: { page: params || 1, limit } });
   },
   
-  getOrder: (id: string) => api.get(`/orders/${id}`),
+  getOrder: async (id: string) => {
+    const res: any = await api.get(`/orders/${id}`);
+    return res?.data !== undefined ? res.data : res;
+  },
   
   cancelOrder: (id: string) => api.put(`/orders/${id}/cancel`),
   
   trackOrder: (orderNumber: string) =>
     api.get(`/orders/track/${orderNumber}`),
+
+  getAllOrdersAdmin: async (params?: { page?: number; limit?: number; status?: string; search?: string }) => {
+    const res: any = await api.get('/orders/admin/all', { params });
+    return res?.data !== undefined ? res : { data: res, pagination: {} };
+  },
+
+  updateOrderStatus: (id: string, status: string) =>
+    api.put(`/orders/${id}/status`, { status }),
 };
 
 export default orderService;

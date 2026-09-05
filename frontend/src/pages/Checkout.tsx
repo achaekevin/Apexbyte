@@ -70,7 +70,7 @@ const CheckoutForm = () => {
     onSuccess: (data: any) => {
       clearCart();
       const orderId = data?.id || data?.data?.id;
-      navigate(`/orders/${orderId}`, { state: { orderSuccess: true } });
+      navigate(`/order-success/${orderId}`);
     },
     onError: (error: any) => {
       alert(error.response?.data?.message || 'Failed to create order');

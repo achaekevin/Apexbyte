@@ -70,6 +70,7 @@ const Header = () => {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/shop', label: 'Shop Laptops' },
+    { path: '/finder', label: 'Laptop Finder' },
     { path: '/compare', label: 'Compare Specs' },
     { path: '/blog', label: 'Tech Guides' },
     { path: '/about', label: 'About Apexbyte' },

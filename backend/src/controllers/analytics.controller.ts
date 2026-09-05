@@ -16,16 +16,16 @@ export const getDashboardStats = asyncHandler(
     ] = await Promise.all([
       prisma.order.aggregate({
         where: { status: { notIn: ['CANCELLED', 'REFUNDED'] } },
-        _sum: { totalAmount: true },
+        _sum: { total: true },
       }),
       prisma.order.count(),
       prisma.user.count({ where: { role: 'CUSTOMER' } }),
-      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { status: 'PUBLISHED' } }),
       prisma.order.count({
         where: { status: { in: ['PENDING', 'PROCESSING'] } },
       }),
       prisma.product.count({
-        where: { stock: { lte: 10, gt: 0 }, isActive: true },
+        where: { stock: { lte: 10, gt: 0 }, status: 'PUBLISHED' },
       }),
       prisma.order.findMany({
         take: 5,
@@ -45,7 +45,7 @@ export const getDashboardStats = asyncHandler(
     res.json({
       success: true,
       data: {
-        totalRevenue: totalRevenue._sum.totalAmount || 0,
+        totalRevenue: totalRevenue._sum?.total || 0,
         totalOrders,
         totalCustomers,
         totalProducts,
@@ -96,7 +96,7 @@ export const getSalesAnalytics = asyncHandler(
             status: { notIn: ['CANCELLED', 'REFUNDED'] },
           },
           _sum: {
-            totalAmount: true,
+            total: true,
           },
           _count: true,
         }),
@@ -105,7 +105,7 @@ export const getSalesAnalytics = asyncHandler(
             ...dateFilter,
             status: { notIn: ['CANCELLED', 'REFUNDED'] },
           },
-          _sum: { totalAmount: true },
+          _sum: { total: true },
           _count: true,
         }),
         prisma.order.aggregate({
@@ -113,7 +113,7 @@ export const getSalesAnalytics = asyncHandler(
             ...dateFilter,
             status: { notIn: ['CANCELLED', 'REFUNDED'] },
           },
-          _avg: { totalAmount: true },
+          _avg: { total: true },
         }),
         prisma.orderItem.groupBy({
           by: ['productId'],
@@ -151,23 +151,23 @@ export const getSalesAnalytics = asyncHandler(
       const product = products.find((p) => p.id === item.productId);
       return {
         product,
-        totalQuantity: item._sum.quantity || 0,
-        totalRevenue: item._sum.price || 0,
+        totalQuantity: item._sum?.quantity || 0,
+        totalRevenue: item._sum?.price || 0,
       };
     });
 
     const dailySalesData = salesByDay.map((day) => ({
       date: day.createdAt,
-      revenue: day._sum.totalAmount || 0,
+      revenue: day._sum?.total || 0,
       orders: day._count,
     }));
 
     res.json({
       success: true,
       data: {
-        totalSales: totalSales._sum.totalAmount || 0,
+        totalSales: totalSales._sum?.total || 0,
         totalOrders: totalSales._count,
-        averageOrderValue: averageOrderValue._avg.totalAmount || 0,
+        averageOrderValue: averageOrderValue._avg?.total || 0,
         dailySales: dailySalesData,
         topProducts: topProductsWithDetails,
       },
@@ -197,7 +197,7 @@ export const getRevenueAnalytics = asyncHandler(
       },
       select: {
         createdAt: true,
-        totalAmount: true,
+        total: true,
         subtotal: true,
         shippingCost: true,
         tax: true,
@@ -234,7 +234,7 @@ export const getRevenueAnalytics = asyncHandler(
         };
       }
 
-      revenueByPeriod[key].revenue += Number(order.totalAmount);
+      revenueByPeriod[key].revenue += Number(order.total);
       revenueByPeriod[key].subtotal += Number(order.subtotal);
       revenueByPeriod[key].shippingCost += Number(order.shippingCost);
       revenueByPeriod[key].tax += Number(order.tax);
@@ -278,7 +278,7 @@ export const getCustomerAnalytics = asyncHandler(
           createdAt: true,
           orders: {
             where: { status: { notIn: ['CANCELLED', 'REFUNDED'] } },
-            select: { totalAmount: true },
+            select: { total: true },
           },
         },
         take: 100,
@@ -297,8 +297,8 @@ export const getCustomerAnalytics = asyncHandler(
 
     const topCustomersWithStats = topCustomers
       .map((customer) => {
-        const totalSpent = customer.orders.reduce(
-          (sum, order) => sum + Number(order.totalAmount),
+        const totalSpent = (customer.orders || []).reduce(
+          (sum: number, order: any) => sum + Number(order.total || 0),
           0
         );
         return {
@@ -346,9 +346,9 @@ export const getProductAnalytics = asyncHandler(
       productsByBrand,
     ] = await Promise.all([
       prisma.product.count(),
-      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { status: 'PUBLISHED' } }),
       prisma.product.count({
-        where: { stock: { lte: 10, gt: 0 }, isActive: true },
+        where: { stock: { lte: 10, gt: 0 }, status: 'PUBLISHED' },
       }),
       prisma.orderItem.groupBy({
         by: ['productId'],
@@ -559,7 +559,7 @@ export const getExportData = asyncHandler(
             createdAt: true,
             orders: {
               select: {
-                totalAmount: true,
+                total: true,
               },
             },
           },

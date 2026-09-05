@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { validate } from '../middleware/validation';
 import {
   getProfile,
@@ -9,6 +9,7 @@ import {
   createAddress,
   updateAddress,
   deleteAddress,
+  getAllUsers,
 } from '../controllers/user.controller';
 
 const router = Router();
@@ -37,6 +38,9 @@ const addressValidation = [
 const addressIdValidation = [
   param('id').trim().notEmpty().withMessage('Address ID is required'),
 ];
+
+// Admin endpoints
+router.get('/', authorize('ADMIN', 'SUPER_ADMIN'), getAllUsers);
 
 // Profile endpoints
 router.get('/profile', getProfile);

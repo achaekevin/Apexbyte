@@ -165,7 +165,7 @@ export const createNotification = asyncHandler(
         title,
         message,
         type,
-        link,
+        data: link ? JSON.stringify({ link }) : undefined,
       },
     });
 
@@ -189,8 +189,8 @@ export const sendBulkNotification = asyncHandler(
       userId,
       title,
       message,
-      type: type || 'INFO',
-      link,
+      type: type || 'SYSTEM',
+      data: link ? JSON.stringify({ link }) : undefined,
     }));
 
     await prisma.notification.createMany({

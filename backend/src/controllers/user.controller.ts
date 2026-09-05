@@ -208,3 +208,87 @@ export const deleteAddress = asyncHandler(async (req: AuthRequest, res: Response
     message: 'Address deleted successfully',
   });
 });
+
+/**
+ * Admin: Get all users with search, role filter, order stats, and pagination
+ */
+export const getAllUsers = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { page = 1, limit = 10, search = '', role } = req.query;
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const where: any = {};
+
+  if (role && role !== 'ALL') {
+    where.role = role as any;
+  }
+
+  if (search) {
+    where.OR = [
+      { firstName: { contains: String(search) } },
+      { lastName: { contains: String(search) } },
+      { email: { contains: String(search) } },
+      { phone: { contains: String(search) } },
+    ];
+  }
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        avatar: true,
+        role: true,
+        isVerified: true,
+        createdAt: true,
+        orders: {
+          select: {
+            id: true,
+            total: true,
+            status: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: Number(limit),
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  const sanitizedUsers = users.map((u) => {
+    const totalSpent = u.orders
+      .filter((o) => o.status !== 'CANCELLED' && o.status !== 'REFUNDED')
+      .reduce((sum, o) => sum + Number(o.total), 0);
+
+    return {
+      id: u.id,
+      email: u.email,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      fullName: `${u.firstName} ${u.lastName}`.trim(),
+      phone: u.phone,
+      avatar: u.avatar,
+      role: u.role,
+      isVerified: u.isVerified,
+      createdAt: u.createdAt,
+      totalOrders: u.orders.length,
+      totalSpent,
+    };
+  });
+
+  res.json({
+    success: true,
+    data: sanitizedUsers,
+    pagination: {
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPages: Math.ceil(total / Number(limit)),
+    },
+  });
+});
