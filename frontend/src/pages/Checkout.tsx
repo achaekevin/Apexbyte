@@ -182,7 +182,7 @@ const CheckoutForm = () => {
                 <div key={step.id} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${
+                      className={`w-8 h-8 sm:w-10 sm:h-10 text-xs sm:text-base rounded-full flex items-center justify-center font-bold transition-colors ${
                         index <= currentStepIndex
                           ? 'bg-primary-600 text-white'
                           : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
@@ -191,7 +191,7 @@ const CheckoutForm = () => {
                       {index < currentStepIndex ? '✓' : step.number}
                     </div>
                     <span
-                      className={`text-sm mt-2 font-medium ${
+                      className={`text-xs sm:text-sm mt-1 sm:mt-2 font-medium text-center leading-tight ${
                         index <= currentStepIndex
                           ? 'text-primary-600'
                           : 'text-gray-600 dark:text-gray-400'
@@ -202,7 +202,7 @@ const CheckoutForm = () => {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`h-1 flex-1 mx-4 transition-colors ${
+                      className={`h-1 flex-1 mx-1 sm:mx-4 transition-colors ${
                         index < currentStepIndex
                           ? 'bg-primary-600'
                           : 'bg-gray-300 dark:bg-gray-600'

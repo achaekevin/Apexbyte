@@ -114,8 +114,8 @@ const Cart = () => {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Shopping Cart</h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1 tracking-tight">Shopping Cart</h1>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
               </p>
             </div>
@@ -160,7 +160,7 @@ const Cart = () => {
                               {item.name}
                             </h3>
                           </Link>
-                          <p className="text-2xl sm:text-3xl font-black text-primary-600 mb-3">
+                          <p className="text-xl sm:text-2xl font-black text-primary-600 dark:text-primary-400 mb-2 tracking-tight">
                             {formatCurrency(item.price)}
                           </p>
 

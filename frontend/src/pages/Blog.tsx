@@ -41,11 +41,11 @@ const Blog = () => {
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Hero */}
-        <div className="bg-gradient-hero text-white py-16">
+        <div className="bg-gradient-hero text-white py-10 sm:py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl font-bold mb-4">Our Blog</h1>
-            <p className="text-xl text-blue-100">
-              Latest news, reviews, and guides about laptops
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 tracking-tight">Tech Guides & Insights</h1>
+            <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto">
+              Hardware reviews, buying guides, and maintenance tips from our Kisii technicians
             </p>
           </div>
         </div>

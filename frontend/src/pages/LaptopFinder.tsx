@@ -298,10 +298,10 @@ const LaptopFinder = () => {
           <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/60 px-3 py-1 rounded-full border border-primary-200 dark:border-primary-800">
             Interactive Hardware Matcher
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-gray-900 dark:text-white mt-3 mb-3 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mt-3 mb-2 tracking-tight">
             Find Your Ideal Laptop in 60 Seconds
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Answer 4 quick questions. Our transparent scoring engine scans available inventory at Mocha Place to rank your top machine matches.
           </p>
 

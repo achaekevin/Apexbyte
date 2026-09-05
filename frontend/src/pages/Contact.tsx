@@ -109,10 +109,10 @@ const Contact = () => {
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-xs font-semibold mb-3 transition-colors">
                 📍 Kisii CBD Physical Showroom
               </span>
-              <h1 className="text-4xl sm:text-5xl font-black mb-4 text-slate-900 dark:text-white">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-3 text-slate-900 dark:text-white tracking-tight">
                 We're Here to Help You Choose Right
               </h1>
-              <p className="text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 max-w-2xl mx-auto">
                 Have questions about laptop specs, current showroom stock, or custom upgrades? Speak directly with our hardware technicians.
               </p>
             </motion.div>

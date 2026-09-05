@@ -39,11 +39,11 @@ const About = () => {
               <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4 transition-colors">
                 <FiMapPin /> Mocha Place, 2nd Floor, Hospital Road, Kisii CBD
               </div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight text-slate-900 dark:text-white">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4 sm:mb-6 leading-tight text-slate-900 dark:text-white tracking-tight">
                 Built by Technicians, <br />
                 Trusted by Kenyan Professionals.
               </h1>
-              <p className="text-lg sm:text-xl text-slate-700 dark:text-slate-200 leading-relaxed mb-8">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-700 dark:text-slate-200 leading-relaxed mb-6 sm:mb-8">
                 We started Apexbyte because buying a laptop in Kisii and Western Kenya shouldn't feel like gambling with your hard-earned money. We test, certify, and warranty every single machine before it leaves our showroom.
               </p>
               <div className="flex flex-wrap gap-4">

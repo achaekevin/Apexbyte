@@ -57,7 +57,9 @@ const Shop = () => {
     limit: 12,
   });
 
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth >= 1024 : false
+  );
 
   // Sync state whenever URL searchParams change (supports browser back/forward and external brand links)
   useEffect(() => {
@@ -329,7 +331,7 @@ const Shop = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
                     {activeBrandObj ? `${activeBrandObj.name} Laptops` : 'Laptop Catalog'}
                   </h1>
                   {activeBrandObj && (
@@ -347,7 +349,7 @@ const Shop = () => {
               {/* Mobile Filter Toggle */}
               <Button
                 variant="outline"
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <FiFilter className="mr-2" />
@@ -366,11 +368,11 @@ const Shop = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Filters Sidebar */}
             <AnimatePresence>
-              {(showFilters || window.innerWidth >= 1024) && (
+              {showFilters && (
                 <motion.aside
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
                   className="lg:col-span-1"
                 >
                   <Card className="sticky top-4">

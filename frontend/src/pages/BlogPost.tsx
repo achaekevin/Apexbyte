@@ -115,11 +115,11 @@ const BlogPost = () => {
               </Badge>
             )}
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight mb-3 tracking-tight">
               {post.title}
             </h1>
 
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300 mb-5 leading-relaxed">
               {post.excerpt}
             </p>
 

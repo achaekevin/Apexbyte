@@ -90,22 +90,22 @@ const Home = () => {
       </Helmet>
 
       {/* Hero Section - Fully Responsive to Light & Dark Modes */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-16 sm:py-20 overflow-hidden transition-colors">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-10 sm:py-16 lg:py-20 overflow-hidden transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4 transition-colors">
+              <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3 py-1 rounded-full text-xs font-semibold mb-3 sm:mb-4 transition-colors">
                 <span>🏬</span> Showroom Pickup at Mocha Place, Hospital Road, Kisii CBD
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight text-slate-900 dark:text-white">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 leading-tight text-slate-900 dark:text-white tracking-tight">
                 Genuine Laptops, <br />
                 Zero Guesswork.
               </h1>
-              <p className="text-base sm:text-lg mb-8 text-slate-700 dark:text-slate-200 leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 text-slate-700 dark:text-slate-200 leading-relaxed max-w-xl">
                 Every machine is thoroughly benchmarked with a 7-point diagnostic inspection. Backed by 1-year local warranty, with same-day Kisii courier dispatch or walk-in testing at our Hospital Road shop.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -196,10 +196,10 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-4xl font-bold mb-3 text-slate-900 dark:text-white">Featured Laptops</h2>
-            <p className="text-slate-600 dark:text-slate-400">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">Featured Laptops</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
               Hand-picked certified laptops for every workload
             </p>
           </motion.div>
@@ -264,7 +264,7 @@ const Home = () => {
                         </span>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                        <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                           {formatCurrency(product.price)}
                         </span>
                         {product.stock < 10 && product.stock > 0 && (
@@ -310,10 +310,10 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-4xl font-bold mb-3 text-slate-900 dark:text-white">Shop by Category</h2>
-            <p className="text-slate-600 dark:text-slate-400">Find the perfect laptop for your specific usage</p>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">Shop by Category</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">Find the perfect laptop for your specific usage</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -352,8 +352,8 @@ const Home = () => {
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/40 px-3 py-1 rounded-full border border-primary-200 dark:border-primary-800 mb-2">
                 <FiAward size={14} /> Official Brand Stores
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Shop by Brand</h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">100% genuine laptops with authorized distributor warranty</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Shop by Brand</h2>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">100% genuine laptops with authorized distributor warranty</p>
             </div>
             <Link to="/shop" className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
               Explore All Brands <FiArrowRight size={14} />
@@ -389,10 +389,10 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-4xl font-bold mb-3 text-slate-900 dark:text-white">New Arrivals</h2>
-            <p className="text-slate-600 dark:text-slate-400">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">New Arrivals</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
               Freshly inspected machines added to our Kisii showroom this week
             </p>
           </motion.div>
@@ -460,7 +460,7 @@ const Home = () => {
                         </span>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                        <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                           {formatCurrency(product.price)}
                         </span>
                       </div>
@@ -490,11 +490,11 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-4 py-1.5 rounded-full text-sm font-medium mb-3 transition-colors">
+            <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium mb-3 transition-colors">
               <span>★</span> 100% Verified Buyer Reviews
             </div>
-            <h2 className="text-4xl font-bold mb-4 text-slate-900 dark:text-white">Verified Customer Feedback</h2>
-            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white tracking-tight">Verified Customer Feedback</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
               Direct reviews submitted exclusively by verified purchasers following delivery or showroom pickup
             </p>
           </motion.div>
@@ -644,11 +644,11 @@ const Home = () => {
       {/* Authentic Store Guarantees */}
       <section id="store-guarantees" className="py-16 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               Why Kenyan & South Nyanza Professionals Choose Apexbyte
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 mt-3 text-base sm:text-lg">
+            <p className="text-slate-600 dark:text-slate-300 mt-2 sm:mt-3 text-sm sm:text-base lg:text-lg">
               Certified retail store with a physical showroom and bench-tested inventory in Kisii
             </p>
           </div>

@@ -210,7 +210,7 @@ const ProductDetail = () => {
               Shop
             </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-900 dark:text-white font-medium">
+            <span className="text-gray-900 dark:text-white font-medium truncate max-w-[180px] sm:max-w-none">
               {product.name}
             </span>
           </nav>
@@ -266,50 +266,50 @@ const ProductDetail = () => {
 
             {/* Product Info */}
             <div>
-              <Card className="p-6">
-                <div className="flex items-start justify-between mb-4">
+              <Card className="p-4 sm:p-6">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
                   <div>
                     {product.brand && (
                       <Link
                         to={`/shop?brand=${product.brand.slug || product.brand.id}`}
-                        className="text-primary-600 dark:text-primary-400 hover:underline font-bold text-base"
+                        className="text-primary-600 dark:text-primary-400 hover:underline font-bold text-sm sm:text-base"
                       >
                         {product.brand.name}
                       </Link>
                     )}
-                    <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 leading-tight">{product.name}</h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold mb-2 sm:mb-3 leading-tight tracking-tight">{product.name}</h1>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    {product.isFeatured && <Badge variant="primary">Featured</Badge>}
-                    {product.isNewArrival && <Badge variant="success">New</Badge>}
+                  <div className="flex flex-col gap-1.5 shrink-0">
+                    {product.isFeatured && <Badge variant="primary" size="sm">Featured</Badge>}
+                    {product.isNewArrival && <Badge variant="success" size="sm">New</Badge>}
                   </div>
                 </div>
 
                 {/* Rating */}
-                <div className="flex items-center gap-2.5 mb-5">
-                  <div className="flex items-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center text-amber-400 text-lg">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
                         key={star}
-                        className={`text-xl ${
+                        className={
                           star <= product.averageRating
                             ? 'text-yellow-400'
                             : 'text-gray-300 dark:text-gray-600'
-                        }`}
+                        }
                       >
                         ★
                       </span>
                     ))}
                   </div>
-                  <span className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300">
                     {product.averageRating.toFixed(1)} ({product.reviewCount} verified reviews)
                   </span>
                 </div>
 
                 {/* Price */}
-                <div className="mb-6">
+                <div className="mb-5 sm:mb-6">
                   <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-4xl sm:text-5xl font-black text-primary-600 dark:text-primary-400">
+                    <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
                       {formatCurrency(product.price)}
                     </span>
                   </div>

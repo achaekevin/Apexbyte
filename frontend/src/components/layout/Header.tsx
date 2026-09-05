@@ -118,16 +118,16 @@ const Header = () => {
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Authentic Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-sky-600 flex items-center justify-center text-white shadow-md shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary-600 to-sky-600 flex items-center justify-center text-white shadow-md shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow"
             >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
                 <line x1="8" y1="21" x2="16" y2="21" />
                 <line x1="12" y1="17" x2="12" y2="21" />
@@ -135,22 +135,22 @@ const Header = () => {
               </svg>
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
+              <span className="text-lg sm:text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
                 Apex<span className="text-primary-600 dark:text-primary-400">byte</span>
               </span>
-              <span className="text-xs uppercase font-bold tracking-wider text-amber-600 dark:text-amber-400 mt-1">
+              <span className="text-[10px] sm:text-xs uppercase font-bold tracking-wider text-amber-600 dark:text-amber-400 mt-0.5 sm:mt-1">
                 Laptops Kenya
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-7">
+          <nav className="hidden md:flex items-center space-x-5 lg:space-x-7">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors relative flex items-center gap-1.5 text-base"
+                className="text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors relative flex items-center gap-1.5 text-sm lg:text-base"
               >
                 <span>{link.label}</span>
                 {link.path === '/compare' && comparisonProducts.length > 0 && (
@@ -163,18 +163,18 @@ const Header = () => {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1 sm:space-x-3">
             {/* Search */}
             <button
               onClick={() => navigate('/shop')}
-              className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Search laptops"
             >
-              <FiSearch size={20} />
+              <FiSearch className="w-5 h-5" />
             </button>
 
-            {/* 3-State Theme Mode Switcher (Light / Dark / System) */}
-            <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-xl border border-gray-200 dark:border-gray-700 text-xs">
+            {/* 3-State Theme Mode Switcher (Desktop/Tablet) */}
+            <div className="hidden lg:flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-xl border border-gray-200 dark:border-gray-700 text-xs">
               <button
                 onClick={() => setThemeMode('light')}
                 title="Light Mode"
