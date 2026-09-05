@@ -417,8 +417,8 @@ const CheckoutForm = () => {
                           }`}
                         >
                           <div className="text-2xl mb-1">📱</div>
-                          <div className="font-bold text-xs">M-Pesa STK</div>
-                          <span className="text-[10px] text-gray-500">Fast prompt</span>
+                          <div className="font-bold text-sm sm:text-base">M-Pesa STK</div>
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Fast prompt</span>
                         </button>
 
                         <button
@@ -431,8 +431,8 @@ const CheckoutForm = () => {
                           }`}
                         >
                           <div className="text-2xl mb-1">💵</div>
-                          <div className="font-bold text-xs">Pay on Delivery</div>
-                          <span className="text-[10px] text-gray-500">Kisii only</span>
+                          <div className="font-bold text-sm sm:text-base">Pay on Delivery</div>
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Kisii only</span>
                         </button>
 
                         <button
@@ -445,8 +445,8 @@ const CheckoutForm = () => {
                           }`}
                         >
                           <div className="text-2xl mb-1">💳</div>
-                          <div className="font-bold text-xs">Card (Stripe)</div>
-                          <span className="text-[10px] text-gray-500">Visa/Mastercard</span>
+                          <div className="font-bold text-sm sm:text-base">Card (Stripe)</div>
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Visa/Mastercard</span>
                         </button>
 
                         <button
@@ -459,15 +459,15 @@ const CheckoutForm = () => {
                           }`}
                         >
                           <div className="text-2xl mb-1">💰</div>
-                          <div className="font-bold text-xs">PayPal</div>
-                          <span className="text-[10px] text-gray-500">International</span>
+                          <div className="font-bold text-sm sm:text-base">PayPal</div>
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-300">International</span>
                         </button>
                       </div>
 
                       <form onSubmit={handlePaymentSubmit}>
                         {paymentMethod === 'mpesa' && (
                           <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
-                            <label className="block text-xs font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider mb-2">
+                            <label className="block text-sm font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider mb-2">
                               Safaricom M-Pesa Phone Number *
                             </label>
                             <Input

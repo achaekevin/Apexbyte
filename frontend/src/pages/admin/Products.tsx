@@ -500,12 +500,12 @@ const AdminProducts = () => {
                             </span>
                             <div className="flex items-center gap-1 mt-1">
                               {product.isFeatured && (
-                                <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 px-1.5 py-0.5 rounded font-medium">
+                                <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 px-2 py-0.5 rounded font-semibold">
                                   Featured
                                 </span>
                               )}
                               {product.isBestSeller && (
-                                <span className="text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-1.5 py-0.5 rounded font-medium">
+                                <span className="text-xs bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-2 py-0.5 rounded font-semibold">
                                   Best Seller
                                 </span>
                               )}
@@ -516,23 +516,23 @@ const AdminProducts = () => {
 
                       {/* Brand & Category */}
                       <td className="px-4 py-4">
-                        <div className="font-medium text-gray-900 dark:text-white">
+                        <div className="font-semibold text-gray-900 dark:text-white">
                           {product.brand?.name || 'Generic'}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 font-medium">
                           {product.category?.name || 'Laptops'}
                         </div>
                       </td>
 
                       {/* Specs */}
                       <td className="px-4 py-4 text-xs">
-                        <div className="font-medium text-gray-900 dark:text-white">
+                        <div className="font-semibold text-gray-900 dark:text-white">
                           {product.processor || 'Core i5'}
                         </div>
-                        <div className="text-gray-500">
+                        <div className="text-gray-500 font-medium">
                           {product.ram}GB RAM • {product.storage}GB {product.storageType || 'SSD'}
                         </div>
-                        <div className="text-gray-400 text-[11px]">
+                        <div className="text-gray-400 text-xs">
                           {product.displaySize}" {product.displayResolution}
                         </div>
                       </td>
@@ -1164,14 +1164,14 @@ const AdminProducts = () => {
 
                             {/* Main badge or Set Main button */}
                             {i === 0 ? (
-                              <span className="absolute top-2 left-2 bg-primary-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow">
+                              <span className="absolute top-2 left-2 bg-primary-600 text-white text-xs px-2.5 py-0.5 rounded-full font-bold shadow">
                                 Main Photo
                               </span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => handleSetMainImage(i)}
-                                className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 bg-gray-900/85 hover:bg-black text-white text-[10px] px-2 py-0.5 rounded transition-opacity shadow"
+                                className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 bg-gray-900/90 hover:bg-black text-white text-xs px-2.5 py-1 rounded transition-opacity shadow font-semibold"
                                 title="Set as main storefront photo"
                               >
                                 Set Main

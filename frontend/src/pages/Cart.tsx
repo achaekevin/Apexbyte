@@ -156,11 +156,11 @@ const Cart = () => {
                         {/* Product Info */}
                         <div className="flex-1 min-w-0">
                           <Link to={`/products/${item.productId}`}>
-                            <h3 className="font-semibold mb-1 hover:text-primary-600 transition-colors line-clamp-2">
+                            <h3 className="font-bold text-base sm:text-lg mb-1.5 hover:text-primary-600 transition-colors line-clamp-2">
                               {item.name}
                             </h3>
                           </Link>
-                          <p className="text-2xl font-bold text-primary-600 mb-3">
+                          <p className="text-2xl sm:text-3xl font-black text-primary-600 mb-3">
                             {formatCurrency(item.price)}
                           </p>
 
@@ -174,7 +174,7 @@ const Cart = () => {
                                     item.quantity - 1
                                   )
                                 }
-                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold"
                                 disabled={item.quantity <= 1}
                               >
                                 -
@@ -190,7 +190,7 @@ const Cart = () => {
                                     parseInt(e.target.value) || 1
                                   )
                                 }
-                                className="w-16 text-center border-x border-gray-300 dark:border-gray-600 bg-transparent py-1"
+                                className="w-16 text-center border-x border-gray-300 dark:border-gray-600 bg-transparent py-1 font-bold"
                               />
                               <button
                                 onClick={() =>
@@ -199,20 +199,20 @@ const Cart = () => {
                                     item.quantity + 1
                                   )
                                 }
-                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold"
                                 disabled={item.stock !== undefined && item.quantity >= item.stock}
                               >
                                 +
                               </button>
                             </div>
-                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                            <span className="text-sm sm:text-base font-medium text-gray-600 dark:text-gray-400">
                               {item.stock !== undefined ? `${item.stock} available` : 'In stock'}
                             </span>
                           </div>
 
                           {/* Stock Warning */}
                           {item.stock !== undefined && item.quantity > item.stock && (
-                            <p className="text-sm text-red-600 mt-2">
+                            <p className="text-sm sm:text-base font-semibold text-red-600 mt-2">
                               Only {item.stock} available in stock
                             </p>
                           )}
@@ -321,28 +321,28 @@ const Cart = () => {
                 </div>
 
                 {/* Price Breakdown */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
+                <div className="space-y-3.5 mb-6">
+                  <div className="flex justify-between text-base">
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
                       Subtotal
                     </span>
-                    <span className="font-medium">{formatCurrency(subtotal)}</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(subtotal)}</span>
                   </div>
 
                   {appliedCoupon && (
-                    <div className="flex justify-between text-green-600">
+                    <div className="flex justify-between text-base text-green-600 dark:text-green-400 font-semibold">
                       <span>Discount ({appliedCoupon.code})</span>
-                      <span className="font-medium">
+                      <span className="font-bold">
                         -{formatCurrency(discountAmount)}
                       </span>
                     </div>
                   )}
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
+                  <div className="flex justify-between text-base">
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
                       Shipping
                     </span>
-                    <span className="font-medium">
+                    <span className="font-bold">
                       {shippingCost === 0 ? (
                         <Badge variant="success">FREE</Badge>
                       ) : (
@@ -352,21 +352,21 @@ const Cart = () => {
                   </div>
 
                   {subtotal < 50000 && shippingCost > 0 && (
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                       Add {formatCurrency(50000 - subtotal)} more for free shipping!
                     </p>
                   )}
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
+                  <div className="flex justify-between text-base">
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
                       Tax (8%)
                     </span>
-                    <span className="font-medium">{formatCurrency(tax)}</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(tax)}</span>
                   </div>
 
-                  <div className="pt-3 border-t-2 border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <span className="text-xl font-bold">Total</span>
-                    <span className="text-2xl font-bold text-primary-600">
+                  <div className="pt-4 border-t-2 border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <span className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">Total</span>
+                    <span className="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400">
                       {formatCurrency(total)}
                     </span>
                   </div>
