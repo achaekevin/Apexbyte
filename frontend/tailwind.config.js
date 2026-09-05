@@ -75,6 +75,19 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Poppins', 'system-ui', 'sans-serif'],
       },
+      fontSize: {
+        '2xs': ['0.75rem', { lineHeight: '1.1rem' }],      // 12px for micro-badges
+        'xs': ['0.8125rem', { lineHeight: '1.25rem' }],    // 13.5px
+        'sm': ['0.9375rem', { lineHeight: '1.4rem' }],     // 15.5px
+        'base': ['1.0625rem', { lineHeight: '1.65rem' }],  // 17.5px
+        'lg': ['1.1875rem', { lineHeight: '1.75rem' }],    // 19.5px
+        'xl': ['1.3125rem', { lineHeight: '1.875rem' }],   // 21.5px
+        '2xl': ['1.5625rem', { lineHeight: '2.125rem' }],   // 25.5px
+        '3xl': ['1.95rem', { lineHeight: '2.375rem' }],     // 32px
+        '4xl': ['2.44rem', { lineHeight: '2.75rem' }],      // 40px
+        '5xl': ['3.05rem', { lineHeight: '1.15' }],
+        '6xl': ['3.815rem', { lineHeight: '1.1' }],
+      },
       spacing: {
         128: '32rem',
         144: '36rem',
