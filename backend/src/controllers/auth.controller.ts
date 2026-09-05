@@ -20,6 +20,7 @@ import {
   sendPasswordResetEmail,
 } from '../config/email';
 import { AuthRequest } from '../middleware/auth';
+import { hashToken } from '../utils/encryption';
 
 // Register
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -46,7 +47,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const hashedPassword = await hashPassword(password);
 
   // Generate verification token
-  const verificationToken = generateVerificationToken();
+  const rawVerificationToken = generateVerificationToken();
 
   // Create user
   const user = await prisma.user.create({
@@ -56,12 +57,12 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       firstName,
       lastName,
       phone,
-      verificationToken,
+      verificationToken: hashToken(rawVerificationToken),
     },
   });
 
   // Send verification email
-  await sendVerificationEmail(email, verificationToken, firstName);
+  await sendVerificationEmail(email, rawVerificationToken, firstName);
 
   res.status(201).json({
     success: true,
@@ -208,8 +209,14 @@ export const verifyEmail = asyncHandler(
       throw new AppError('Verification token is required', 400);
     }
 
+    const hashedToken = hashToken(token);
     const user = await prisma.user.findFirst({
-      where: { verificationToken: token },
+      where: {
+        OR: [
+          { verificationToken: hashedToken },
+          { verificationToken: token },
+        ],
+      },
     });
 
     if (!user) {
@@ -248,14 +255,14 @@ export const resendVerification = asyncHandler(
       throw new AppError('Email is already verified', 400);
     }
 
-    const verificationToken = generateVerificationToken();
+    const rawVerificationToken = generateVerificationToken();
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { verificationToken },
+      data: { verificationToken: hashToken(rawVerificationToken) },
     });
 
-    await sendVerificationEmail(email, verificationToken, user.firstName);
+    await sendVerificationEmail(email, rawVerificationToken, user.firstName);
 
     res.json({
       success: true,
@@ -281,18 +288,18 @@ export const forgotPassword = asyncHandler(
       });
     }
 
-    const resetToken = generateResetToken();
+    const rawResetToken = generateResetToken();
     const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        resetToken,
+        resetToken: hashToken(rawResetToken),
         resetTokenExpiry,
       },
     });
 
-    await sendPasswordResetEmail(email, resetToken, user.firstName);
+    await sendPasswordResetEmail(email, rawResetToken, user.firstName);
 
     res.json({
       success: true,
@@ -306,9 +313,13 @@ export const resetPassword = asyncHandler(
   async (req: Request, res: Response) => {
     const { token, password } = req.body;
 
+    const hashedResetToken = hashToken(token);
     const user = await prisma.user.findFirst({
       where: {
-        resetToken: token,
+        OR: [
+          { resetToken: hashedResetToken },
+          { resetToken: token },
+        ],
         resetTokenExpiry: {
           gte: new Date(),
         },
