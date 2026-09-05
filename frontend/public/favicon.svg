@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#grad)" />
+  <!-- Stylized Laptop & Apex Peak -->
+  <path d="M16 42h32a2 2 0 0 0 2-2V22a2 2 0 0 0-2-2H16a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2z" fill="#0f172a" />
+  <path d="M18 24h28v14H18z" fill="#1e293b" />
+  <!-- Apex Peak 'A' Symbol -->
+  <path d="M32 26l7 10h-4l-3-4.5-3 4.5h-4z" fill="url(#accentGrad)" />
+  <!-- Base tray -->
+  <path d="M12 44h40l-2 3H14z" fill="#cbd5e1" />
+  <rect x="28" y="44" width="8" height="1.5" rx="0.75" fill="#64748b" />
+</svg>

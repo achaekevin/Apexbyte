@@ -51,7 +51,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
 function App() {
-  const { isDarkMode } = useThemeStore();
+  const { isDarkMode, initializeTheme } = useThemeStore();
+
+  useEffect(() => {
+    initializeTheme();
+  }, [initializeTheme]);
 
   useEffect(() => {
     if (isDarkMode) {

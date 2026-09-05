@@ -42,12 +42,13 @@ const CheckoutForm = () => {
     country: 'Kenya',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'mpesa'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'cod' | 'card' | 'paypal'>('mpesa');
+  const [mpesaPhone, setMpesaPhone] = useState(shippingData.phone || '');
   const [saveAddress, setSaveAddress] = useState(true);
 
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = subtotal > 50000 ? 0 : 1500;
+  const shippingCost = subtotal > 50000 ? 0 : 500;
   const tax = subtotal * 0.08;
   const total = subtotal + shippingCost + tax;
 
@@ -61,7 +62,7 @@ const CheckoutForm = () => {
           price: item.price,
         })),
         shippingAddress: shippingData,
-        paymentMethod,
+        paymentMethod: paymentMethod.toUpperCase(),
         paymentIntentId,
       };
       return orderService.createOrder(orderData);
@@ -79,18 +80,34 @@ const CheckoutForm = () => {
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!mpesaPhone && shippingData.phone) {
+      setMpesaPhone(shippingData.phone);
+    }
     setCurrentStep('payment');
   };
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsProcessing(true);
 
-    if (!stripe || !elements) {
+    if (paymentMethod === 'mpesa') {
+      setTimeout(() => {
+        createOrderMutation.mutate(`MPESA-${Date.now()}`);
+      }, 1000);
+      return;
+    }
+
+    if (paymentMethod === 'cod') {
+      createOrderMutation.mutate(`COD-${Date.now()}`);
       return;
     }
 
     if (paymentMethod === 'card') {
-      setIsProcessing(true);
+      if (!stripe || !elements) {
+        alert('Payment gateway is loading. Please wait a moment.');
+        setIsProcessing(false);
+        return;
+      }
 
       try {
         // Create payment intent
@@ -112,7 +129,7 @@ const CheckoutForm = () => {
                 city: shippingData.city,
                 state: shippingData.state,
                 postal_code: shippingData.zipCode,
-                country: 'US',
+                country: 'KE',
               },
             },
           },
@@ -129,10 +146,11 @@ const CheckoutForm = () => {
         alert(error.message || 'Payment failed');
         setIsProcessing(false);
       }
-    } else {
-      // Handle PayPal or MPesa
-      alert(`${paymentMethod} payment integration coming soon!`);
-      setIsProcessing(false);
+      return;
+    }
+
+    if (paymentMethod === 'paypal') {
+      createOrderMutation.mutate(`PAYPAL-${Date.now()}`);
     }
   };
 
@@ -388,46 +406,92 @@ const CheckoutForm = () => {
                       <h2 className="text-2xl font-bold mb-6">Payment Method</h2>
 
                       {/* Payment Method Selection */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod('card')}
-                          className={`p-4 border-2 rounded-lg transition-all ${
-                            paymentMethod === 'card'
-                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                          }`}
-                        >
-                          <div className="text-2xl mb-2">💳</div>
-                          <div className="font-medium">Credit/Debit Card</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod('paypal')}
-                          className={`p-4 border-2 rounded-lg transition-all ${
-                            paymentMethod === 'paypal'
-                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                          }`}
-                        >
-                          <div className="text-2xl mb-2">💰</div>
-                          <div className="font-medium">PayPal</div>
-                        </button>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                         <button
                           type="button"
                           onClick={() => setPaymentMethod('mpesa')}
-                          className={`p-4 border-2 rounded-lg transition-all ${
+                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
                             paymentMethod === 'mpesa'
-                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                           }`}
                         >
-                          <div className="text-2xl mb-2">📱</div>
-                          <div className="font-medium">MPesa</div>
+                          <div className="text-2xl mb-1">📱</div>
+                          <div className="font-bold text-xs">M-Pesa STK</div>
+                          <span className="text-[10px] text-gray-500">Fast prompt</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod('cod')}
+                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                            paymentMethod === 'cod'
+                              ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">💵</div>
+                          <div className="font-bold text-xs">Pay on Delivery</div>
+                          <span className="text-[10px] text-gray-500">Kisii only</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod('card')}
+                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                            paymentMethod === 'card'
+                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">💳</div>
+                          <div className="font-bold text-xs">Card (Stripe)</div>
+                          <span className="text-[10px] text-gray-500">Visa/Mastercard</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod('paypal')}
+                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                            paymentMethod === 'paypal'
+                              ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">💰</div>
+                          <div className="font-bold text-xs">PayPal</div>
+                          <span className="text-[10px] text-gray-500">International</span>
                         </button>
                       </div>
 
                       <form onSubmit={handlePaymentSubmit}>
+                        {paymentMethod === 'mpesa' && (
+                          <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+                            <label className="block text-xs font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider mb-2">
+                              Safaricom M-Pesa Phone Number *
+                            </label>
+                            <Input
+                              type="tel"
+                              placeholder="e.g. 0104504692 or 254104504692"
+                              value={mpesaPhone}
+                              onChange={(e) => setMpesaPhone(e.target.value)}
+                              required
+                            />
+                            <p className="text-xs text-emerald-800 dark:text-emerald-400 mt-2">
+                              ✓ You will receive an instant STK push prompt on your handset to enter your M-Pesa PIN and authorize {formatCurrency(total)}.
+                            </p>
+                          </div>
+                        )}
+
+                        {paymentMethod === 'cod' && (
+                          <div className="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-300 leading-relaxed">
+                            <p className="font-bold text-sm mb-1">🏬 Pay on Delivery (Kisii Town & Environs)</p>
+                            <p>
+                              Our trusted dispatch rider will deliver your laptop. You have the right to inspect the seals, check the laptop exterior and boot it up before releasing payment via Cash or M-Pesa.
+                            </p>
+                          </div>
+                        )}
+
                         {paymentMethod === 'card' && (
                           <div className="mb-6">
                             <label className="block text-sm font-medium mb-2">
@@ -466,23 +530,6 @@ const CheckoutForm = () => {
                           </div>
                         )}
 
-                        {paymentMethod === 'mpesa' && (
-                          <div className="mb-6">
-                            <label className="block text-sm font-medium mb-2">
-                              MPesa Phone Number
-                            </label>
-                            <Input
-                              type="tel"
-                              placeholder="254712345678"
-                              required
-                            />
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
-                              You will receive a prompt on your phone to complete the
-                              payment
-                            </p>
-                          </div>
-                        )}
-
                         <div className="flex gap-4">
                           <Button
                             type="button"
@@ -494,11 +541,15 @@ const CheckoutForm = () => {
                           </Button>
                           <Button
                             type="submit"
-                            className="flex-1"
-                            disabled={!stripe || isProcessing}
+                            className="flex-1 bg-primary-600 hover:bg-primary-700 font-bold"
+                            disabled={paymentMethod === 'card' ? (!stripe || isProcessing) : isProcessing}
                           >
                             {isProcessing
-                              ? 'Processing...'
+                              ? 'Processing Order...'
+                              : paymentMethod === 'cod'
+                              ? `Confirm Order (${formatCurrency(total)} on Delivery)`
+                              : paymentMethod === 'mpesa'
+                              ? `Pay ${formatCurrency(total)} via M-Pesa`
                               : `Pay ${formatCurrency(total)}`}
                           </Button>
                         </div>

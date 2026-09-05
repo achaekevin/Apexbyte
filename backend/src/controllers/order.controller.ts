@@ -23,8 +23,30 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
     throw new AppError('No items in order', 400);
   }
 
+  let resolvedShippingId = shippingAddressId;
+  let resolvedBillingId = billingAddressId;
+
+  if (userId && (!resolvedShippingId || !resolvedBillingId) && req.body.shippingAddress) {
+    const s = req.body.shippingAddress;
+    const createdAddress = await prisma.address.create({
+      data: {
+        userId,
+        fullName: `${s.firstName || 'Customer'} ${s.lastName || ''}`.trim(),
+        phone: s.phone || '0104504692',
+        addressLine1: s.address || 'Kisii Town',
+        city: s.city || 'Kisii',
+        state: s.state || 'Kisii',
+        postalCode: s.zipCode || '40200',
+        country: s.country || 'Kenya',
+        type: 'HOME',
+      },
+    });
+    resolvedShippingId = resolvedShippingId || createdAddress.id;
+    resolvedBillingId = resolvedBillingId || createdAddress.id;
+  }
+
   // Validate addresses for logged-in users
-  if (userId && (!shippingAddressId || !billingAddressId)) {
+  if (userId && (!resolvedShippingId || !resolvedBillingId)) {
     throw new AppError('Shipping and billing addresses are required', 400);
   }
 
@@ -102,8 +124,8 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
       guestEmail,
       guestFirstName,
       guestLastName,
-      shippingAddressId,
-      billingAddressId,
+      shippingAddressId: resolvedShippingId,
+      billingAddressId: resolvedBillingId,
       subtotal,
       discount,
       tax,
