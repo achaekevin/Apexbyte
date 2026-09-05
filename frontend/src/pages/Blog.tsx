@@ -67,7 +67,7 @@ const Blog = () => {
                   >
                     All Posts
                   </button>
-                  {categories?.map((category: any) => (
+                  {Array.isArray(categories) && categories.map((category: any) => (
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
@@ -97,7 +97,7 @@ const Blog = () => {
                     <LoadingSkeleton key={i} className="h-80" />
                   ))}
                 </div>
-              ) : postsData?.data.length === 0 ? (
+              ) : (!postsData?.data || postsData.data.length === 0) ? (
                 <Card className="text-center py-12">
                   <div className="text-6xl mb-4">📝</div>
                   <h3 className="text-xl font-bold mb-2">No posts found</h3>
@@ -108,7 +108,7 @@ const Blog = () => {
               ) : (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {postsData?.data.map((post: any, index: number) => (
+                    {postsData.data.map((post: any, index: number) => (
                       <motion.div
                         key={post.id}
                         initial={{ opacity: 0, y: 20 }}

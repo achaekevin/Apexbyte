@@ -77,93 +77,72 @@ const blogService = {
     search?: string;
     featured?: boolean;
   }) => {
-    const response = await api.get<{
-      data: BlogPost[];
-      pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-      };
-    }>('/blog/posts', { params });
-    return response.data;
+    const res: any = await api.get('/blog/posts', { params });
+    if (res?.data && Array.isArray(res.data)) {
+      return res;
+    }
+    if (Array.isArray(res)) {
+      return { data: res, pagination: { page: 1, limit: 10, total: res.length, totalPages: 1 } };
+    }
+    return { data: [], pagination: { page: 1, limit: 10, total: 0, totalPages: 1 } };
   },
 
   getPost: async (slug: string) => {
-    const response = await api.get<{ data: BlogPost }>(`/blog/posts/${slug}`);
-    return response.data.data;
+    const res: any = await api.get(`/blog/posts/${slug}`);
+    return res?.data || res;
   },
 
   getCategories: async () => {
-    const response = await api.get<{ data: BlogCategory[] }>(
-      '/blog/categories'
-    );
-    return response.data.data;
+    const res: any = await api.get('/blog/categories');
+    return Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
   },
 
   // Authenticated endpoints
   createComment: async (data: { postId: string; content: string }) => {
-    const response = await api.post<{ data: BlogComment }>(
-      '/blog/comments',
-      data
-    );
-    return response.data.data;
+    const res: any = await api.post('/blog/comments', data);
+    return res?.data || res;
   },
 
   // Admin endpoints
   createPost: async (formData: FormData) => {
-    const response = await api.post<{ data: BlogPost }>(
-      '/blog/posts',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data.data;
+    const res: any = await api.post('/blog/posts', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res?.data || res;
   },
 
   updatePost: async (id: string, formData: FormData) => {
-    const response = await api.put<{ data: BlogPost }>(
-      `/blog/posts/${id}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data.data;
+    const res: any = await api.put(`/blog/posts/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res?.data || res;
   },
 
   deletePost: async (id: string) => {
-    const response = await api.delete(`/blog/posts/${id}`);
-    return response.data;
+    const response: any = await api.delete(`/blog/posts/${id}`);
+    return response;
   },
 
   createCategory: async (data: { name: string; description?: string }) => {
-    const response = await api.post<{ data: BlogCategory }>(
-      '/blog/categories',
-      data
-    );
-    return response.data.data;
+    const res: any = await api.post('/blog/categories', data);
+    return res?.data || res;
   },
 
   updateCategory: async (
     id: string,
     data: { name?: string; description?: string }
   ) => {
-    const response = await api.put<{ data: BlogCategory }>(
-      `/blog/categories/${id}`,
-      data
-    );
-    return response.data.data;
+    const res: any = await api.put(`/blog/categories/${id}`, data);
+    return res?.data || res;
   },
 
   deleteCategory: async (id: string) => {
-    const response = await api.delete(`/blog/categories/${id}`);
-    return response.data;
+    const response: any = await api.delete(`/blog/categories/${id}`);
+    return response;
   },
 
   getComments: async (params?: {
@@ -172,28 +151,18 @@ const blogService = {
     postId?: string;
     isApproved?: boolean;
   }) => {
-    const response = await api.get<{
-      data: BlogComment[];
-      pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-      };
-    }>('/blog/comments', { params });
-    return response.data;
+    const res: any = await api.get('/blog/comments', { params });
+    return res;
   },
 
   approveComment: async (id: string) => {
-    const response = await api.put<{ data: BlogComment }>(
-      `/blog/comments/${id}/approve`
-    );
-    return response.data.data;
+    const res: any = await api.put(`/blog/comments/${id}/approve`);
+    return res?.data || res;
   },
 
   deleteComment: async (id: string) => {
-    const response = await api.delete(`/blog/comments/${id}`);
-    return response.data;
+    const response: any = await api.delete(`/blog/comments/${id}`);
+    return response;
   },
 };
 
