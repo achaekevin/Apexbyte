@@ -1,20 +1,51 @@
 import { Router } from 'express';
+import { body, param } from 'express-validator';
 import { authenticate } from '../middleware/auth';
+import { validate } from '../middleware/validation';
+import {
+  getProfile,
+  updateProfile,
+  getAddresses,
+  createAddress,
+  updateAddress,
+  deleteAddress,
+} from '../controllers/user.controller';
 
 const router = Router();
 
-// All routes require authentication
+// All user routes require authentication
 router.use(authenticate);
 
-// User profile routes - to be implemented
-router.get('/profile', (req, res) => res.json({ success: true, message: 'Get profile' }));
-router.put('/profile', (req, res) => res.json({ success: true, message: 'Update profile' }));
-router.post('/avatar', (req, res) => res.json({ success: true, message: 'Upload avatar' }));
+// Validation rules
+const profileValidation = [
+  body('firstName').optional().trim().notEmpty().withMessage('First name cannot be empty'),
+  body('lastName').optional().trim().notEmpty().withMessage('Last name cannot be empty'),
+  body('phone').optional().trim().isMobilePhone('any').withMessage('Invalid phone number'),
+];
 
-// Address management
-router.get('/addresses', (req, res) => res.json({ success: true, message: 'Get addresses' }));
-router.post('/addresses', (req, res) => res.json({ success: true, message: 'Create address' }));
-router.put('/addresses/:id', (req, res) => res.json({ success: true, message: 'Update address' }));
-router.delete('/addresses/:id', (req, res) => res.json({ success: true, message: 'Delete address' }));
+const addressValidation = [
+  body('fullName').trim().notEmpty().withMessage('Full name is required'),
+  body('phone').trim().notEmpty().withMessage('Phone number is required'),
+  body('addressLine1').trim().notEmpty().withMessage('Address line 1 is required'),
+  body('city').trim().notEmpty().withMessage('City is required'),
+  body('state').trim().notEmpty().withMessage('State/County is required'),
+  body('country').trim().notEmpty().withMessage('Country is required'),
+  body('postalCode').trim().notEmpty().withMessage('Postal code is required'),
+  body('isDefault').optional().isBoolean().withMessage('isDefault must be a boolean'),
+];
+
+const addressIdValidation = [
+  param('id').trim().notEmpty().withMessage('Address ID is required'),
+];
+
+// Profile endpoints
+router.get('/profile', getProfile);
+router.put('/profile', validate(profileValidation), updateProfile);
+
+// Address endpoints with strict IDOR protections
+router.get('/addresses', getAddresses);
+router.post('/addresses', validate(addressValidation), createAddress);
+router.put('/addresses/:id', validate([...addressIdValidation, ...addressValidation]), updateAddress);
+router.delete('/addresses/:id', validate(addressIdValidation), deleteAddress);
 
 export default router;
