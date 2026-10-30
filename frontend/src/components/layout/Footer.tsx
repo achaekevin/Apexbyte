@@ -8,46 +8,46 @@ const Footer = () => {
   return (
     <footer className="bg-gray-100 text-gray-700 border-t border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800 transition-colors">
       {/* Top Value Assurance Ribbon */}
-      <div className="border-b border-gray-200 dark:border-slate-800/80 bg-gray-200/40 dark:bg-slate-900/50 py-6 transition-colors">
+      <div className="border-b border-gray-200 dark:border-slate-800/80 bg-gray-200/40 dark:bg-slate-900/50 py-4 sm:py-6 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-600 dark:text-primary-400 text-xl shrink-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 text-xs sm:text-sm">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-600 dark:text-primary-400 text-lg sm:text-xl shrink-0">
                 <FiMapPin />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Showroom Pickup</h4>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Mocha Place, 2nd Flr, Kisii CBD</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Showroom Pickup</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Mocha Place, Kisii CBD</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xl shrink-0">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 text-lg sm:text-xl shrink-0">
                 <FiShield />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">1-Year Warranty</h4>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Authorized local service center support</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">1-Year Warranty</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Authorized local support</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl shrink-0">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-lg sm:text-xl shrink-0">
                 <FiTruck />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Same-Day Delivery</h4>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Kisii, Nyamira & Migori (Courier nationwide)</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Same-Day Delivery</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Kisii & courier countrywide</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xl shrink-0">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-lg sm:text-xl shrink-0">
                 <FiRefreshCw />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">7-Point Inspection</h4>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Thermal, battery, SSD & screen verified</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">7-Point Bench Check</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Thermal, battery, SSD verified</p>
               </div>
             </div>
           </div>
@@ -55,8 +55,8 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Links */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand & Showroom Info (2 Cols on lg) */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-2.5">

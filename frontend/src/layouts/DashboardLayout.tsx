@@ -1,5 +1,4 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   FiHome,
   FiShoppingBag,
@@ -12,7 +11,7 @@ import Footer from '../components/layout/Footer';
 
 const menuItems = [
   { path: '/dashboard', label: 'Dashboard', icon: FiHome },
-  { path: '/dashboard/orders', label: 'Orders', icon: FiShoppingBag },
+  { path: '/dashboard/orders', label: 'My Orders', icon: FiShoppingBag },
   { path: '/dashboard/wishlist', label: 'Wishlist', icon: FiHeart },
   { path: '/dashboard/profile', label: 'Profile', icon: FiUser },
   { path: '/dashboard/addresses', label: 'Addresses', icon: FiMapPin },
@@ -22,19 +21,40 @@ const DashboardLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
-      <div className="flex-grow bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-grow">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
+          {/* Mobile Horizontal Tab Navigation (under md) */}
+          <div className="md:hidden mb-4 overflow-x-auto scrollbar-none pb-1">
+            <div className="flex items-center gap-2 min-w-max">
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-xs ${
+                      isActive
+                        ? 'bg-primary-600 text-white shadow-sm'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                    }`}
+                  >
+                    <Icon size={14} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Sidebar */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="md:col-span-1"
-            >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4">
-                <nav className="space-y-2">
+            {/* Desktop Sidebar (md:block) */}
+            <aside className="hidden md:block md:col-span-1">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sticky top-24">
+                <nav className="space-y-1.5">
                   {menuItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path;
@@ -43,29 +63,25 @@ const DashboardLayout = () => {
                       <Link
                         key={item.path}
                         to={item.path}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                           isActive
-                            ? 'bg-primary-600 text-white shadow-lg'
+                            ? 'bg-primary-600 text-white shadow-sm'
                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       >
-                        <Icon size={20} />
-                        <span className="font-medium">{item.label}</span>
+                        <Icon size={18} />
+                        <span>{item.label}</span>
                       </Link>
                     );
                   })}
                 </nav>
               </div>
-            </motion.div>
+            </aside>
 
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="md:col-span-3"
-            >
+            {/* Content Area */}
+            <main className="md:col-span-3 min-w-0">
               <Outlet />
-            </motion.div>
+            </main>
           </div>
         </div>
       </div>

@@ -167,7 +167,7 @@ const Header = () => {
             {/* Search */}
             <button
               onClick={() => navigate('/shop')}
-              className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Search laptops"
             >
               <FiSearch className="w-5 h-5" />
@@ -216,7 +216,7 @@ const Header = () => {
             {/* Wishlist */}
             <Link
               to="/dashboard/wishlist"
-              className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Wishlist"
             >
               <FiHeart size={20} />
@@ -225,12 +225,12 @@ const Header = () => {
             {/* Cart */}
             <Link
               to="/cart"
-              className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors relative"
+              className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors relative"
               aria-label="Shopping Cart"
             >
               <FiShoppingCart size={20} />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-500 text-gray-950 text-xs font-bold flex items-center justify-center shadow-sm">
+                <span className="absolute 0 top-0.5 right-0.5 sm:top-1 sm:right-1 w-5 h-5 rounded-full bg-amber-500 text-gray-950 text-xs font-bold flex items-center justify-center shadow-sm">
                   {cartItemsCount}
                 </span>
               )}
@@ -242,7 +242,7 @@ const Header = () => {
                 <div>
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center space-x-2 p-1 rounded-full hover:ring-2 hover:ring-primary-500 transition-all"
+                    className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full hover:ring-2 hover:ring-primary-500 transition-all"
                     aria-label="User profile menu"
                   >
                     {user?.avatar ? (
@@ -278,20 +278,20 @@ const Header = () => {
 
                         <Link
                           to="/dashboard"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          className="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           My Account
                         </Link>
                         <Link
                           to="/dashboard/orders"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          className="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           My Orders
                         </Link>
                         {user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN' ? (
                           <Link
                             to="/admin"
-                            className="block px-4 py-2 text-sm text-amber-600 dark:text-amber-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="block px-4 py-2.5 text-sm text-amber-600 dark:text-amber-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
                           >
                             Store Management
                           </Link>
@@ -299,7 +299,7 @@ const Header = () => {
 
                         <button
                           onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                          className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                         >
                           <FiLogOut size={16} />
                           <span>Logout</span>
@@ -325,7 +325,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="md:hidden w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -343,12 +343,12 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
           >
-            <nav className="px-4 py-4 space-y-2">
+            <nav className="px-3 sm:px-4 py-4 space-y-1 sm:space-y-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="flex items-center justify-between px-4 py-2.5 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-base font-semibold"
+                  className="flex items-center justify-between px-3.5 py-3 min-h-[44px] text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors text-sm sm:text-base font-semibold"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <span>{link.label}</span>
@@ -360,14 +360,14 @@ const Header = () => {
                 </Link>
               ))}
               {/* Mobile Theme Selector */}
-              <div className="pt-2 pb-1 border-t border-gray-200 dark:border-gray-800">
-                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-4 block mb-2">
+              <div className="pt-2.5 pb-1 border-t border-gray-200 dark:border-gray-800">
+                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-3.5 block mb-2">
                   Theme Appearance
                 </span>
-                <div className="grid grid-cols-3 gap-2 px-2">
+                <div className="grid grid-cols-3 gap-2 px-1">
                   <button
                     onClick={() => setThemeMode('light')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       themeMode === 'light'
                         ? 'bg-amber-500 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
@@ -377,7 +377,7 @@ const Header = () => {
                   </button>
                   <button
                     onClick={() => setThemeMode('dark')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       themeMode === 'dark'
                         ? 'bg-sky-600 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
@@ -387,7 +387,7 @@ const Header = () => {
                   </button>
                   <button
                     onClick={() => setThemeMode('system')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       themeMode === 'system'
                         ? 'bg-primary-600 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
@@ -399,17 +399,17 @@ const Header = () => {
               </div>
 
               {!isAuthenticated && (
-                <div className="pt-2 border-t border-gray-200 dark:border-gray-800 flex gap-2">
+                <div className="pt-2.5 border-t border-gray-200 dark:border-gray-800 flex gap-2">
                   <Link
                     to="/login"
-                    className="flex-1 text-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-300"
+                    className="flex-1 min-h-[44px] flex items-center justify-center text-center px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="flex-1 text-center px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold"
+                    className="flex-1 min-h-[44px] flex items-center justify-center text-center px-4 py-2.5 bg-primary-600 text-white rounded-xl text-sm font-semibold hover:bg-primary-700"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Register
