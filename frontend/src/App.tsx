@@ -53,6 +53,7 @@ import NotFound from './pages/NotFound';
 // Protected Route
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const { isDarkMode, initializeTheme } = useThemeStore();
@@ -70,7 +71,9 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Public Routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
@@ -150,6 +153,7 @@ function App() {
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   );
 }
 
