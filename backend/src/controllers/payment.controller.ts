@@ -5,6 +5,7 @@ import { asyncHandler, AppError } from '../middleware/errorHandler';
 import { AuthRequest } from '../middleware/auth';
 import logger from '../config/logger';
 import { encrypt } from '../utils/encryption';
+import mpesaService from '../services/mpesa.service';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
@@ -231,62 +232,182 @@ export const handlePayPalWebhook = asyncHandler(
   }
 );
 
-// MPesa: Initiate STK push
+// MPesa: Initiate official Daraja STK push
 export const initiateMpesaPayment = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const { phoneNumber, orderId } = req.body;
 
-    if (!phoneNumber || !phoneNumber.match(/^254\d{9}$/)) {
-      throw new AppError('Invalid phone number format. Use 254XXXXXXXXX', 400);
+    if (!orderId) {
+      throw new AppError('orderId is required', 400);
     }
 
-    if (orderId) {
-      const order = await prisma.order.findUnique({
-        where: { id: orderId },
-      });
-
-      if (!order) {
-        throw new AppError('Order not found', 404);
-      }
-
-      if (req.user && order.userId && order.userId !== req.user.id && req.user.role === 'CUSTOMER') {
-        throw new AppError('Access denied: You do not own this order', 403);
-      }
-
-      if (order.paymentStatus === 'PAID') {
-        throw new AppError('This order has already been paid', 400);
-      }
+    if (!phoneNumber) {
+      throw new AppError('Kenyan phone number is required', 400);
     }
 
-    // In production, integrate with Safaricom MPesa API
-    const checkoutRequestId = `MPESA-${Date.now()}`;
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new AppError('Order not found', 404);
+    }
+
+    if (req.user && order.userId && order.userId !== req.user.id && req.user.role === 'CUSTOMER') {
+      throw new AppError('Access denied: You do not own this order', 403);
+    }
+
+    if (order.paymentStatus === 'PAID') {
+      throw new AppError('This order has already been paid', 400);
+    }
+
+    const result = await mpesaService.initiateStkPush({
+      orderId: order.id,
+      phoneNumber,
+      amount: Number(order.total),
+      accountReference: order.orderNumber,
+      transactionDesc: `Order ${order.orderNumber}`,
+    });
 
     res.json({
       success: true,
-      data: {
-        checkoutRequestId,
-        responseCode: '0',
-        responseDescription: 'Success. Request accepted for processing',
-        customerMessage: 'Success. Request accepted for processing',
-      },
-      message: 'MPesa STK push sent. Complete payment on your phone.',
+      data: result,
+      message: result.customerMessage,
     });
   }
 );
 
-// MPesa: Callback handler
+// MPesa: Polling endpoint for frontend live checkout status
+export const queryMpesaPaymentStatus = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const { checkoutRequestId } = req.params;
+
+    if (!checkoutRequestId) {
+      throw new AppError('checkoutRequestId is required', 400);
+    }
+
+    const result = await mpesaService.queryStkStatus(checkoutRequestId);
+
+    res.json({
+      success: true,
+      data: result,
+    });
+  }
+);
+
+// MPesa: Daraja HTTPS Webhook Callback handler
 export const handleMpesaCallback = asyncHandler(
   async (req: Request, res: Response) => {
     const callbackData = req.body;
+    const response = await mpesaService.handleCallback(callbackData);
+    res.json(response);
+  }
+);
 
-    logger.info('MPesa callback received:', callbackData);
+// Admin: Get all payments with status filter, search, and pagination
+export const getAllPayments = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const { page = 1, limit = 20, status, method, search } = req.query;
 
-    // Process MPesa callback
-    // Extract order ID and update payment status
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.max(1, Number(limit) || 20);
+    const skip = (pageNum - 1) * limitNum;
+
+    const where: any = {};
+    if (status && status !== 'all') where.status = status;
+    if (method && method !== 'all') where.method = method;
+    if (search) {
+      where.OR = [
+        { transactionId: { contains: String(search) } },
+        { mpesaReceiptNumber: { contains: String(search) } },
+        { phoneNumber: { contains: String(search) } },
+        { order: { orderNumber: { contains: String(search) } } },
+      ];
+    }
+
+    const [payments, total] = await Promise.all([
+      prisma.payment.findMany({
+        where,
+        include: {
+          order: {
+            select: {
+              id: true,
+              orderNumber: true,
+              total: true,
+              status: true,
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limitNum,
+      }),
+      prisma.payment.count({ where }),
+    ]);
 
     res.json({
-      ResultCode: 0,
-      ResultDesc: 'Success',
+      success: true,
+      data: payments,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    });
+  }
+);
+
+// Admin: Reconcile pending payment
+export const reconcilePayment = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
+
+    const payment = await prisma.payment.findUnique({
+      where: { id },
+      include: { order: true },
+    });
+
+    if (!payment) {
+      throw new AppError('Payment not found', 404);
+    }
+
+    if (payment.status === 'PAID') {
+      return res.json({
+        success: true,
+        message: 'Payment is already verified as PAID',
+        data: payment,
+      });
+    }
+
+    if (payment.method === 'MPESA' && payment.checkoutRequestId) {
+      const queryResult = await mpesaService.queryStkStatus(payment.checkoutRequestId);
+      const refreshedPayment = await prisma.payment.findUnique({
+        where: { id },
+        include: { order: true },
+      });
+
+      return res.json({
+        success: true,
+        message: `M-Pesa reconciliation complete. Status: ${refreshedPayment?.status}`,
+        data: {
+          queryResult,
+          payment: refreshedPayment,
+        },
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Payment status unchanged',
+      data: payment,
     });
   }
 );

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
-import { authenticate, authorize } from '../middleware/auth';
+import { authenticate, authorize, optionalAuth } from '../middleware/auth';
 import { validate } from '../middleware/validation';
 import {
   createStripePaymentIntent,
@@ -10,6 +10,9 @@ import {
   handlePayPalWebhook,
   initiateMpesaPayment,
   handleMpesaCallback,
+  queryMpesaPaymentStatus,
+  getAllPayments,
+  reconcilePayment,
   processRefund,
   getPaymentMethods,
   addPaymentMethod,
@@ -49,8 +52,13 @@ router.post('/paypal/capture', authenticate, validate(paypalCaptureValidation), 
 router.post('/paypal/webhook', handlePayPalWebhook);
 
 // MPesa
-router.post('/mpesa/initiate', authenticate, validate(mpesaInitiateValidation), initiateMpesaPayment);
+router.post('/mpesa/initiate', optionalAuth, initiateMpesaPayment);
+router.get('/mpesa/query/:checkoutRequestId', optionalAuth, queryMpesaPaymentStatus);
 router.post('/mpesa/callback', handleMpesaCallback);
+
+// Admin: Payments management & reconciliation
+router.get('/admin/all', authenticate, authorize('ADMIN', 'SUPER_ADMIN'), getAllPayments);
+router.post('/admin/reconcile/:id', authenticate, authorize('ADMIN', 'SUPER_ADMIN'), reconcilePayment);
 
 // Refunds (Admin)
 router.post(
