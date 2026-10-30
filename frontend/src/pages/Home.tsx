@@ -4,7 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { FiAward, FiArrowRight, FiChevronLeft, FiChevronRight, FiCheckCircle } from 'react-icons/fi';
+import {
+  FiAward,
+  FiArrowRight,
+  FiChevronLeft,
+  FiChevronRight,
+  FiCpu,
+  FiZap,
+  FiHardDrive,
+  FiBatteryCharging,
+  FiShield,
+} from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -16,51 +26,128 @@ import { useCartStore } from '../store/cartStore';
 
 import api from '../services/api';
 
-const heroSlides = [
+const heroLaptops = [
   {
-    image: '/laptops/showroom-fleet.jpg',
-    title: 'Mocha Place Showroom Fleet',
+    id: 'fleet',
+    name: 'Apexbyte Active Showroom Fleet',
+    brand: 'Mocha Place Showroom',
     badge: 'Live Kisii Inventory',
-    tag: 'Tested & Powered On',
-    desc: 'HP ProBook, EliteBook & Core i5/i7 Workstations',
+    price: 'From KSh 24,000',
+    image: '/laptops/showroom-fleet.jpg',
+    processor: 'Multi-Core Intel & Ryzen',
+    ram: '8GB - 32GB RAM Options',
+    storage: '256GB - 1TB NVMe SSD',
+    display: '13" to 15.6" Anti-Glare',
+    battery: '85% - 100% Battery Health',
+    ideal: 'Walk-In Testing Today in Kisii CBD',
+    accentGradient: 'from-emerald-500/20 via-teal-500/15 to-transparent',
+    tagColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
   },
   {
-    image: '/hero-laptops.png',
-    title: 'Certified Pre-Owned & Brand New',
-    badge: '7-Point Diagnostics',
-    tag: '1-Year Local Warranty',
-    desc: 'Dell Vostro, Latitude, Apple MacBook & Lenovo',
+    id: 'hp',
+    name: 'HP ProBook & Pavilion 15',
+    brand: 'HP Official',
+    badge: 'Top Business Pick',
+    price: 'From KSh 36,000',
+    image: '/laptops/hp-pavilion-natural.jpg',
+    processor: 'Intel Core i5 / i7 Turbo',
+    ram: '16GB DDR4 High-Speed',
+    storage: '512GB PCIe M.2 NVMe',
+    display: '15.6" Micro-Edge FHD IPS',
+    battery: 'Up to 9 Hours Runtime',
+    ideal: 'Office Work, University & Accounting',
+    accentGradient: 'from-cyan-500/20 via-blue-500/15 to-transparent',
+    tagColor: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30',
   },
   {
-    image: '/laptops/hero-showcase.png',
-    title: 'High-Performance Workstations',
-    badge: 'Hardware Customization',
-    tag: 'Free RAM / SSD Upgrades',
-    desc: 'Lenovo ThinkPad, ASUS ROG Gaming & Ultrabooks',
+    id: 'macbook',
+    name: 'Apple MacBook Pro Retina / M-Series',
+    brand: 'Apple',
+    badge: 'Pro Creator & Dev',
+    price: 'From KSh 78,000',
+    image: '/laptops/macbook-pro-natural.jpg',
+    processor: 'Apple Silicon / Core i7 Turbo',
+    ram: '16GB Unified High-Speed RAM',
+    storage: '512GB Ultra-Fast SSD',
+    display: 'Liquid Retina XDR True Tone',
+    battery: 'All-Day 15-Hour Endurance',
+    ideal: 'Software Engineering & Video Editing',
+    accentGradient: 'from-purple-500/20 via-indigo-500/15 to-transparent',
+    tagColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
+  },
+  {
+    id: 'dell',
+    name: 'Dell XPS 13 & Latitude Series',
+    brand: 'Dell Precision',
+    badge: 'Executive Ultrabook',
+    price: 'From KSh 45,000',
+    image: '/laptops/dell-xps-natural.jpg',
+    processor: 'Intel Core i7 11th/12th Gen',
+    ram: '16GB LPDDR5 Dual-Channel',
+    storage: '512GB Fast NVMe SSD',
+    display: '13.4" InfinityEdge 4K / FHD+',
+    battery: 'ExpressCharge 80% in 60m',
+    ideal: 'Corporate Travel & Remote Multitasking',
+    accentGradient: 'from-blue-600/20 via-sky-500/15 to-transparent',
+    tagColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30',
+  },
+  {
+    id: 'thinkpad',
+    name: 'Lenovo ThinkPad T-Series & X1',
+    brand: 'Lenovo ThinkPad',
+    badge: 'Military-Grade Durability',
+    price: 'From KSh 34,000',
+    image: '/laptops/lenovo-thinkpad-natural.jpg',
+    processor: 'Core i5 / i7 vPro Processor',
+    ram: '16GB Upgradable to 32GB',
+    storage: '512GB NVMe OPAL Encrypted',
+    display: '14.0" Matte Anti-Glare IPS',
+    battery: 'Dual Hot-Swap Battery Support',
+    ideal: 'Data Science, Diagnostics & Typing',
+    accentGradient: 'from-rose-500/20 via-red-500/15 to-transparent',
+    tagColor: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+  },
+  {
+    id: 'asus',
+    name: 'ASUS ROG Strix & TUF Gaming Beast',
+    brand: 'ASUS ROG',
+    badge: 'Dedicated NVIDIA RTX GPU',
+    price: 'From KSh 89,000',
+    image: '/laptops/asus-rog-natural.jpg',
+    processor: 'Ryzen 7 / Core i7 Octa-Core',
+    ram: '16GB / 32GB DDR5 Gaming RAM',
+    storage: '1TB Gen4 PCIe NVMe SSD',
+    display: '144Hz / 240Hz High-Refresh IPS',
+    battery: 'Dual Fan Liquid Metal Thermal',
+    ideal: 'AAA Gaming, Blender 3D, CAD & Arch',
+    accentGradient: 'from-amber-500/20 via-orange-500/15 to-transparent',
+    tagColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
   },
 ];
 
 const Home = () => {
   const navigate = useNavigate();
   const { addItem } = useCartStore();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentLaptopIndex, setCurrentLaptopIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-cycle through the alternating showcase slides every 4.5 seconds
+  // Auto-cycle through the alternating laptop models every 4.5 seconds
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentLaptopIndex((prev) => (prev + 1) % heroLaptops.length);
     }, 4500);
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const activeLaptop = heroLaptops[currentLaptopIndex];
+
+  const nextLaptop = () => {
+    setCurrentLaptopIndex((prev) => (prev + 1) % heroLaptops.length);
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  const prevLaptop = () => {
+    setCurrentLaptopIndex((prev) => (prev - 1 + heroLaptops.length) % heroLaptops.length);
   };
 
   // Fetch featured products
@@ -133,185 +220,326 @@ const Home = () => {
         />
       </Helmet>
 
-      {/* Hero Section - Fully Responsive to Light & Dark Modes */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-8 sm:py-14 lg:py-18 overflow-hidden transition-colors">
+      {/* Full-Page Alternating Laptop Showcase Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-8 sm:py-12 lg:py-16 transition-colors">
+        {/* Full-width ambient dynamic background glow */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeLaptop.id + '-bg'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className={`absolute inset-0 bg-gradient-to-r ${activeLaptop.accentGradient} blur-3xl pointer-events-none -z-10`}
+          />
+        </AnimatePresence>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+          {/* Header Title & Trust Pill */}
+          <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-xs font-bold mb-3 shadow-sm"
             >
-              <div className="inline-flex items-center gap-1.5 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3 py-1 rounded-full text-xs font-semibold mb-3 transition-colors">
-                <span>🏬</span> Showroom at Mocha Place, Kisii CBD
-              </div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-5 leading-tight text-slate-900 dark:text-white tracking-tight">
-                Genuine Laptops, <br />
-                Zero Guesswork.
-              </h1>
-              <p className="text-sm sm:text-base lg:text-lg mb-5 sm:mb-7 text-slate-700 dark:text-slate-200 leading-relaxed max-w-xl">
-                Every machine is thoroughly benchmarked with a 7-point diagnostic inspection. Backed by 1-year local warranty, with same-day Kisii courier dispatch or walk-in testing at our Hospital Road shop.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  size="md"
-                  onClick={() => navigate('/shop')}
-                  className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-md"
-                >
-                  Explore Laptops in Stock
-                </Button>
-                <Button
-                  variant="outline"
-                  size="md"
-                  onClick={() => {
-                    const el = document.getElementById('store-guarantees');
-                    if (el) {
-                      el.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                      navigate('/about');
-                    }
-                  }}
-                  className="border-gray-300 text-slate-800 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 cursor-pointer transition-all duration-200"
-                >
-                  Our 7-Point Inspection
-                </Button>
-              </div>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Mocha Place, 2nd Floor, Kisii CBD • 7-Point Inspected Laptops</span>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative flex justify-center w-full"
+              className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-2 sm:mb-3"
             >
-              <div
-                className="relative z-10 w-full max-w-sm sm:max-w-md lg:max-w-lg select-none"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-                onTouchStart={() => setIsPaused(true)}
-                onTouchEnd={() => setIsPaused(false)}
-              >
-                {/* Floating Alternating Badge 1 (Top-Left): Showroom Fleet */}
-                <motion.div
-                  animate={{ y: [-4, 4, -4], rotate: [-1, 1, -1] }}
-                  transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
-                  className="absolute -top-3 -left-2 sm:-top-4 sm:-left-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex items-center gap-2"
-                >
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-bold text-gray-900 dark:text-white">
-                    Showroom Fleet Active
-                  </span>
-                </motion.div>
+              Genuine Laptops. Zero Guesswork.
+            </motion.h1>
 
-                {/* Floating Alternating Badge 2 (Top-Right): Kisii Dispatch */}
-                <motion.div
-                  animate={{ y: [3, -4, 3] }}
-                  transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
-                  className="absolute -top-3 -right-2 sm:-top-4 sm:-right-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hidden sm:flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400"
-                >
-                  <span>⚡</span> Same-Day Kisii Dispatch
-                </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-xs sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed"
+            >
+              Test any machine before payment at our Hospital Road showroom. Backed by 1-year local warranty with same-day Kisii delivery or nationwide insured courier dispatch.
+            </motion.p>
+          </div>
 
-                {/* Floating Alternating Badge 3 (Bottom-Right): 1-Year Local Warranty */}
-                <motion.div
-                  animate={{ y: [4, -4, 4], rotate: [1, -1, 1] }}
-                  transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                  className="absolute -bottom-3 -right-2 sm:-bottom-4 sm:-right-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-3 py-2 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 flex items-center gap-2.5"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm font-black">
-                    <FiCheckCircle size={16} />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-[11px] font-bold block text-gray-900 dark:text-white leading-tight">
-                      1-Year Local Warranty
+          {/* Full-Width Laptop Stage Arena */}
+          <div
+            className="relative w-full rounded-3xl bg-white/70 dark:bg-gray-850/80 backdrop-blur-xl border border-gray-200/80 dark:border-gray-700/80 p-4 sm:p-6 lg:p-8 shadow-2xl overflow-hidden"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+          >
+            {/* Left & Right Nav Arrows spanning full stage */}
+            <button
+              type="button"
+              onClick={prevLaptop}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
+              aria-label="Previous laptop"
+            >
+              <FiChevronLeft size={22} />
+            </button>
+            <button
+              type="button"
+              onClick={nextLaptop}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
+              aria-label="Next laptop"
+            >
+              <FiChevronRight size={22} />
+            </button>
+
+            {/* Stage Grid: Left Specs | Center Grand Laptop Image | Right Price & Warranty */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center px-2 sm:px-8 lg:px-12">
+              {/* Left Column: Alternating Hardware Specifications (3 cols on desktop) */}
+              <div className="lg:col-span-3 order-2 lg:order-1 space-y-3">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeLaptop.id + '-left'}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-2.5 sm:space-y-3"
+                  >
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block">
+                      Hardware Specs:
                     </span>
-                    <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                      7-Point Diagnostic Checked
-                    </span>
-                  </div>
-                </motion.div>
 
-                {/* Main Alternating Image Showcase */}
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-gray-200/80 dark:border-gray-700/80 aspect-[4/3] bg-gray-100 dark:bg-gray-800">
-                  <AnimatePresence mode="wait">
                     <motion.div
-                      key={currentSlide}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.03 }}
-                      transition={{ duration: 0.55, ease: 'easeOut' }}
-                      className="w-full h-full relative"
+                      animate={{ y: [-2, 2, -2] }}
+                      transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
                     >
+                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                        <FiCpu size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-gray-400 block font-medium">Processor</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                          {activeLaptop.processor}
+                        </span>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ y: [2, -2, 2] }}
+                      transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
+                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <FiZap size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-gray-400 block font-medium">Memory (RAM)</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                          {activeLaptop.ram}
+                        </span>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ y: [-2, 2, -2] }}
+                      transition={{ repeat: Infinity, duration: 4.8, ease: 'easeInOut' }}
+                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                        <FiHardDrive size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-gray-400 block font-medium">Storage</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                          {activeLaptop.storage}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Center Stage: The Grand Alternating Laptop Model (6 cols on desktop) */}
+              <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col items-center justify-center relative">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeLaptop.id}
+                    initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 1.05, y: -15 }}
+                    transition={{ duration: 0.55, ease: 'easeOut' }}
+                    className="relative w-full flex flex-col items-center"
+                  >
+                    {/* Top Floating Badge */}
+                    <div className="mb-2">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${activeLaptop.tagColor} shadow-sm`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                        {activeLaptop.badge}
+                      </span>
+                    </div>
+
+                    {/* Central Laptop Hero Image */}
+                    <div className="relative w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[480px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-gray-100 dark:bg-gray-900 group">
                       <img
-                        src={heroSlides[currentSlide].image}
-                        alt={heroSlides[currentSlide].title}
-                        className="w-full h-full object-cover object-center"
+                        src={activeLaptop.image}
+                        alt={activeLaptop.name}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
 
-                      {/* Bottom Caption Overlay Banner */}
-                      <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/60 to-transparent text-white">
+                      {/* Floating Bottom Name Bar */}
+                      <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/70 to-transparent text-white">
                         <div className="flex items-center justify-between gap-2">
                           <div className="min-w-0">
-                            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 block">
-                              {heroSlides[currentSlide].badge}
+                            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
+                              {activeLaptop.brand}
                             </span>
-                            <h3 className="text-xs sm:text-sm font-bold text-white truncate">
-                              {heroSlides[currentSlide].title}
-                            </h3>
-                            <p className="text-[10px] text-gray-300 truncate hidden sm:block">
-                              {heroSlides[currentSlide].desc}
-                            </p>
+                            <h2 className="text-sm sm:text-base font-black text-white truncate">
+                              {activeLaptop.name}
+                            </h2>
                           </div>
-                          <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-gray-100 shrink-0">
-                            {heroSlides[currentSlide].tag}
+                          <span className="text-[11px] font-bold text-white bg-primary-600 px-2.5 py-1 rounded-lg shrink-0 shadow-md">
+                            {activeLaptop.display}
                           </span>
                         </div>
                       </div>
-                    </motion.div>
-                  </AnimatePresence>
+                    </div>
 
-                  {/* Manual Arrow Controls */}
-                  <button
-                    type="button"
-                    onClick={prevSlide}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md active:scale-95"
-                    aria-label="Previous laptop slide"
-                  >
-                    <FiChevronLeft size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={nextSlide}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md active:scale-95"
-                    aria-label="Next laptop slide"
-                  >
-                    <FiChevronRight size={18} />
-                  </button>
-
-                  {/* Dot Indicators */}
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full">
-                    {heroSlides.map((_, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setCurrentSlide(idx)}
-                        className={`h-1.5 rounded-full transition-all ${
-                          currentSlide === idx ? 'w-5 bg-amber-400' : 'w-1.5 bg-white/60 hover:bg-white'
-                        }`}
-                        aria-label={`Show laptop showcase ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Animated Pulsing Ambient Glow Halo */}
-                <motion.div
-                  animate={{ scale: [1, 1.06, 1], opacity: [0.2, 0.35, 0.2] }}
-                  transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                  className="absolute inset-0 bg-gradient-to-tr from-primary-600/30 via-sky-500/20 to-purple-600/30 rounded-3xl blur-2xl -z-10"
-                />
+                    {/* Ground Reflection Accent */}
+                    <div className="w-3/4 h-4 bg-black/20 dark:bg-black/50 blur-lg rounded-full mt-2" />
+                  </motion.div>
+                </AnimatePresence>
               </div>
-            </motion.div>
+
+              {/* Right Column: Alternating Price, Battery & Guarantee (3 cols on desktop) */}
+              <div className="lg:col-span-3 order-3 space-y-3">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeLaptop.id + '-right'}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="space-y-2.5 sm:space-y-3"
+                  >
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block">
+                      Pricing &amp; Warranty:
+                    </span>
+
+                    <motion.div
+                      animate={{ y: [2, -2, 2] }}
+                      transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
+                      className="p-3.5 sm:p-4 rounded-xl bg-primary-50/70 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800 shadow-sm"
+                    >
+                      <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block mb-0.5">
+                        Cash / M-Pesa Price
+                      </span>
+                      <span className="text-xl sm:text-2xl font-black text-primary-600 dark:text-primary-400 block">
+                        {activeLaptop.price}
+                      </span>
+                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold block mt-0.5">
+                        ✓ In Stock at Mocha Place
+                      </span>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ y: [-2, 2, -2] }}
+                      transition={{ repeat: Infinity, duration: 4.6, ease: 'easeInOut' }}
+                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <FiBatteryCharging size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-gray-400 block font-medium">Battery Benchmark</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                          {activeLaptop.battery}
+                        </span>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ y: [2, -2, 2] }}
+                      transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <FiShield size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-gray-400 block font-medium">Warranty Coverage</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                          1-Year Local Technical Warranty
+                        </span>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Action Buttons Below Laptop Arena */}
+            <div className="mt-6 sm:mt-8 pt-4 border-t border-gray-200/70 dark:border-gray-700/70 flex flex-wrap items-center justify-center gap-3">
+              <Button
+                size="md"
+                onClick={() => navigate('/shop')}
+                className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg text-xs sm:text-sm"
+              >
+                Explore All Laptops in Stock
+              </Button>
+              <a
+                href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Kisii,%20I%20am%20interested%20in%20testing%20the%20laptops%20shown%20on%20your%20website"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 py-2.5 px-4 rounded-xl border border-emerald-500 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-xs sm:text-sm font-bold transition-all shadow-sm"
+              >
+                <span>💬</span> Chat on WhatsApp / Test in Showroom
+              </a>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => navigate('/finder')}
+                className="border-gray-300 dark:border-gray-600 text-slate-800 dark:text-white text-xs sm:text-sm"
+              >
+                Interactive Laptop Finder
+              </Button>
+            </div>
+
+            {/* Full-Width Laptop Model Selector Dock across the bottom */}
+            <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-750">
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2.5 px-1">
+                <span className="font-bold uppercase tracking-wider text-[10px] sm:text-xs">
+                  Featured Machine Showcase (Auto-Alternating):
+                </span>
+                <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold">
+                  {isPaused ? '⏸️ Paused (Hovered)' : `Next in 4s • Click to Switch`}
+                </span>
+              </div>
+
+              {/* Horizontal Pill Track */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                {heroLaptops.map((laptop, idx) => (
+                  <button
+                    key={laptop.id}
+                    type="button"
+                    onClick={() => setCurrentLaptopIndex(idx)}
+                    className={`shrink-0 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
+                      currentLaptopIndex === idx
+                        ? 'bg-primary-600 text-white shadow-md border-primary-600 scale-105'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-current opacity-80" />
+                    <span>{laptop.name.split(' ')[0]} {laptop.name.split(' ')[1] || ''}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                      currentLaptopIndex === idx ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                    }`}>
+                      {laptop.price.replace('From ', '')}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
