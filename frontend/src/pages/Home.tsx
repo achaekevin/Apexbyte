@@ -129,16 +129,14 @@ const Home = () => {
   const navigate = useNavigate();
   const { addItem } = useCartStore();
   const [currentLaptopIndex, setCurrentLaptopIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-cycle through the alternating laptop models every 4.5 seconds
+  // Auto-cycle continuously through alternating laptop models without stopping
   useEffect(() => {
-    if (isPaused) return;
     const interval = setInterval(() => {
       setCurrentLaptopIndex((prev) => (prev + 1) % heroLaptops.length);
-    }, 4500);
+    }, 4000);
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [currentLaptopIndex]);
 
   const activeLaptop = heroLaptops[currentLaptopIndex];
 
@@ -220,326 +218,378 @@ const Home = () => {
         />
       </Helmet>
 
-      {/* Full-Page Alternating Laptop Showcase Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-8 sm:py-12 lg:py-16 transition-colors">
-        {/* Full-width ambient dynamic background glow */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeLaptop.id + '-bg'}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className={`absolute inset-0 bg-gradient-to-r ${activeLaptop.accentGradient} blur-3xl pointer-events-none -z-10`}
-          />
-        </AnimatePresence>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header Title & Trust Pill */}
-          <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+      {/* Full-Page Screen-Filling Alternating Laptop Showcase Hero */}
+      <section
+        className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-100 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 transition-colors pt-4 pb-4 sm:pt-6 sm:pb-6"
+      >
+        {/* Full-Bleed Edge-to-Edge Dynamic Ambient Backdrop */}
+        <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+          <AnimatePresence mode="wait">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-xs font-bold mb-3 shadow-sm"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Mocha Place, 2nd Floor, Kisii CBD • 7-Point Inspected Laptops</span>
-            </motion.div>
+              key={activeLaptop.id + '-ambient-img'}
+              initial={{ opacity: 0, scale: 1.15 }}
+              animate={{ opacity: 0.18, scale: 1.02 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.85 }}
+              className="absolute inset-0 w-full h-full bg-center bg-cover filter blur-3xl scale-110"
+              style={{ backgroundImage: `url(${activeLaptop.image})` }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/60 to-white/95 dark:from-gray-950/90 dark:via-gray-950/70 dark:to-gray-950/95" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeLaptop.id + '-ambient-glow'}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className={`absolute inset-0 bg-gradient-to-tr ${activeLaptop.accentGradient} blur-3xl`}
+            />
+          </AnimatePresence>
+          {/* Tech dot matrix grid */}
+          <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.08] bg-[radial-gradient(#808080_1px,transparent_1px)] [background-size:24px_24px]" />
+        </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-2 sm:mb-3"
-            >
-              Genuine Laptops. Zero Guesswork.
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xs sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed"
-            >
-              Test any machine before payment at our Hospital Road showroom. Backed by 1-year local warranty with same-day Kisii delivery or nationwide insured courier dispatch.
-            </motion.p>
-          </div>
-
-          {/* Full-Width Laptop Stage Arena */}
-          <div
-            className="relative w-full rounded-3xl bg-white/70 dark:bg-gray-850/80 backdrop-blur-xl border border-gray-200/80 dark:border-gray-700/80 p-4 sm:p-6 lg:p-8 shadow-2xl overflow-hidden"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onTouchStart={() => setIsPaused(true)}
-            onTouchEnd={() => setIsPaused(false)}
+        {/* Top Header & Verification Pill */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto shrink-0 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 px-3.5 py-1 sm:py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-[11px] sm:text-xs font-bold mb-2 shadow-sm"
           >
-            {/* Left & Right Nav Arrows spanning full stage */}
-            <button
-              type="button"
-              onClick={prevLaptop}
-              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
-              aria-label="Previous laptop"
-            >
-              <FiChevronLeft size={22} />
-            </button>
-            <button
-              type="button"
-              onClick={nextLaptop}
-              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
-              aria-label="Next laptop"
-            >
-              <FiChevronRight size={22} />
-            </button>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Mocha Place, 2nd Floor, Kisii CBD • 1-Year Local Technical Warranty • Test Before Payment</span>
+          </motion.div>
 
-            {/* Stage Grid: Left Specs | Center Grand Laptop Image | Right Price & Warranty */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center px-2 sm:px-8 lg:px-12">
-              {/* Left Column: Alternating Hardware Specifications (3 cols on desktop) */}
-              <div className="lg:col-span-3 order-2 lg:order-1 space-y-3">
-                <AnimatePresence mode="wait">
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
+          >
+            Genuine Laptops. Zero Guesswork.
+          </motion.h1>
+
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mt-1 line-clamp-1 sm:line-clamp-none">
+            Kisii’s physical showroom for certified business, developer, and gaming laptops. Walk in to test or order for same-day delivery.
+          </p>
+        </div>
+
+        {/* Left & Right Edge Navigation Arrows spanning full page */}
+        <button
+          type="button"
+          onClick={prevLaptop}
+          className="absolute left-2 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer backdrop-blur-md"
+          aria-label="Previous laptop model"
+          title="Previous Model"
+        >
+          <FiChevronLeft size={26} />
+        </button>
+        <button
+          type="button"
+          onClick={nextLaptop}
+          className="absolute right-2 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer backdrop-blur-md"
+          aria-label="Next laptop model"
+          title="Next Model"
+        >
+          <FiChevronRight size={26} />
+        </button>
+
+        {/* Full-Page Center Stage Arena: Spans Entire Screen Width & Height */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 flex-1 flex flex-col justify-center relative z-10 my-2 sm:my-3">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center">
+            {/* Left Column: Floating Hardware Specifications (Desktop 3 cols) */}
+            <div className="hidden lg:block lg:col-span-3 space-y-3">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeLaptop.id + '-specs-left'}
+                  initial={{ opacity: 0, x: -25 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 25 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-3"
+                >
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block">
+                    Verified Hardware Specs:
+                  </span>
+
                   <motion.div
-                    key={activeLaptop.id + '-left'}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-2.5 sm:space-y-3"
+                    animate={{ y: [-3, 3, -3] }}
+                    transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
+                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
                   >
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block">
-                      Hardware Specs:
-                    </span>
-
-                    <motion.div
-                      animate={{ y: [-2, 2, -2] }}
-                      transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                        <FiCpu size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] text-gray-400 block font-medium">Processor</span>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                          {activeLaptop.processor}
-                        </span>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      animate={{ y: [2, -2, 2] }}
-                      transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <FiZap size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] text-gray-400 block font-medium">Memory (RAM)</span>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                          {activeLaptop.ram}
-                        </span>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      animate={{ y: [-2, 2, -2] }}
-                      transition={{ repeat: Infinity, duration: 4.8, ease: 'easeInOut' }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                        <FiHardDrive size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] text-gray-400 block font-medium">Storage</span>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                          {activeLaptop.storage}
-                        </span>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Center Stage: The Grand Alternating Laptop Model (6 cols on desktop) */}
-              <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col items-center justify-center relative">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeLaptop.id}
-                    initial={{ opacity: 0, scale: 0.92, y: 15 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 1.05, y: -15 }}
-                    transition={{ duration: 0.55, ease: 'easeOut' }}
-                    className="relative w-full flex flex-col items-center"
-                  >
-                    {/* Top Floating Badge */}
-                    <div className="mb-2">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${activeLaptop.tagColor} shadow-sm`}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                        {activeLaptop.badge}
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                      <FiCpu size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-gray-400 block font-medium">Processor</span>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.processor}
                       </span>
                     </div>
+                  </motion.div>
 
-                    {/* Central Laptop Hero Image */}
-                    <div className="relative w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[480px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-gray-100 dark:bg-gray-900 group">
+                  <motion.div
+                    animate={{ y: [3, -3, 3] }}
+                    transition={{ repeat: Infinity, duration: 4.6, ease: 'easeInOut' }}
+                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                      <FiZap size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-gray-400 block font-medium">Memory (RAM)</span>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.ram}
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    animate={{ y: [-3, 3, -3] }}
+                    transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                      <FiHardDrive size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-gray-400 block font-medium">Solid State Drive</span>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.storage}
+                      </span>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Center Column: The Grand Alternating Laptop Model (Desktop 6 cols) */}
+            <div className="lg:col-span-6 flex flex-col items-center justify-center relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeLaptop.id}
+                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 1.05, y: -20 }}
+                  transition={{ duration: 0.55, ease: 'easeOut' }}
+                  className="relative w-full flex flex-col items-center"
+                >
+                  {/* Floating Top Badge & Ideal Usage */}
+                  <div className="mb-2 sm:mb-3 flex items-center gap-2 flex-wrap justify-center">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${activeLaptop.tagColor} shadow-md backdrop-blur-md bg-white/90 dark:bg-gray-900/90`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                      {activeLaptop.badge}
+                    </span>
+                    <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 shadow-sm backdrop-blur-md">
+                      {activeLaptop.ideal}
+                    </span>
+                  </div>
+
+                  {/* Grand Laptop Showcase Window */}
+                  <motion.div
+                    animate={{ y: [-4, 4, -4] }}
+                    transition={{ repeat: Infinity, duration: 5.5, ease: 'easeInOut' }}
+                    className="relative w-full flex items-center justify-center group"
+                  >
+                    <div className="relative w-full max-w-sm sm:max-w-xl lg:max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md">
                       <img
                         src={activeLaptop.image}
                         alt={activeLaptop.name}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-[32vh] sm:h-[42vh] lg:h-[48vh] max-h-[500px] object-contain object-center p-2 sm:p-4 group-hover:scale-105 transition-transform duration-700"
                       />
 
-                      {/* Floating Bottom Name Bar */}
-                      <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/70 to-transparent text-white">
-                        <div className="flex items-center justify-between gap-2">
+                      {/* In-Frame Bottom HUD Bar */}
+                      <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/75 to-transparent text-white">
+                        <div className="flex items-center justify-between gap-3">
                           <div className="min-w-0">
-                            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
+                            <span className="text-[10px] sm:text-xs text-amber-400 font-bold uppercase tracking-wider block">
                               {activeLaptop.brand}
                             </span>
-                            <h2 className="text-sm sm:text-base font-black text-white truncate">
+                            <h2 className="text-sm sm:text-lg lg:text-xl font-black text-white truncate">
                               {activeLaptop.name}
                             </h2>
                           </div>
-                          <span className="text-[11px] font-bold text-white bg-primary-600 px-2.5 py-1 rounded-lg shrink-0 shadow-md">
-                            {activeLaptop.display}
-                          </span>
+                          <div className="text-right shrink-0">
+                            <span className="text-sm sm:text-lg font-black text-amber-300 block">
+                              {activeLaptop.price}
+                            </span>
+                            <span className="text-[10px] sm:text-xs text-emerald-400 font-medium block">
+                              {activeLaptop.display}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Ground Reflection Accent */}
-                    <div className="w-3/4 h-4 bg-black/20 dark:bg-black/50 blur-lg rounded-full mt-2" />
                   </motion.div>
-                </AnimatePresence>
-              </div>
 
-              {/* Right Column: Alternating Price, Battery & Guarantee (3 cols on desktop) */}
-              <div className="lg:col-span-3 order-3 space-y-3">
-                <AnimatePresence mode="wait">
+                  {/* Realistic Ground Shadow & Depth Underglow */}
+                  <div className="w-3/4 sm:w-2/3 h-5 bg-black/30 dark:bg-black/70 blur-xl rounded-full mt-2" />
+
+                  {/* Mobile Spec Grid directly under laptop for small viewports */}
+                  <div className="lg:hidden grid grid-cols-2 gap-2 w-full max-w-sm mt-3 px-1">
+                    <div className="p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+                      <span className="text-[9px] text-gray-400 block uppercase font-bold">Processor</span>
+                      <span className="text-xs font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.processor}
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+                      <span className="text-[9px] text-gray-400 block uppercase font-bold">Memory &amp; Storage</span>
+                      <span className="text-xs font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.ram} • {activeLaptop.storage}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right Column: Alternating Price, Battery & Guarantee (Desktop 3 cols) */}
+            <div className="hidden lg:block lg:col-span-3 space-y-3">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeLaptop.id + '-specs-right'}
+                  initial={{ opacity: 0, x: 25 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -25 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-3"
+                >
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block">
+                    Showroom Assurance:
+                  </span>
+
                   <motion.div
-                    key={activeLaptop.id + '-right'}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-2.5 sm:space-y-3"
+                    animate={{ y: [3, -3, 3] }}
+                    transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
+                    className="p-4 rounded-2xl bg-primary-50/90 dark:bg-primary-950/60 backdrop-blur-md border border-primary-200 dark:border-primary-800 shadow-lg"
                   >
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 block">
-                      Pricing &amp; Warranty:
+                    <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block mb-0.5">
+                      Cash / M-Pesa Price
                     </span>
-
-                    <motion.div
-                      animate={{ y: [2, -2, 2] }}
-                      transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
-                      className="p-3.5 sm:p-4 rounded-xl bg-primary-50/70 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800 shadow-sm"
-                    >
-                      <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block mb-0.5">
-                        Cash / M-Pesa Price
-                      </span>
-                      <span className="text-xl sm:text-2xl font-black text-primary-600 dark:text-primary-400 block">
-                        {activeLaptop.price}
-                      </span>
-                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold block mt-0.5">
-                        ✓ In Stock at Mocha Place
-                      </span>
-                    </motion.div>
-
-                    <motion.div
-                      animate={{ y: [-2, 2, -2] }}
-                      transition={{ repeat: Infinity, duration: 4.6, ease: 'easeInOut' }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <FiBatteryCharging size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] text-gray-400 block font-medium">Battery Benchmark</span>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                          {activeLaptop.battery}
-                        </span>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      animate={{ y: [2, -2, 2] }}
-                      transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                      className="p-3 sm:p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700 flex items-center gap-3 shadow-sm"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                        <FiShield size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] text-gray-400 block font-medium">Warranty Coverage</span>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                          1-Year Local Technical Warranty
-                        </span>
-                      </div>
-                    </motion.div>
+                    <span className="text-2xl font-black text-primary-600 dark:text-primary-400 block">
+                      {activeLaptop.price}
+                    </span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">
+                      ✓ In Stock at Mocha Place CBD
+                    </span>
                   </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
 
-            {/* Action Buttons Below Laptop Arena */}
-            <div className="mt-6 sm:mt-8 pt-4 border-t border-gray-200/70 dark:border-gray-700/70 flex flex-wrap items-center justify-center gap-3">
-              <Button
-                size="md"
-                onClick={() => navigate('/shop')}
-                className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg text-xs sm:text-sm"
-              >
-                Explore All Laptops in Stock
-              </Button>
-              <a
-                href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Kisii,%20I%20am%20interested%20in%20testing%20the%20laptops%20shown%20on%20your%20website"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 py-2.5 px-4 rounded-xl border border-emerald-500 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-xs sm:text-sm font-bold transition-all shadow-sm"
-              >
-                <span>💬</span> Chat on WhatsApp / Test in Showroom
-              </a>
-              <Button
-                variant="outline"
-                size="md"
-                onClick={() => navigate('/finder')}
-                className="border-gray-300 dark:border-gray-600 text-slate-800 dark:text-white text-xs sm:text-sm"
-              >
-                Interactive Laptop Finder
-              </Button>
-            </div>
-
-            {/* Full-Width Laptop Model Selector Dock across the bottom */}
-            <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-750">
-              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2.5 px-1">
-                <span className="font-bold uppercase tracking-wider text-[10px] sm:text-xs">
-                  Featured Machine Showcase (Auto-Alternating):
-                </span>
-                <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold">
-                  {isPaused ? '⏸️ Paused (Hovered)' : `Next in 4s • Click to Switch`}
-                </span>
-              </div>
-
-              {/* Horizontal Pill Track */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                {heroLaptops.map((laptop, idx) => (
-                  <button
-                    key={laptop.id}
-                    type="button"
-                    onClick={() => setCurrentLaptopIndex(idx)}
-                    className={`shrink-0 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
-                      currentLaptopIndex === idx
-                        ? 'bg-primary-600 text-white shadow-md border-primary-600 scale-105'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700'
-                    }`}
+                  <motion.div
+                    animate={{ y: [-3, 3, -3] }}
+                    transition={{ repeat: Infinity, duration: 4.8, ease: 'easeInOut' }}
+                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
                   >
-                    <span className="w-2 h-2 rounded-full bg-current opacity-80" />
-                    <span>{laptop.name.split(' ')[0]} {laptop.name.split(' ')[1] || ''}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                      currentLaptopIndex === idx ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {laptop.price.replace('From ', '')}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                      <FiBatteryCharging size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-gray-400 block font-medium">Battery Benchmark</span>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                        {activeLaptop.battery}
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    animate={{ y: [3, -3, 3] }}
+                    transition={{ repeat: Infinity, duration: 5.2, ease: 'easeInOut' }}
+                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <FiShield size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-gray-400 block font-medium">Warranty Coverage</span>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
+                        1-Year Local Technical Warranty
+                      </span>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
             </div>
+          </div>
+        </div>
+
+        {/* Full-Width Bottom Control Dock: Continuous Progress, Actions & Model Track */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 shrink-0 relative z-10 pt-2">
+          {/* Continuous progress countdown bar */}
+          <div className="w-full h-1.5 bg-gray-200/80 dark:bg-gray-800/80 rounded-full overflow-hidden mb-3 shadow-inner">
+            <motion.div
+              key={currentLaptopIndex}
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 4.0, ease: 'linear' }}
+              className="h-full bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500 rounded-full"
+            />
+          </div>
+
+          {/* Action CTA Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-3">
+            <Button
+              size="md"
+              onClick={() => navigate('/shop')}
+              className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg text-xs sm:text-sm px-4 sm:px-6 py-2.5"
+            >
+              Explore All Laptops in Stock
+            </Button>
+            <a
+              href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Kisii,%20I%20am%20interested%20in%20testing%20the%20laptops%20shown%20on%20your%20website"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 py-2 px-4 rounded-xl border border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-xs sm:text-sm font-bold transition-all shadow-sm"
+            >
+              <span>💬</span> Chat on WhatsApp / Test in Showroom
+            </a>
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => navigate('/finder')}
+              className="border-gray-300 dark:border-gray-600 text-slate-800 dark:text-white text-xs sm:text-sm hidden sm:inline-flex"
+            >
+              Interactive Laptop Finder
+            </Button>
+            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-50/80 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-sm backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>Continuous Live Showcase</span>
+            </div>
+          </div>
+
+          {/* Model Selector Track across the entire page */}
+          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5 px-1">
+            <span className="font-bold uppercase tracking-wider text-[10px] sm:text-xs">
+              Alternating Fleet Showcase: {activeLaptop.name}
+            </span>
+            <span className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Model {currentLaptopIndex + 1} of {heroLaptops.length} • Auto-Alternating Continuously
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {heroLaptops.map((laptop, idx) => (
+              <button
+                key={laptop.id}
+                type="button"
+                onClick={() => setCurrentLaptopIndex(idx)}
+                className={`shrink-0 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
+                  currentLaptopIndex === idx
+                    ? 'bg-primary-600 text-white shadow-md border-primary-600 scale-105'
+                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 backdrop-blur-sm'
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${currentLaptopIndex === idx ? 'bg-white animate-pulse' : 'bg-gray-400 dark:bg-gray-500'}`} />
+                <span>{laptop.name.split(' ')[0]} {laptop.name.split(' ')[1] || ''}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                  currentLaptopIndex === idx ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                }`}>
+                  {laptop.price.replace('From ', '')}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
