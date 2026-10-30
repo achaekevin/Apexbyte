@@ -90,35 +90,35 @@ const Home = () => {
       </Helmet>
 
       {/* Hero Section - Fully Responsive to Light & Dark Modes */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-10 sm:py-16 lg:py-20 overflow-hidden transition-colors">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-8 sm:py-14 lg:py-18 overflow-hidden transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3 py-1 rounded-full text-xs font-semibold mb-3 sm:mb-4 transition-colors">
-                <span>🏬</span> Showroom Pickup at Mocha Place, Hospital Road, Kisii CBD
+              <div className="inline-flex items-center gap-1.5 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3 py-1 rounded-full text-xs font-semibold mb-3 transition-colors">
+                <span>🏬</span> Showroom at Mocha Place, Kisii CBD
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 leading-tight text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-5 leading-tight text-slate-900 dark:text-white tracking-tight">
                 Genuine Laptops, <br />
                 Zero Guesswork.
               </h1>
-              <p className="text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 text-slate-700 dark:text-slate-200 leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base lg:text-lg mb-5 sm:mb-7 text-slate-700 dark:text-slate-200 leading-relaxed max-w-xl">
                 Every machine is thoroughly benchmarked with a 7-point diagnostic inspection. Backed by 1-year local warranty, with same-day Kisii courier dispatch or walk-in testing at our Hospital Road shop.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3">
                 <Button
-                  size="lg"
+                  size="md"
                   onClick={() => navigate('/shop')}
-                  className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg"
+                  className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-md"
                 >
                   Explore Laptops in Stock
                 </Button>
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="md"
                   onClick={() => {
                     const el = document.getElementById('store-guarantees');
                     if (el) {
@@ -140,11 +140,11 @@ const Home = () => {
               transition={{ duration: 0.6 }}
               className="relative flex justify-center"
             >
-              <div className="relative z-10 w-full max-w-md lg:max-w-lg">
+              <div className="relative z-10 w-full max-w-sm sm:max-w-md lg:max-w-lg">
                 <img
                   src="/hero-laptops.png"
                   alt="Apexbyte Showroom Tested Laptops Kisii"
-                  className="rounded-2xl shadow-2xl w-full max-h-[440px] sm:max-h-[500px] object-cover object-center border border-gray-200 dark:border-gray-800"
+                  className="rounded-2xl shadow-xl w-full max-h-[280px] sm:max-h-[380px] lg:max-h-[440px] object-cover object-center border border-gray-200 dark:border-gray-800"
                 />
               </div>
               <div className="absolute inset-0 bg-primary-500/10 dark:bg-slate-800 rounded-2xl transform rotate-2 sm:rotate-3 opacity-30 transition-colors" />
@@ -190,28 +190,28 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-white dark:bg-gray-900 transition-colors">
+      <section className="py-10 sm:py-16 bg-white dark:bg-gray-900 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-6 sm:mb-10"
           >
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">Featured Laptops</h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2 text-slate-900 dark:text-white tracking-tight">Featured Laptops</h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               Hand-picked certified laptops for every workload
             </p>
           </motion.div>
 
           {loadingFeatured ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <LoadingSkeleton key={i} />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {featuredProducts?.data.map((product: any, index: number) => (
                 <motion.div
                   key={product.id}
@@ -220,64 +220,69 @@ const Home = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="group hover:shadow-premium transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                    <Link to={`/products/${product.id}`}>
-                      <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
-                        <img
-                          src={getProductImage(product)}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
-                          }}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {product.isFeatured && (
-                          <Badge className="absolute top-2 right-2" variant="primary">
-                            Featured
-                          </Badge>
-                        )}
-                      </div>
-                    </Link>
-                    <div className="p-5">
+                  <Card className="group hover:shadow-premium transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col justify-between">
+                    <div>
                       <Link to={`/products/${product.id}`}>
-                        <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
-                          {product.name}
-                        </h3>
-                      </Link>
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="flex items-center">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className={`text-base ${
-                                star <= product.averageRating
-                                  ? 'text-amber-400'
-                                  : 'text-gray-300 dark:text-gray-600'
-                              }`}
-                            >
-                              ★
-                            </span>
-                          ))}
+                        <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
+                          <img
+                            src={getProductImage(product)}
+                            alt={product.name}
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
+                            }}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {product.isFeatured && (
+                            <Badge className="absolute top-2 right-2" variant="primary">
+                              Featured
+                            </Badge>
+                          )}
                         </div>
-                        <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
-                          ({product.reviewCount})
-                        </span>
+                      </Link>
+                      <div className="p-3.5 sm:p-5">
+                        <Link to={`/products/${product.id}`}>
+                          <h3 className="font-bold text-sm sm:text-base mb-1.5 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
+                            {product.name}
+                          </h3>
+                        </Link>
+                        <div className="flex items-center gap-1.5 mb-2.5">
+                          <div className="flex items-center text-amber-400 text-xs sm:text-sm">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span
+                                key={star}
+                                className={
+                                  star <= product.averageRating
+                                    ? 'text-amber-400'
+                                    : 'text-gray-300 dark:text-gray-600'
+                                }
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                            ({product.reviewCount || 1})
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                            {formatCurrency(product.price)}
+                          </span>
+                          {product.stock < 10 && product.stock > 0 && (
+                            <Badge variant="warning" size="sm">
+                              Only {product.stock} left
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                          {formatCurrency(product.price)}
-                        </span>
-                        {product.stock < 10 && product.stock > 0 && (
-                          <Badge variant="warning" size="sm">
-                            Only {product.stock} left
-                          </Badge>
-                        )}
-                      </div>
+                    </div>
+                    <div className="p-3.5 sm:p-5 pt-0">
                       <Button
                         fullWidth
+                        size="sm"
                         onClick={() => handleAddToCart(product)}
                         disabled={product.stock === 0}
-                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm sm:text-base py-2.5 shadow-sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 shadow-sm"
                       >
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </Button>
@@ -304,19 +309,19 @@ const Home = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-950 transition-colors">
+      <section className="py-10 sm:py-16 bg-gray-50 dark:bg-gray-950 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-6 sm:mb-10"
           >
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">Shop by Category</h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">Find the perfect laptop for your specific usage</p>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2 text-slate-900 dark:text-white tracking-tight">Shop by Category</h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Find the perfect laptop for your specific usage</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {(categories || []).slice(0, 4).map((category: any, index: number) => (
               <motion.div
                 key={category.id}
@@ -324,16 +329,18 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -4 }}
               >
                 <Link to={`/shop?category=${category.id}`}>
-                  <Card className="text-center hover:shadow-premium cursor-pointer transition-all p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
-                    <div className="text-4xl mb-4">💻</div>
-                    <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">{category.name}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 mb-4 text-sm">
-                      Explore {category.name.toLowerCase()} laptops
-                    </p>
-                    <span className="font-bold text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                  <Card className="text-center hover:shadow-premium cursor-pointer transition-all p-4 sm:p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">💻</div>
+                      <h3 className="text-base sm:text-lg font-bold mb-1 text-slate-900 dark:text-white">{category.name}</h3>
+                      <p className="text-slate-500 dark:text-slate-400 mb-3 text-xs sm:text-sm line-clamp-2">
+                        Explore {category.name.toLowerCase()} laptops
+                      </p>
+                    </div>
+                    <span className="font-bold text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:underline">
                       View Collection →
                     </span>
                   </Card>
@@ -434,18 +441,18 @@ const Home = () => {
                         )}
                       </div>
                     </Link>
-                    <div className="p-5">
+                    <div className="p-3.5 sm:p-5">
                       <Link to={`/products/${product.id}`}>
-                        <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
+                        <h3 className="font-bold text-sm sm:text-base mb-1.5 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
                           {product.name}
                         </h3>
                       </Link>
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="flex items-center">
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <div className="flex items-center text-amber-400 text-xs sm:text-sm">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
-                              className={`text-base ${
+                              className={`text-xs sm:text-sm ${
                                 star <= product.averageRating
                                   ? 'text-amber-400'
                                   : 'text-gray-300 dark:text-gray-600'
@@ -455,20 +462,21 @@ const Home = () => {
                             </span>
                           ))}
                         </div>
-                        <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
+                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                           ({product.reviewCount})
                         </span>
                       </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                           {formatCurrency(product.price)}
                         </span>
                       </div>
                       <Button
                         fullWidth
+                        size="sm"
                         onClick={() => handleAddToCart(product)}
                         disabled={product.stock === 0}
-                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm sm:text-base py-2.5 shadow-sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 shadow-sm"
                       >
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </Button>

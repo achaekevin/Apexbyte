@@ -307,9 +307,9 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Price */}
-                <div className="mb-5 sm:mb-6">
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
+                <div className="mb-4 sm:mb-6">
+                  <div className="flex items-baseline gap-3 mb-1.5">
+                    <span className="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
@@ -318,7 +318,7 @@ const ProductDetail = () => {
                       <>
                         <Badge variant="success">In Stock</Badge>
                         {product.stock < 10 && (
-                          <span className="text-base font-bold text-orange-600 dark:text-orange-400">
+                          <span className="text-xs sm:text-sm font-bold text-orange-600 dark:text-orange-400">
                             Only {product.stock} left!
                           </span>
                         )}
@@ -330,14 +330,14 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Description */}
-                <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-5">
                   {product.description}
                 </p>
 
                 {/* Quantity Selector */}
                 {product.stock > 0 && (
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium mb-2">
+                  <div className="mb-5">
+                    <label className="block text-xs sm:text-sm font-semibold mb-1.5">
                       Quantity
                     </label>
                     <div className="flex items-center gap-3">
@@ -379,10 +379,10 @@ const ProductDetail = () => {
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex flex-col gap-3 mb-6">
+                <div className="flex flex-col gap-2.5 mb-6">
                   <Button
                     fullWidth
-                    size="lg"
+                    size="md"
                     onClick={handleAddToCart}
                     disabled={product.stock === 0}
                   >
@@ -390,7 +390,7 @@ const ProductDetail = () => {
                   </Button>
                   <Button
                     fullWidth
-                    size="lg"
+                    size="md"
                     variant="outline"
                     onClick={handleBuyNow}
                     disabled={product.stock === 0}
@@ -399,6 +399,7 @@ const ProductDetail = () => {
                   </Button>
                   <Button
                     fullWidth
+                    size="sm"
                     variant="ghost"
                     onClick={handleAddToComparison}
                     disabled={isInComparison || !canAddToComparison}

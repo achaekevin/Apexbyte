@@ -61,31 +61,31 @@ const Compare = () => {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                 Compare Laptops Side-by-Side
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+              <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mt-1">
                 {products.length === 0
                   ? 'Select any 2 to 4 laptops below to analyze their specs and pricing.'
                   : `Comparing ${products.length} of 4 maximum laptops.`}
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
               >
                 <FiPlus size={16} />
                 <span>{isSearchOpen ? 'Hide Laptop Selector' : 'Add Laptop to Compare'}</span>
               </Button>
 
               {products.length > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearAll} className="text-red-500 hover:text-red-600">
+                <Button variant="ghost" size="sm" onClick={clearAll} className="text-red-500 hover:text-red-600 text-xs sm:text-sm">
                   Clear All
                 </Button>
               )}
@@ -219,13 +219,13 @@ const Compare = () => {
                       key={product.id}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="w-72 sm:w-80 flex-shrink-0"
+                      className="w-64 sm:w-72 md:w-80 flex-shrink-0"
                     >
-                      <Card className="h-full flex flex-col justify-between p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 relative">
+                      <Card className="h-full flex flex-col justify-between p-3.5 sm:p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 relative">
                         {/* Remove Button */}
                         <button
                           onClick={() => removeProduct(product.id)}
-                          className="absolute top-3 right-3 z-10 w-7 h-7 bg-white/90 dark:bg-gray-900/90 rounded-full flex items-center justify-center text-gray-500 hover:text-red-600 shadow transition-colors"
+                          className="absolute top-2.5 right-2.5 z-10 w-7 h-7 bg-white/90 dark:bg-gray-900/90 rounded-full flex items-center justify-center text-gray-500 hover:text-red-600 shadow transition-colors"
                           title="Remove from comparison"
                         >
                           <FiX size={14} />
@@ -234,7 +234,7 @@ const Compare = () => {
                         <div>
                           {/* Image */}
                           <Link to={`/products/${product.id}`} className="block">
-                            <div className="aspect-square rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-900 mb-3 relative group">
+                            <div className="aspect-square rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-900 mb-2.5 relative group">
                               <img
                                 src={getProductImage(product)}
                                 alt={product.name}
@@ -244,7 +244,7 @@ const Compare = () => {
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                               {product.brand?.name && (
-                                <span className="absolute bottom-2 left-2 bg-black/75 text-white text-xs font-black px-2.5 py-1 rounded backdrop-blur-sm uppercase tracking-wide">
+                                <span className="absolute bottom-2 left-2 bg-black/75 text-white text-[11px] font-black px-2 py-0.5 rounded backdrop-blur-sm uppercase tracking-wide">
                                   {product.brand.name}
                                 </span>
                               )}
@@ -253,13 +253,13 @@ const Compare = () => {
 
                           {/* Title */}
                           <Link to={`/products/${product.id}`}>
-                            <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-white line-clamp-2 hover:text-primary-600 transition-colors mb-2">
+                            <h3 className="font-bold text-xs sm:text-sm md:text-base text-gray-900 dark:text-white line-clamp-2 hover:text-primary-600 transition-colors mb-1.5">
                               {product.name}
                             </h3>
                           </Link>
 
                           {/* Price */}
-                          <p className="text-2xl font-black text-primary-600 dark:text-primary-400 mb-3">
+                          <p className="text-base sm:text-lg md:text-xl font-black text-primary-600 dark:text-primary-400 mb-2.5">
                             {formatCurrency(product.price)}
                           </p>
                         </div>
@@ -270,7 +270,7 @@ const Compare = () => {
                           size="sm"
                           onClick={() => handleAddToCart(product)}
                           disabled={product.stock === 0}
-                          className="flex items-center justify-center gap-2 mt-3"
+                          className="flex items-center justify-center gap-1.5 mt-2 min-h-[38px] text-xs sm:text-sm"
                         >
                           <FiShoppingCart size={14} />
                           {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
@@ -281,18 +281,18 @@ const Compare = () => {
 
                   {/* Add More Slot */}
                   {products.length < 4 && (
-                    <div className="w-72 sm:w-80 flex-shrink-0">
+                    <div className="w-64 sm:w-72 md:w-80 flex-shrink-0">
                       <div
                         onClick={() => setIsSearchOpen(true)}
-                        className="h-full min-h-[350px] border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary-500 rounded-2xl flex flex-col items-center justify-center p-6 cursor-pointer bg-white/50 dark:bg-gray-800/50 hover:bg-primary-50/20 transition-all text-center group"
+                        className="h-full min-h-[320px] sm:min-h-[350px] border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary-500 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 cursor-pointer bg-white/50 dark:bg-gray-800/50 hover:bg-primary-50/20 transition-all text-center group"
                       >
-                        <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                          <FiPlus size={24} />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+                          <FiPlus size={22} />
                         </div>
-                        <h4 className="font-bold text-sm text-gray-800 dark:text-gray-200">
+                        <h4 className="font-bold text-xs sm:text-sm text-gray-800 dark:text-gray-200">
                           Add Another Laptop
                         </h4>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-[11px] sm:text-xs text-gray-500 mt-1">
                           Compare up to 4 models side-by-side
                         </p>
                       </div>
@@ -302,20 +302,20 @@ const Compare = () => {
               </div>
 
               {/* Side-by-Side Detailed Specs Matrix */}
-              <Card className="p-6 overflow-hidden">
-                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              <Card className="p-3.5 sm:p-6 overflow-hidden">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white">
                   Technical Specifications Comparison
                 </h3>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-base">
+                <div className="overflow-x-auto -mx-3.5 sm:mx-0">
+                  <table className="w-full text-left text-xs sm:text-sm">
                     <thead>
                       <tr className="border-b-2 border-gray-200 dark:border-gray-700">
-                        <th className="py-3.5 px-4 w-48 font-bold text-gray-700 dark:text-gray-300 uppercase text-xs sm:text-sm tracking-wider">
+                        <th className="py-2.5 sm:py-3.5 px-3 sm:px-4 w-36 sm:w-48 font-bold text-gray-700 dark:text-gray-300 uppercase text-[11px] sm:text-xs tracking-wider">
                           Specification
                         </th>
                         {products.map((product) => (
-                          <th key={product.id} className="py-3.5 px-4 w-72 sm:w-80 font-bold text-gray-900 dark:text-white">
+                          <th key={product.id} className="py-2.5 sm:py-3.5 px-3 sm:px-4 w-64 sm:w-72 md:w-80 font-bold text-gray-900 dark:text-white">
                             <span className="line-clamp-1">{product.name}</span>
                           </th>
                         ))}
@@ -324,9 +324,9 @@ const Compare = () => {
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                       {/* Price */}
                       <tr className="bg-primary-50/30 dark:bg-primary-950/20 font-bold">
-                        <td className="py-3.5 px-4 text-gray-800 dark:text-gray-200 font-bold">Price</td>
+                        <td className="py-2.5 sm:py-3.5 px-3 sm:px-4 text-gray-800 dark:text-gray-200 font-bold">Price</td>
                         {products.map((p) => (
-                          <td key={p.id} className="py-3.5 px-4 text-primary-600 dark:text-primary-400 text-lg font-black">
+                          <td key={p.id} className="py-2.5 sm:py-3.5 px-3 sm:px-4 text-primary-600 dark:text-primary-400 text-sm sm:text-base md:text-lg font-black">
                             {formatCurrency(p.price)}
                           </td>
                         ))}

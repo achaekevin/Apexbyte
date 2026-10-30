@@ -136,8 +136,8 @@ const Cart = () => {
                     exit={{ opacity: 0, x: -100 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card className="p-4">
-                      <div className="flex gap-4">
+                    <Card className="p-3 sm:p-4">
+                      <div className="flex gap-3 sm:gap-4">
                         {/* Product Image */}
                         <Link
                           to={`/products/${item.productId}`}
@@ -149,23 +149,23 @@ const Cart = () => {
                             onError={(e) => {
                               e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                             }}
-                            className="w-24 h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-800"
+                            className="w-18 h-18 sm:w-24 sm:h-24 object-cover rounded-lg bg-gray-100 dark:bg-gray-800"
                           />
                         </Link>
 
                         {/* Product Info */}
                         <div className="flex-1 min-w-0">
                           <Link to={`/products/${item.productId}`}>
-                            <h3 className="font-bold text-base sm:text-lg mb-1.5 hover:text-primary-600 transition-colors line-clamp-2">
+                            <h3 className="font-bold text-sm sm:text-base mb-1 hover:text-primary-600 transition-colors line-clamp-2 leading-snug">
                               {item.name}
                             </h3>
                           </Link>
-                          <p className="text-xl sm:text-2xl font-black text-primary-600 dark:text-primary-400 mb-2 tracking-tight">
+                          <p className="text-base sm:text-lg font-black text-primary-600 dark:text-primary-400 mb-2 tracking-tight">
                             {formatCurrency(item.price)}
                           </p>
 
                           {/* Quantity Controls */}
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg">
                               <button
                                 onClick={() =>
@@ -174,7 +174,7 @@ const Cart = () => {
                                     item.quantity - 1
                                   )
                                 }
-                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold"
+                                className="px-2.5 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold text-sm"
                                 disabled={item.quantity <= 1}
                               >
                                 -
@@ -190,7 +190,7 @@ const Cart = () => {
                                     parseInt(e.target.value) || 1
                                   )
                                 }
-                                className="w-16 text-center border-x border-gray-300 dark:border-gray-600 bg-transparent py-1 font-bold"
+                                className="w-12 sm:w-16 text-center border-x border-gray-300 dark:border-gray-600 bg-transparent py-1 font-bold text-sm"
                               />
                               <button
                                 onClick={() =>
@@ -199,30 +199,30 @@ const Cart = () => {
                                     item.quantity + 1
                                   )
                                 }
-                                className="px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold"
+                                className="px-2.5 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-bold text-sm"
                                 disabled={item.stock !== undefined && item.quantity >= item.stock}
                               >
                                 +
                               </button>
                             </div>
-                            <span className="text-sm sm:text-base font-medium text-gray-600 dark:text-gray-400">
-                              {item.stock !== undefined ? `${item.stock} available` : 'In stock'}
+                            <span className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">
+                              {item.stock !== undefined ? `${item.stock} left` : 'In stock'}
                             </span>
                           </div>
 
                           {/* Stock Warning */}
                           {item.stock !== undefined && item.quantity > item.stock && (
-                            <p className="text-sm sm:text-base font-semibold text-red-600 mt-2">
+                            <p className="text-xs sm:text-sm font-semibold text-red-600 mt-1.5">
                               Only {item.stock} available in stock
                             </p>
                           )}
                         </div>
 
                         {/* Item Total & Remove */}
-                        <div className="flex flex-col items-end justify-between">
+                        <div className="flex flex-col items-end justify-between shrink-0">
                           <button
                             onClick={() => removeItem(item.productId)}
-                            className="text-gray-400 hover:text-red-600 transition-colors"
+                            className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                             aria-label="Remove item"
                           >
                             <svg

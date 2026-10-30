@@ -672,34 +672,34 @@ const Shop = () => {
                             </Link>
 
                             {/* Content */}
-                            <div className="p-4 flex-1 flex flex-col justify-between">
+                            <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
                               <div>
                                 {/* Brand Name & Stock */}
-                                <div className="flex items-center justify-between gap-2 mb-1.5">
-                                  <span className="text-xs font-black uppercase tracking-wider text-primary-600 dark:text-primary-400">
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-primary-600 dark:text-primary-400">
                                     {product.brand?.name || 'LAPTOP'}
                                   </span>
-                                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                  <span className="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                     In Stock
                                   </span>
                                 </div>
 
                                 {/* Title */}
                                 <Link to={`/products/${product.id}`}>
-                                  <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg hover:text-primary-600 dark:hover:text-primary-400 transition-colors line-clamp-2 mb-2 leading-snug">
+                                  <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base hover:text-primary-600 dark:hover:text-primary-400 transition-colors line-clamp-2 mb-1.5 leading-snug">
                                     {product.name}
                                   </h3>
                                 </Link>
 
                                 {/* Specs Snippet */}
-                                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium mb-2.5 line-clamp-1">
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium mb-2 line-clamp-1">
                                   {product.processor || ''} {product.ram ? `• ${product.ram}GB RAM` : ''} {product.storage ? `• ${product.storage}GB SSD` : ''}
                                 </p>
 
                                 {/* Rating */}
-                                <div className="flex items-center gap-2 mb-3">
-                                  <div className="flex text-amber-400 text-sm">
+                                <div className="flex items-center gap-1.5 mb-2.5">
+                                  <div className="flex text-amber-400 text-xs sm:text-sm">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                       <span
                                         key={star}
@@ -713,46 +713,46 @@ const Shop = () => {
                                       </span>
                                     ))}
                                   </div>
-                                  <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
-                                    ({product.reviewCount || 1} reviews)
+                                  <span className="text-[11px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                    ({product.reviewCount || 1})
                                   </span>
                                 </div>
                               </div>
 
                               {/* Price & Action */}
-                              <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
-                                <div className="flex items-baseline gap-2.5 mb-2">
-                                  <span className="text-2xl font-black text-gray-900 dark:text-white">
+                              <div className="pt-2.5 border-t border-gray-100 dark:border-gray-750">
+                                <div className="flex items-baseline gap-2 mb-2">
+                                  <span className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
                                     {formatCurrency(product.price)}
                                   </span>
                                   {product.compareAtPrice && product.compareAtPrice > product.price && (
-                                    <span className="text-sm text-gray-400 dark:text-gray-500 line-through font-medium">
+                                    <span className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through font-medium">
                                       {formatCurrency(product.compareAtPrice)}
                                     </span>
                                   )}
                                 </div>
 
-                                <div className="flex items-center gap-2 mt-2">
+                                <div className="flex items-center gap-1.5 mt-2">
                                   <button
                                     type="button"
                                     onClick={() => handleAddToCart(product)}
                                     disabled={product.stock === 0}
-                                    className="flex-1 py-2.5 px-3 rounded-lg font-bold text-sm bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-1.5 shadow-sm uppercase tracking-wider"
+                                    className="flex-1 min-h-[40px] py-2 px-2.5 rounded-lg font-bold text-xs sm:text-sm bg-amber-500 hover:bg-amber-600 text-gray-950 transition-colors flex items-center justify-center gap-1.5 shadow-xs uppercase tracking-wider"
                                   >
-                                    <FiShoppingCart size={16} />
+                                    <FiShoppingCart size={15} />
                                     {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleToggleCompare(product)}
-                                    className={`py-2.5 px-3 rounded-lg border text-sm font-bold transition-colors flex items-center justify-center whitespace-nowrap ${
+                                    className={`min-h-[40px] py-2 px-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-colors flex items-center justify-center whitespace-nowrap ${
                                       isInComparison(product.id)
                                         ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary-500 text-gray-700 dark:text-gray-200'
                                     }`}
                                     title={isInComparison(product.id) ? 'Remove from comparison' : 'Add to comparison'}
                                   >
-                                    {isInComparison(product.id) ? '✓ Compared' : '+ Compare'}
+                                    {isInComparison(product.id) ? '✓' : '+ Compare'}
                                   </button>
                                 </div>
                               </div>

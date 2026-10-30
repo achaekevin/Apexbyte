@@ -356,15 +356,15 @@ const CheckoutForm = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                   >
-                    <Card className="p-6">
-                      <div className="flex items-center justify-between mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
+                    <Card className="p-4 sm:p-6">
+                      <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100 dark:border-gray-800">
                         <div>
-                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Shipping Information</h2>
+                          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Shipping Information</h2>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                             Enter the destination for your courier delivery or rider dispatch
                           </p>
                         </div>
-                        <span className="text-xs px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold rounded-full border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                        <span className="text-[11px] sm:text-xs px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold rounded-full border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
                           <FiShield className="text-xs" /> Verified Dispatch
                         </span>
                       </div>
@@ -535,73 +535,73 @@ const CheckoutForm = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                   >
-                    <Card className="p-6">
-                      <div className="flex items-center justify-between mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
+                    <Card className="p-4 sm:p-6">
+                      <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100 dark:border-gray-800">
                         <div>
-                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Choose Payment Method</h2>
+                          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Choose Payment Method</h2>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                             Transactions are encrypted and verified via official Safaricom Daraja & PCI-DSS gateways
                           </p>
                         </div>
-                        <FiLock className="text-xl text-primary-600 dark:text-primary-400" />
+                        <FiLock className="text-lg sm:text-xl text-primary-600 dark:text-primary-400" />
                       </div>
 
                       {/* Payment Method Selector */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 mb-5 sm:mb-6">
                         <button
                           type="button"
                           onClick={() => setPaymentMethod('mpesa')}
-                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                          className={`p-2.5 sm:p-3.5 border-2 rounded-xl text-center transition-all ${
                             paymentMethod === 'mpesa'
                               ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 shadow-sm'
                               : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                           }`}
                         >
-                          <div className="text-2xl mb-1">📱</div>
-                          <div className="font-bold text-sm text-gray-900 dark:text-white">M-Pesa Express</div>
-                          <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">STK Push</span>
+                          <div className="text-xl sm:text-2xl mb-1">📱</div>
+                          <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">M-Pesa Express</div>
+                          <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">STK Push</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setPaymentMethod('cod')}
-                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                          className={`p-2.5 sm:p-3.5 border-2 rounded-xl text-center transition-all ${
                             paymentMethod === 'cod'
                               ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30 shadow-sm'
                               : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
                           }`}
                         >
-                          <div className="text-2xl mb-1">💵</div>
-                          <div className="font-bold text-sm text-gray-900 dark:text-white">Pay on Delivery</div>
-                          <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">Inspect & Pay</span>
+                          <div className="text-xl sm:text-2xl mb-1">💵</div>
+                          <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">Pay on Delivery</div>
+                          <span className="text-[11px] sm:text-xs font-semibold text-amber-700 dark:text-amber-400">Inspect & Pay</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setPaymentMethod('card')}
-                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                          className={`p-2.5 sm:p-3.5 border-2 rounded-xl text-center transition-all ${
                             paymentMethod === 'card'
                               ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 shadow-sm'
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
                           }`}
                         >
-                          <div className="text-2xl mb-1">💳</div>
-                          <div className="font-bold text-sm text-gray-900 dark:text-white">Card (Stripe)</div>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">Visa / MC</span>
+                          <div className="text-xl sm:text-2xl mb-1">💳</div>
+                          <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">Card (Stripe)</div>
+                          <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">Visa / MC</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setPaymentMethod('paypal')}
-                          className={`p-3.5 border-2 rounded-xl text-center transition-all ${
+                          className={`p-2.5 sm:p-3.5 border-2 rounded-xl text-center transition-all ${
                             paymentMethod === 'paypal'
                               ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-sm'
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
                           }`}
                         >
-                          <div className="text-2xl mb-1">🅿️</div>
-                          <div className="font-bold text-sm text-gray-900 dark:text-white">PayPal</div>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">International</span>
+                          <div className="text-xl sm:text-2xl mb-1">🅿️</div>
+                          <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">PayPal</div>
+                          <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">International</span>
                         </button>
                       </div>
 
