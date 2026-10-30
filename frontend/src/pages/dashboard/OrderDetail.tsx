@@ -206,11 +206,11 @@ const OrderDetail = () => {
         </div>
 
         {/* Order Header Card */}
-        <Card className="p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-gray-800">
+        <Card className="p-4 sm:p-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 sm:pb-6 border-b border-gray-100 dark:border-gray-800">
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900 dark:text-white">
                   Order #{order.orderNumber}
                 </h1>
                 <Badge variant={getOrderStatusColor(order.status)}>{order.status}</Badge>
@@ -218,15 +218,15 @@ const OrderDetail = () => {
                   {order.paymentStatus}
                 </Badge>
               </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 Placed on {formatDate(order.createdAt)} • Payment Method: <strong>{order.paymentMethod}</strong>
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 block">
+            <div className="text-left md:text-right">
+              <span className="text-[11px] sm:text-xs uppercase font-bold text-gray-500 dark:text-gray-400 block">
                 Total Amount
               </span>
-              <span className="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400">
+              <span className="text-xl sm:text-2xl md:text-3xl font-black text-primary-600 dark:text-primary-400">
                 {formatCurrency(Number(order.total) || 0)}
               </span>
             </div>
@@ -234,11 +234,11 @@ const OrderDetail = () => {
 
           {/* Progress Tracker (unless cancelled) */}
           {!isCancelled ? (
-            <div className="pt-6">
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block mb-4">
+            <div className="pt-4 sm:pt-6 overflow-x-auto">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 block mb-3 sm:mb-4">
                 Fulfillment Progress
               </span>
-              <div className="grid grid-cols-5 gap-2 relative">
+              <div className="grid grid-cols-5 gap-1.5 sm:gap-2 min-w-[320px]">
                 {STEPS.map((step, idx) => {
                   const isDone = currentStepIndex >= idx;
                   const isCurrent = currentStepIndex === idx;
@@ -246,7 +246,7 @@ const OrderDetail = () => {
                   return (
                     <div key={step} className="flex flex-col items-center text-center">
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all mb-1.5 ${
+                        className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all mb-1 sm:mb-1.5 ${
                           isDone
                             ? 'bg-primary-600 text-white shadow-md'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-400'
@@ -255,7 +255,7 @@ const OrderDetail = () => {
                         {isDone ? <FiCheckCircle /> : idx + 1}
                       </div>
                       <span
-                        className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider ${
+                        className={`text-[9px] sm:text-xs font-bold uppercase tracking-wider ${
                           isDone
                             ? 'text-gray-900 dark:text-white'
                             : 'text-gray-400 dark:text-gray-500'
@@ -278,20 +278,20 @@ const OrderDetail = () => {
         </Card>
 
         {/* Two Columns: Items & Address/Billing */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Order Items Table (2 cols) */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="p-6">
-              <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            <Card className="p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
                 <FiPackage className="text-primary-600" /> Purchased Hardware ({order.items?.length || 0})
               </h2>
 
               <div className="divide-y divide-gray-100 dark:divide-gray-800">
                 {order.items?.map((item: any) => (
-                  <div key={item.id} className="py-4 space-y-3">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
+                  <div key={item.id} className="py-3 sm:py-4 space-y-2.5 sm:space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
                           <img
                             src={item.productImage || getProductImage(item.product)}
                             alt={item.productName}
@@ -301,23 +301,23 @@ const OrderDetail = () => {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <Link
                             to={`/products/${item.productId}`}
-                            className="font-bold text-gray-900 dark:text-white hover:text-primary-600 transition-colors line-clamp-1 text-sm sm:text-base"
+                            className="font-bold text-gray-900 dark:text-white hover:text-primary-600 transition-colors line-clamp-1 text-xs sm:text-base"
                           >
                             {item.productName}
                           </Link>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">
                             SKU: {item.productSku || 'APEX-LAPTOP'} • Qty: {item.quantity}
                           </p>
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
+                      <div className="text-left sm:text-right shrink-0 pl-15 sm:pl-0 flex items-center justify-between sm:block">
                         <span className="font-bold text-gray-900 dark:text-white block text-sm sm:text-base">
                           {formatCurrency(Number(item.price) * item.quantity)}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400">
                           {formatCurrency(Number(item.price))} each
                         </span>
                       </div>

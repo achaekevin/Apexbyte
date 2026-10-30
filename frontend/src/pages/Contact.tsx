@@ -244,12 +244,12 @@ const Contact = () => {
 
             {/* Right 2 Columns: Working Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl rounded-2xl">
-                <div className="mb-6">
+              <Card className="p-4 sm:p-6 lg:p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl rounded-2xl">
+                <div className="mb-5 sm:mb-6">
                   <span className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider block mb-1">
                     Send Us a Message
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-gray-900 dark:text-white">
                     Get in Touch with Our Hardware Team
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -306,7 +306,7 @@ const Contact = () => {
                       <select
                         value={formData.subject}
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-base sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       >
                         <option value="Laptop Recommendation / Inquiry">Looking for Laptop Recommendation</option>
                         <option value="Confirm Showroom Stock">Check Physical Showroom Stock</option>

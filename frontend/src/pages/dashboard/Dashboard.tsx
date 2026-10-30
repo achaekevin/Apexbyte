@@ -59,17 +59,17 @@ const Dashboard = () => {
       </Helmet>
 
       <div>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">
             Welcome back, {user?.firstName}!
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             Here's what's happening with your account
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -77,18 +77,18 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
+              <Card className="p-3 sm:p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                   <div
-                    className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center text-2xl`}
+                    className={`w-9 h-9 sm:w-12 sm:h-12 ${stat.color} rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0`}
                   >
                     {stat.icon}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-[11px] sm:text-sm text-gray-600 dark:text-gray-400">
                       {stat.label}
                     </p>
-                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-base sm:text-2xl font-bold truncate">{stat.value}</p>
                   </div>
                 </div>
               </Card>
@@ -97,30 +97,30 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <Link to="/shop">
-            <Card className="p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-4xl mb-3">🛍️</div>
-              <h3 className="font-bold mb-2">Browse Products</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
+              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">🛍️</div>
+              <h3 className="font-bold text-sm sm:text-base mb-1">Browse Products</h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 Explore our latest laptops and deals
               </p>
             </Card>
           </Link>
           <Link to="/dashboard/orders">
-            <Card className="p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-4xl mb-3">📦</div>
-              <h3 className="font-bold mb-2">Track Orders</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
+              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">📦</div>
+              <h3 className="font-bold text-sm sm:text-base mb-1">Track Orders</h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 View and manage your orders
               </p>
             </Card>
           </Link>
           <Link to="/dashboard/wishlist">
-            <Card className="p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-4xl mb-3">❤️</div>
-              <h3 className="font-bold mb-2">Wishlist</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
+              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">❤️</div>
+              <h3 className="font-bold text-sm sm:text-base mb-1">Wishlist</h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 Manage your saved items
               </p>
             </Card>
@@ -128,11 +128,11 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Orders */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Recent Orders</h2>
+        <Card className="p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-2xl font-bold">Recent Orders</h2>
             <Link to="/dashboard/orders">
-              <Button variant="ghost">View All</Button>
+              <Button variant="ghost" size="sm">View All</Button>
             </Link>
           </div>
 
@@ -143,38 +143,38 @@ const Dashboard = () => {
               ))}
             </div>
           ) : ordersData?.data.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📦</div>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <div className="text-center py-8 sm:py-12">
+              <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">📦</div>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4">
                 No orders yet
               </p>
               <Link to="/shop">
-                <Button>Start Shopping</Button>
+                <Button size="sm">Start Shopping</Button>
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {ordersData?.data.slice(0, 5).map((order: any) => (
                 <Link
                   key={order.id}
                   to={`/dashboard/orders/${order.id}`}
                   className="block"
                 >
-                  <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-500 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="font-bold">{order.orderNumber}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-primary-500 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-xs sm:text-sm">{order.orderNumber}</span>
                         <Badge variant={getOrderStatusColor(order.status)}>
                           {order.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {new Date(order.createdAt).toLocaleDateString()} •{' '}
                         {order.items.length} item{order.items.length !== 1 ? 's' : ''}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-primary-600">
+                    <div className="text-left sm:text-right">
+                      <p className="text-base sm:text-lg font-bold text-primary-600">
                         {formatCurrency(order.totalAmount)}
                       </p>
                     </div>

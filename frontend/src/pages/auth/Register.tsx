@@ -44,13 +44,13 @@ const Register = () => {
   return (
     <Card>
       <Card.Body>
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-2">Create Account</h2>
-          <p className="text-gray-600 dark:text-gray-400">Join us today</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 sm:mb-2">Create Account</h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Join us today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Input
               label="First Name"
               placeholder="John"

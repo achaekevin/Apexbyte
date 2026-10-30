@@ -132,41 +132,41 @@ const Addresses = () => {
       </Helmet>
 
       <div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-3xl font-bold">Delivery Addresses</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Delivery Addresses</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
               Manage shipping and showroom pickup contact locations for fast parcel dispatch.
             </p>
           </div>
-          <Button onClick={openAddModal} className="flex items-center gap-2">
+          <Button onClick={openAddModal} size="sm" className="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto">
             <FiPlus /> Add New Address
           </Button>
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {[1, 2].map((i) => (
               <LoadingSkeleton key={i} className="h-48 rounded-xl" />
             ))}
           </div>
         ) : !addresses || addresses.length === 0 ? (
-          <Card className="text-center py-12">
-            <FiMapPin className="text-5xl text-gray-400 mx-auto mb-3" />
-            <h3 className="text-xl font-bold mb-2">No Saved Addresses</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto text-sm">
+          <Card className="text-center py-8 sm:py-12 px-4">
+            <FiMapPin className="text-4xl sm:text-5xl text-gray-400 mx-auto mb-3" />
+            <h3 className="text-lg sm:text-xl font-bold mb-2">No Saved Addresses</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto text-xs sm:text-sm">
               Save your residence, office, or courier collection point in Kisii, Nairobi, or countrywide.
             </p>
-            <Button onClick={openAddModal} className="inline-flex items-center gap-2">
+            <Button onClick={openAddModal} size="sm" className="inline-flex items-center gap-2">
               <FiPlus /> Add Your First Address
             </Button>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {addresses.map((addr) => (
               <Card
                 key={addr.id}
-                className={`p-6 relative border-2 transition-all ${
+                className={`p-4 sm:p-6 relative border-2 transition-all ${
                   addr.isDefault
                     ? 'border-primary-500/80 shadow-md bg-primary-50/10 dark:bg-primary-950/10'
                     : 'border-transparent hover:border-gray-300 dark:hover:border-gray-700'

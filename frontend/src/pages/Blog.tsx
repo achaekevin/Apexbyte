@@ -50,11 +50,11 @@ const Blog = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
             {/* Sidebar */}
             <aside className="lg:col-span-1">
-              <Card className="p-6 sticky top-4">
+              <Card className="p-4 sm:p-6 sticky top-4">
                 <h2 className="font-bold text-lg mb-4">Categories</h2>
                 <div className="space-y-2">
                   <button

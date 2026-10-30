@@ -28,7 +28,7 @@ const About = () => {
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-20 overflow-hidden transition-colors">
+        <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-12 sm:py-20 overflow-hidden transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -46,16 +46,16 @@ const About = () => {
               <p className="text-sm sm:text-base lg:text-lg text-slate-700 dark:text-slate-200 leading-relaxed mb-6 sm:mb-8">
                 We started Apexbyte because buying a laptop in Kisii and Western Kenya shouldn't feel like gambling with your hard-earned money. We test, certify, and warranty every single machine before it leaves our showroom.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3 sm:gap-4">
                 <Link to="/shop">
-                  <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg">
+                  <Button size="md" className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg">
                     Browse Inspected Laptops
                   </Button>
                 </Link>
                 <Link to="/contact">
                   <Button
                     variant="outline"
-                    size="lg"
+                    size="md"
                     className="border-gray-300 dark:border-gray-700 text-slate-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
                     Visit Our Showroom
@@ -67,14 +67,14 @@ const About = () => {
         </section>
 
         {/* The Story Behind Apexbyte */}
-        <section className="py-16 sm:py-20">
+        <section className="py-10 sm:py-16 lg:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div>
                 <span className="text-primary-600 dark:text-primary-400 font-bold uppercase tracking-wider text-xs block mb-2">
                   Our Real Story
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-black mb-6 leading-tight">
+                <h2 className="text-xl sm:text-3xl lg:text-4xl font-black mb-4 sm:mb-6 leading-tight">
                   Tired of Gray-Market Traps & Fake Power Bricks in Town
                 </h2>
                 <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">

@@ -37,15 +37,17 @@ const Orders = () => {
       </Helmet>
 
       <div>
-        <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">My Orders</h1>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
           {filterOptions.map((option) => (
             <Button
               key={option.value}
               variant={filter === option.value ? 'primary' : 'outline'}
+              size="sm"
               onClick={() => setFilter(option.value)}
+              className="text-xs sm:text-sm"
             >
               {option.label}
             </Button>
@@ -60,16 +62,16 @@ const Orders = () => {
             ))}
           </div>
         ) : ordersData?.data.length === 0 ? (
-          <Card className="text-center py-12">
-            <div className="text-6xl mb-4">📦</div>
-            <h3 className="text-xl font-bold mb-2">No orders found</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <Card className="text-center py-8 sm:py-12 px-4">
+            <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">📦</div>
+            <h3 className="text-lg sm:text-xl font-bold mb-2">No orders found</h3>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-6">
               {filter === 'all'
                 ? "You haven't placed any orders yet"
                 : `No ${filter.toLowerCase()} orders`}
             </p>
             <Link to="/shop">
-              <Button>Start Shopping</Button>
+              <Button size="sm">Start Shopping</Button>
             </Link>
           </Card>
         ) : (
@@ -81,21 +83,21 @@ const Orders = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                <Card className="p-3.5 sm:p-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold">{order.orderNumber}</h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-sm sm:text-base md:text-lg font-bold">{order.orderNumber}</h3>
                         <Badge variant={getOrderStatusColor(order.status)}>
                           {order.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         Placed on {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-primary-600 mb-2">
+                    <div className="text-left md:text-right flex items-center justify-between md:block">
+                      <p className="text-base sm:text-xl md:text-2xl font-bold text-primary-600 md:mb-2">
                         {formatCurrency(order.totalAmount)}
                       </p>
                       <Link to={`/dashboard/orders/${order.id}`}>
@@ -105,29 +107,29 @@ const Orders = () => {
                   </div>
 
                   {/* Order Items Preview */}
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3 pt-3 border-t border-gray-100 dark:border-gray-700/60">
                     {order.items.slice(0, 2).map((item: any) => (
-                      <div key={item.id} className="flex gap-3">
+                      <div key={item.id} className="flex gap-2.5 sm:gap-3 items-center">
                         <img
                           src={getProductImage(item.productImage || item.product)}
                           alt={item.product?.name || item.productName}
                           onError={(e) => {
                             e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                           }}
-                          className="w-16 h-16 object-cover rounded bg-gray-100 dark:bg-gray-800"
+                          className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0"
                         />
-                        <div className="flex-1">
-                          <p className="font-medium line-clamp-1">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs sm:text-sm font-medium line-clamp-1">
                             {item.product?.name || item.productName}
                           </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">
                             Qty: {item.quantity} × {formatCurrency(item.price)}
                           </p>
                         </div>
                       </div>
                     ))}
                     {order.items.length > 2 && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         + {order.items.length - 2} more item
                         {order.items.length - 2 !== 1 ? 's' : ''}
                       </p>

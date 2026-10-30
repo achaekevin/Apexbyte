@@ -68,16 +68,16 @@ const Profile = () => {
       </Helmet>
 
       <div>
-        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">My Profile</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Profile Information */}
-          <Card className="p-6">
-            <h2 className="text-xl font-bold mb-6">Profile Information</h2>
+          <Card className="p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Profile Information</h2>
             <form onSubmit={handleProfileSubmit}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700 dark:text-gray-300">
                     First Name
                   </label>
                   <Input
@@ -92,7 +92,7 @@ const Profile = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700 dark:text-gray-300">
                     Last Name
                   </label>
                   <Input
@@ -107,7 +107,7 @@ const Profile = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700 dark:text-gray-300">Email</label>
                   <Input
                     type="email"
                     value={profileData.email}
@@ -121,7 +121,7 @@ const Profile = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Phone</label>
+                  <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-gray-700 dark:text-gray-300">Phone</label>
                   <Input
                     type="tel"
                     value={profileData.phone}
@@ -147,8 +147,8 @@ const Profile = () => {
           </Card>
 
           {/* Change Password */}
-          <Card className="p-6">
-            <h2 className="text-xl font-bold mb-6">Change Password</h2>
+          <Card className="p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Change Password</h2>
             <form onSubmit={handlePasswordSubmit}>
               <div className="space-y-4">
                 <div>

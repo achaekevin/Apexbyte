@@ -40,9 +40,9 @@ const Login = () => {
   return (
     <Card>
       <Card.Body>
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-2">Welcome Back</h2>
-          <p className="text-gray-600 dark:text-gray-400">Login to your account</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 sm:mb-2">Welcome Back</h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Login to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
