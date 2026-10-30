@@ -54,6 +54,9 @@ model User {
   paymentMethods PaymentMethod[]
   supportTickets SupportTicket[]
   rewardPoints  RewardPoints?
+  warranties    Warranty[]
+  warrantyClaims WarrantyClaim[]
+  returnRequests ReturnRequest[]
   
   @@index([email])
   @@index([role])
@@ -248,6 +251,7 @@ model Product {
   inventoryLogs InventoryLog[]
   recentlyViewed RecentlyViewed[]
   compareItems  ComparisonItem[]
+  warranties    Warranty[]
   
   @@index([slug])
   @@index([brandId])
@@ -405,6 +409,8 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+  RETURN_REQUESTED
+  RETURNED
   REFUNDED
 }
 
@@ -471,6 +477,8 @@ model Order {
   items           OrderItem[]
   payments        Payment[]
   invoices        Invoice[]
+  statusHistory   OrderStatusHistory[]
+  returnRequests  ReturnRequest[]
   
   @@index([orderNumber])
   @@index([userId])
@@ -498,6 +506,8 @@ model OrderItem {
   
   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product     Product  @relation(fields: [productId], references: [id])
+  warranty    Warranty?
+  returnItems ReturnItem[]
   
   @@index([orderId])
   @@index([productId])
@@ -514,10 +524,17 @@ model Payment {
   method            PaymentMethodType
   status            PaymentStatus     @default(PENDING)
   
-  // Gateway specific
+  // Gateway & M-Pesa specific
   transactionId     String?       @unique
   gatewayResponse   String?       @db.Text // JSON
-  
+  checkoutRequestId String?       @unique
+  merchantRequestId String?
+  mpesaReceiptNumber String?
+  phoneNumber       String?
+  resultCode        Int?
+  resultDesc        String?
+  rawCallback       String?       @db.Text
+
   // Refund info
   refundedAmount    Decimal?      @db.Decimal(10, 2)
   refundedAt        DateTime?
@@ -530,6 +547,8 @@ model Payment {
   
   @@index([orderId])
   @@index([transactionId])
+  @@index([checkoutRequestId])
+  @@index([mpesaReceiptNumber])
   @@map("payments")
 }
 
@@ -926,4 +945,140 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ==================== ORDER STATUS HISTORY ====================
+
+model OrderStatusHistory {
+  id              String       @id @default(uuid())
+  orderId         String
+  previousStatus  OrderStatus?
+  newStatus       OrderStatus
+  notes           String?      @db.Text
+  changedBy       String?      // User ID or 'SYSTEM' / 'MPESA_CALLBACK'
+  createdAt       DateTime     @default(now())
+
+  order           Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("order_status_history")
+}
+
+// ==================== WARRANTY MANAGEMENT ====================
+
+enum WarrantyClaimStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REPAIR_IN_PROGRESS
+  REPLACEMENT_ARRANGED
+  REJECTED
+  RESOLVED
+}
+
+model Warranty {
+  id              String          @id @default(uuid())
+  orderItemId     String          @unique
+  productId       String
+  userId          String?
+  serialNumber    String?
+  durationMonths  Int             @default(12)
+  warrantyType    String          @default("MANUFACTURER") // STORE, MANUFACTURER
+  startDate       DateTime
+  endDate         DateTime
+  terms           String?         @db.Text
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  orderItem       OrderItem       @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  product         Product         @relation(fields: [productId], references: [id])
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  claims          WarrantyClaim[]
+
+  @@index([orderItemId])
+  @@index([productId])
+  @@index([userId])
+  @@index([serialNumber])
+  @@index([endDate])
+  @@map("warranties")
+}
+
+model WarrantyClaim {
+  id                String              @id @default(uuid())
+  claimNumber       String              @unique
+  warrantyId        String
+  userId            String
+  issueDescription  String              @db.Text
+  evidenceUrls      String?             @db.Text // JSON array of uploaded evidence image URLs
+  status            WarrantyClaimStatus @default(SUBMITTED)
+  resolutionNotes   String?             @db.Text
+  resolvedAt        DateTime?
+  reviewedBy        String?             // Admin user ID
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  warranty          Warranty            @relation(fields: [warrantyId], references: [id], onDelete: Cascade)
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([warrantyId])
+  @@index([userId])
+  @@index([claimNumber])
+  @@index([status])
+  @@map("warranty_claims")
+}
+
+// ==================== RETURNS & REFUNDS ====================
+
+enum ReturnStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RECEIVED
+  INSPECTED
+  REFUNDED
+  CLOSED
+}
+
+model ReturnRequest {
+  id              String        @id @default(uuid())
+  returnNumber    String        @unique
+  orderId         String
+  userId          String
+  reason          String        // DEFECTIVE, WRONG_ITEM, NOT_AS_DESCRIBED, CHANGED_MIND
+  description     String        @db.Text
+  evidenceUrls    String?       @db.Text // JSON array of image URLs
+  status          ReturnStatus  @default(PENDING)
+  adminNotes      String?       @db.Text
+  refundAmount    Decimal?      @db.Decimal(10, 2)
+  restocked       Boolean       @default(false)
+  reviewedBy      String?       // Admin user ID
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items           ReturnItem[]
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([returnNumber])
+  @@index([status])
+  @@map("return_requests")
+}
+
+model ReturnItem {
+  id              String        @id @default(uuid())
+  returnRequestId String
+  orderItemId     String
+  quantity        Int           @default(1)
+  condition       String?       // NEW, OPEN_BOX, DAMAGED, DEFECTIVE
+
+  returnRequest   ReturnRequest @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+  orderItem       OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  @@index([returnRequestId])
+  @@index([orderItemId])
+  @@map("return_items")
 }
