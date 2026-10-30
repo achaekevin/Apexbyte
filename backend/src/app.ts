@@ -37,6 +37,8 @@ import notificationRoutes from './routes/notification.routes';
 import adminRoutes from './routes/admin.routes';
 import searchRoutes from './routes/search.routes';
 import supportRoutes from './routes/support.routes';
+import warrantyRoutes from './routes/warranty.routes';
+import returnRoutes from './routes/return.routes';
 
 const app: Application = express();
 
@@ -202,6 +204,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/warranties', warrantyRoutes);
+app.use('/api/returns', returnRoutes);
 
 // Locate frontend dist directory across dev/prod environments
 const candidateDists = [
