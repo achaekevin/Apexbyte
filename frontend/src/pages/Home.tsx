@@ -1,9 +1,10 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { FiAward, FiArrowRight } from 'react-icons/fi';
+import { FiAward, FiArrowRight, FiChevronLeft, FiChevronRight, FiCheckCircle } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -15,9 +16,52 @@ import { useCartStore } from '../store/cartStore';
 
 import api from '../services/api';
 
+const heroSlides = [
+  {
+    image: '/laptops/showroom-fleet.jpg',
+    title: 'Mocha Place Showroom Fleet',
+    badge: 'Live Kisii Inventory',
+    tag: 'Tested & Powered On',
+    desc: 'HP ProBook, EliteBook & Core i5/i7 Workstations',
+  },
+  {
+    image: '/hero-laptops.png',
+    title: 'Certified Pre-Owned & Brand New',
+    badge: '7-Point Diagnostics',
+    tag: '1-Year Local Warranty',
+    desc: 'Dell Vostro, Latitude, Apple MacBook & Lenovo',
+  },
+  {
+    image: '/laptops/hero-showcase.png',
+    title: 'High-Performance Workstations',
+    badge: 'Hardware Customization',
+    tag: 'Free RAM / SSD Upgrades',
+    desc: 'Lenovo ThinkPad, ASUS ROG Gaming & Ultrabooks',
+  },
+];
+
 const Home = () => {
   const navigate = useNavigate();
   const { addItem } = useCartStore();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Auto-cycle through the alternating showcase slides every 4.5 seconds
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
 
   // Fetch featured products
   const { data: featuredProducts, isLoading: loadingFeatured } = useQuery({
@@ -138,16 +182,135 @@ const Home = () => {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative flex justify-center"
+              className="relative flex justify-center w-full"
             >
-              <div className="relative z-10 w-full max-w-sm sm:max-w-md lg:max-w-lg">
-                <img
-                  src="/hero-laptops.png"
-                  alt="Apexbyte Showroom Tested Laptops Kisii"
-                  className="rounded-2xl shadow-xl w-full max-h-[280px] sm:max-h-[380px] lg:max-h-[440px] object-cover object-center border border-gray-200 dark:border-gray-800"
+              <div
+                className="relative z-10 w-full max-w-sm sm:max-w-md lg:max-w-lg select-none"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onTouchStart={() => setIsPaused(true)}
+                onTouchEnd={() => setIsPaused(false)}
+              >
+                {/* Floating Alternating Badge 1 (Top-Left): Showroom Fleet */}
+                <motion.div
+                  animate={{ y: [-4, 4, -4], rotate: [-1, 1, -1] }}
+                  transition={{ repeat: Infinity, duration: 4.5, ease: 'easeInOut' }}
+                  className="absolute -top-3 -left-2 sm:-top-4 sm:-left-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex items-center gap-2"
+                >
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold text-gray-900 dark:text-white">
+                    Showroom Fleet Active
+                  </span>
+                </motion.div>
+
+                {/* Floating Alternating Badge 2 (Top-Right): Kisii Dispatch */}
+                <motion.div
+                  animate={{ y: [3, -4, 3] }}
+                  transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
+                  className="absolute -top-3 -right-2 sm:-top-4 sm:-right-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hidden sm:flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400"
+                >
+                  <span>⚡</span> Same-Day Kisii Dispatch
+                </motion.div>
+
+                {/* Floating Alternating Badge 3 (Bottom-Right): 1-Year Local Warranty */}
+                <motion.div
+                  animate={{ y: [4, -4, 4], rotate: [1, -1, 1] }}
+                  transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+                  className="absolute -bottom-3 -right-2 sm:-bottom-4 sm:-right-4 z-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-3 py-2 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 flex items-center gap-2.5"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm font-black">
+                    <FiCheckCircle size={16} />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-[11px] font-bold block text-gray-900 dark:text-white leading-tight">
+                      1-Year Local Warranty
+                    </span>
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                      7-Point Diagnostic Checked
+                    </span>
+                  </div>
+                </motion.div>
+
+                {/* Main Alternating Image Showcase */}
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-gray-200/80 dark:border-gray-700/80 aspect-[4/3] bg-gray-100 dark:bg-gray-800">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentSlide}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.03 }}
+                      transition={{ duration: 0.55, ease: 'easeOut' }}
+                      className="w-full h-full relative"
+                    >
+                      <img
+                        src={heroSlides[currentSlide].image}
+                        alt={heroSlides[currentSlide].title}
+                        className="w-full h-full object-cover object-center"
+                      />
+
+                      {/* Bottom Caption Overlay Banner */}
+                      <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/60 to-transparent text-white">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 block">
+                              {heroSlides[currentSlide].badge}
+                            </span>
+                            <h3 className="text-xs sm:text-sm font-bold text-white truncate">
+                              {heroSlides[currentSlide].title}
+                            </h3>
+                            <p className="text-[10px] text-gray-300 truncate hidden sm:block">
+                              {heroSlides[currentSlide].desc}
+                            </p>
+                          </div>
+                          <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-gray-100 shrink-0">
+                            {heroSlides[currentSlide].tag}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* Manual Arrow Controls */}
+                  <button
+                    type="button"
+                    onClick={prevSlide}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md active:scale-95"
+                    aria-label="Previous laptop slide"
+                  >
+                    <FiChevronLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextSlide}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md active:scale-95"
+                    aria-label="Next laptop slide"
+                  >
+                    <FiChevronRight size={18} />
+                  </button>
+
+                  {/* Dot Indicators */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full">
+                    {heroSlides.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`h-1.5 rounded-full transition-all ${
+                          currentSlide === idx ? 'w-5 bg-amber-400' : 'w-1.5 bg-white/60 hover:bg-white'
+                        }`}
+                        aria-label={`Show laptop showcase ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Animated Pulsing Ambient Glow Halo */}
+                <motion.div
+                  animate={{ scale: [1, 1.06, 1], opacity: [0.2, 0.35, 0.2] }}
+                  transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+                  className="absolute inset-0 bg-gradient-to-tr from-primary-600/30 via-sky-500/20 to-purple-600/30 rounded-3xl blur-2xl -z-10"
                 />
               </div>
-              <div className="absolute inset-0 bg-primary-500/10 dark:bg-slate-800 rounded-2xl transform rotate-2 sm:rotate-3 opacity-30 transition-colors" />
             </motion.div>
           </div>
         </div>
