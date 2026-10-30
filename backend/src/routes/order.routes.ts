@@ -7,6 +7,7 @@ import {
   createOrder,
   getOrders,
   getOrder,
+  getGuestOrder,
   cancelOrder,
   getAllOrders,
   updateOrderStatus,
@@ -31,6 +32,7 @@ const updateStatusValidation = [
 ];
 
 // Customer routes
+router.get('/guest/track', getGuestOrder);
 router.get('/', authenticate, getOrders);
 router.get('/:id', authenticate, getOrder);
 router.post('/', createOrderLimiter, optionalAuth, validate(createOrderValidation), createOrder);

@@ -88,6 +88,7 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/returns" element={<Returns />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Route>
 
       {/* Auth Routes */}
@@ -97,18 +98,6 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-      </Route>
-
-      {/* Checkout Route */}
-      <Route
-        path="/checkout"
-        element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Checkout />} />
       </Route>
 
       <Route path="/order-success/:orderId" element={<OrderSuccess />} />
