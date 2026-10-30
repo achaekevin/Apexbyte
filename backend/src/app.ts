@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -98,8 +99,29 @@ app.use((_req, res, next) => {
 });
 
 // CORS configuration
-const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:4000',
+  'http://127.0.0.1:4000',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+]
+  .filter(Boolean)
+  .flatMap((url) => (url as string).split(',').map((u) => u.trim()));
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      (process.env.NODE_ENV !== 'production' &&
+        (/^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)))
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -181,7 +203,31 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/support', supportRoutes);
 
-// 404 handler
+// Locate frontend dist directory across dev/prod environments
+const candidateDists = [
+  path.resolve(process.cwd(), '../frontend/dist'),
+  path.resolve(process.cwd(), 'frontend/dist'),
+  path.resolve(__dirname, '../../frontend/dist'),
+  path.resolve(__dirname, '../../../frontend/dist'),
+];
+const frontendDist = candidateDists.find((dir) => fs.existsSync(dir));
+
+if (frontendDist) {
+  logger.info(`🌐 Serving frontend static files from: ${frontendDist}`);
+  app.use(express.static(frontendDist));
+
+  // Client-side routing fallback (SPA index.html) for all non-API and non-upload GET requests
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  logger.warn('⚠️ Frontend dist directory not found. Run "npm run build:frontend" to serve the website.');
+}
+
+// 404 handler (handles unmatched /api routes and unhandled methods)
 app.use(notFound);
 
 // Error handler

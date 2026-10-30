@@ -17,7 +17,7 @@ import app from './app';
 import { connectDatabase, disconnectDatabase } from './config/database';
 import logger from './config/logger';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error: Error) => {
@@ -33,7 +33,8 @@ const startServer = async () => {
 
     // Start listening
     const server = app.listen(PORT, () => {
-      logger.info(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+      logger.info(`🚀 Unified server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+      logger.info(`🌐 Website & API: http://localhost:${PORT}`);
       logger.info(`📝 API Documentation: http://localhost:${PORT}/api/docs`);
     });
 
