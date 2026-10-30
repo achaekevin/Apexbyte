@@ -30,19 +30,19 @@ const Card = ({ children, hover = false, glass = false, className, ...props }: C
 };
 
 const CardHeader = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={clsx('p-6 border-b border-gray-200 dark:border-gray-700', className)} {...props}>
+  <div className={clsx('p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700', className)} {...props}>
     {children}
   </div>
 );
 
 const CardBody = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={clsx('p-6', className)} {...props}>
+  <div className={clsx('p-4 sm:p-6', className)} {...props}>
     {children}
   </div>
 );
 
 const CardFooter = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={clsx('p-6 border-t border-gray-200 dark:border-gray-700', className)} {...props}>
+  <div className={clsx('p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700', className)} {...props}>
     {children}
   </div>
 );

@@ -35,9 +35,9 @@ const Button = ({
   };
 
   const sizeClasses = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    sm: 'px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm min-h-[36px] sm:min-h-[40px]',
+    md: 'px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base min-h-[44px]',
+    lg: 'px-5 py-3 sm:px-8 sm:py-3.5 text-base sm:text-lg min-h-[48px]',
   };
 
   const MotionButton: any = motion.button;
