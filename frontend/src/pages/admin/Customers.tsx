@@ -35,18 +35,18 @@ const AdminCustomers = () => {
         <title>Manage Customers - Apexbyte Admin</title>
       </Helmet>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
             Customer Directory
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
             View registered clients, buyer order history, lifetime spend, and account roles.
           </p>
         </div>
 
         {/* Filter & Search */}
-        <Card className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <Card className="p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center">
           <div className="relative flex-1 w-full">
             <FiSearch className="absolute left-3.5 top-3 text-gray-400" />
             <Input
@@ -70,7 +70,7 @@ const AdminCustomers = () => {
                 setRoleFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm font-medium focus:ring-2 focus:ring-primary-500"
+              className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm font-medium focus:ring-2 focus:ring-primary-500"
             >
               <option value="ALL">All Roles</option>
               <option value="CUSTOMER">Customer</option>
@@ -83,7 +83,7 @@ const AdminCustomers = () => {
         {/* Customers Table */}
         <Card className="overflow-hidden border border-gray-200 dark:border-gray-800">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-sm min-w-[580px]">
               <thead className="bg-gray-50 dark:bg-gray-800/60 text-xs uppercase font-bold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                 <tr>
                   <th className="py-3.5 px-4">Customer</th>

@@ -380,27 +380,27 @@ const AdminProducts = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <FiPackage className="text-primary-500" /> Laptop Inventory & Pricing Control
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
             Add new laptops, edit prices in Kenyan Shillings (KSh), manage hardware specs, and upload product photos
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <Link to="/admin/brands">
-            <Button variant="outline">Manage Brands</Button>
+            <Button variant="outline" size="sm">Manage Brands</Button>
           </Link>
-          <Button onClick={openCreateModal} leftIcon={<FiPlus />}>
+          <Button onClick={openCreateModal} size="sm" leftIcon={<FiPlus />}>
             Add New Laptop
           </Button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700">
         <div className="relative">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input
             type="text"
             value={searchTerm}
@@ -409,7 +409,7 @@ const AdminProducts = () => {
               setCurrentPage(1);
             }}
             placeholder="Search by laptop name or SKU..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full pl-9 pr-3.5 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
@@ -420,7 +420,7 @@ const AdminProducts = () => {
               setSelectedBrand(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Laptop Brands</option>
             {brands?.map((b) => (
@@ -431,7 +431,7 @@ const AdminProducts = () => {
           </select>
         </div>
 
-        <div className="flex items-center justify-end text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-end text-xs sm:text-sm text-gray-500 dark:text-gray-400">
           Showing {productsList.length} laptops (Page {currentPage})
         </div>
       </div>
@@ -457,7 +457,7 @@ const AdminProducts = () => {
       ) : (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300">
+            <table className="w-full text-left text-sm text-gray-600 dark:text-gray-300 min-w-[660px]">
               <thead className="bg-gray-50 dark:bg-gray-700/50 text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
                 <tr>
                   <th className="px-5 py-3.5">Laptop Model</th>

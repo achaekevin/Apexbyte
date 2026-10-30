@@ -133,14 +133,14 @@ const AdminBrands = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <FiTag className="text-primary-500" /> Laptop Brands Management
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
             Add new laptop brands, upload brand logos, and manage manufacturers across the store
           </p>
         </div>
-        <Button onClick={openCreateModal} leftIcon={<FiPlus />}>
+        <Button onClick={openCreateModal} size="sm" leftIcon={<FiPlus />}>
           Add New Brand
         </Button>
       </div>

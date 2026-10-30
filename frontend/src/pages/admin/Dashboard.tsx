@@ -39,28 +39,28 @@ const AdminDashboard = () => {
   const outOfStockCount = products.filter((p: any) => p.stock === 0).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-primary-700 via-primary-600 to-indigo-700 rounded-2xl p-6 sm:p-8 text-white shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-primary-700 via-primary-600 to-indigo-700 rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-xl">
         <div>
-          <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold uppercase tracking-wider mb-2">
+          <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-2">
             Store Owner & Executive Control Center
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
             Welcome to Apexbyte Admin
           </h1>
-          <p className="text-blue-100 mt-2 max-w-xl text-sm sm:text-base">
+          <p className="text-blue-100 mt-1.5 sm:mt-2 max-w-xl text-xs sm:text-sm lg:text-base">
             Manage your entire laptop catalog, update prices in Kenyan Shillings, and upload new laptop brands seamlessly.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <Link to="/admin/products">
-            <Button className="bg-white text-primary-700 hover:bg-blue-50 shadow-md font-bold" leftIcon={<FiPlus />}>
+            <Button className="bg-white text-primary-700 hover:bg-blue-50 shadow-md font-bold text-xs sm:text-sm" leftIcon={<FiPlus />}>
               Add Laptop
             </Button>
           </Link>
           <Link to="/admin/brands">
-            <Button variant="outline" className="border-white text-white hover:bg-white/10" leftIcon={<FiTag />}>
+            <Button variant="outline" className="border-white text-white hover:bg-white/10 text-xs sm:text-sm" leftIcon={<FiTag />}>
               Add Brand
             </Button>
           </Link>
@@ -68,75 +68,75 @@ const AdminDashboard = () => {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {/* Total Laptops */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <Card className="p-6 flex items-center justify-between">
+          <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Laptops</p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
+              <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Total Laptops</p>
+              <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
                 {loadingProducts ? '...' : totalProducts}
               </h3>
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium">
+              <p className="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 sm:mt-1 font-medium">
                 Active in Storefront
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <FiPackage size={24} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <FiPackage size={20} />
             </div>
           </Card>
         </motion.div>
 
         {/* Laptop Brands */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Card className="p-6 flex items-center justify-between">
+          <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Laptop Brands</p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
+              <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Laptop Brands</p>
+              <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
                 {loadingBrands ? '...' : totalBrands}
               </h3>
-              <p className="text-xs text-primary-600 dark:text-primary-400 mt-1 font-medium">
+              <p className="text-[11px] sm:text-xs text-primary-600 dark:text-primary-400 mt-0.5 sm:mt-1 font-medium">
                 Dell, Apple, HP & custom
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-              <FiTag size={24} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <FiTag size={20} />
             </div>
           </Card>
         </motion.div>
 
         {/* Inventory Health */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <Card className="p-6 flex items-center justify-between">
+          <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Stock Alerts</p>
-              <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
+              <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Stock Alerts</p>
+              <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
                 {outOfStockCount > 0 ? `${outOfStockCount} Out` : `${lowStockCount} Low`}
               </h3>
-              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-medium">
+              <p className="text-[11px] sm:text-xs text-amber-600 dark:text-amber-400 mt-0.5 sm:mt-1 font-medium">
                 Requires restocking
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-              <FiAlertTriangle size={24} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <FiAlertTriangle size={20} />
             </div>
           </Card>
         </motion.div>
 
         {/* Store Currency */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card className="p-6 flex items-center justify-between">
+          <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Primary Currency</p>
-              <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">
+              <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Primary Currency</p>
+              <h3 className="text-lg sm:text-2xl font-extrabold text-gray-900 dark:text-white mt-1">
                 KES (KSh)
               </h3>
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium">
+              <p className="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 sm:mt-1 font-medium">
                 Kenyan Shillings Enabled
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <FiDollarSign size={24} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <FiDollarSign size={20} />
             </div>
           </Card>
         </motion.div>
@@ -215,30 +215,30 @@ const AdminDashboard = () => {
           {products.slice(0, 6).map((product: any) => (
             <div
               key={product.id}
-              className="py-3.5 flex items-center justify-between gap-4 hover:bg-gray-50/60 dark:hover:bg-gray-800/40 px-2 rounded-lg transition-colors"
+              className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 hover:bg-gray-50/60 dark:hover:bg-gray-800/40 px-2 rounded-xl transition-colors"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
+              <div className="flex items-center gap-3 min-w-0">
                 <img
                   src={getProductImage(product)}
                   alt={product.name}
-                  className="w-12 h-12 rounded-lg object-cover bg-gray-100 dark:bg-gray-900 border flex-shrink-0"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg object-cover bg-gray-100 dark:bg-gray-900 border flex-shrink-0"
                   onError={(e) => {
                     e.currentTarget.src = '/laptops/dell-vostro-natural.png';
                   }}
                 />
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-gray-900 dark:text-white text-sm truncate">
+                  <h4 className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm truncate">
                     {product.name}
                   </h4>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-[11px] sm:text-xs text-gray-500">
                     {product.brand?.name} • {product.ram}GB RAM • {product.storage}GB SSD
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <div className="text-right">
-                  <div className="font-bold text-gray-900 dark:text-white text-sm">
+              <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 flex-shrink-0 pl-14 sm:pl-0">
+                <div className="text-left sm:text-right">
+                  <div className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm">
                     {formatCurrency(product.price)}
                   </div>
                   <Badge variant={product.stock > 0 ? 'success' : 'error'}>

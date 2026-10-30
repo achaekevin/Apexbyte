@@ -72,20 +72,20 @@ const AdminOrders = () => {
         <title>Manage Orders - Apexbyte Admin</title>
       </Helmet>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
             Order Management
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
             Track dispatch workflows, verify customer payment methods, and update courier fulfillment states.
           </p>
         </div>
 
         {/* Filter Bar & Search */}
-        <Card className="p-4 space-y-4">
+        <Card className="p-3 sm:p-4 space-y-3 sm:space-y-4">
           {/* Status Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {STATUS_TABS.map((tab) => (
               <button
                 key={tab.value}
@@ -93,7 +93,7 @@ const AdminOrders = () => {
                   setSelectedStatus(tab.value);
                   setCurrentPage(1);
                 }}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
                   selectedStatus === tab.value
                     ? 'bg-primary-600 text-white shadow-sm'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -105,7 +105,7 @@ const AdminOrders = () => {
           </div>
 
           {/* Search Input */}
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <div className="relative flex-1">
               <FiSearch className="absolute left-3.5 top-3 text-gray-400" />
               <Input
@@ -124,7 +124,7 @@ const AdminOrders = () => {
         {/* Orders Table */}
         <Card className="overflow-hidden border border-gray-200 dark:border-gray-800">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-sm min-w-[620px]">
               <thead className="bg-gray-50 dark:bg-gray-800/60 text-xs uppercase font-bold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                 <tr>
                   <th className="py-3.5 px-4">Order #</th>
