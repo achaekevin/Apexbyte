@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import passport from 'passport';
 import { errorHandler, notFound } from './middleware/errorHandler';
+import { requestIdMiddleware } from './middleware/requestId';
 import { apiLimiter } from './middleware/rateLimiter';
 import { botProtection } from './middleware/botProtection';
 import { payloadGuard, payloadErrorHandler } from './middleware/payloadGuard';
@@ -44,6 +45,9 @@ const app: Application = express();
 
 // Trust reverse proxy (essential for rate limiting & secure cookie / HTTPS detection behind proxies)
 app.set('trust proxy', 1);
+
+// Attach traceable Request ID to every incoming request
+app.use(requestIdMiddleware);
 
 // Force HTTPS in production
 app.use((req, res, next) => {
@@ -154,16 +158,20 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Cookie parser
 app.use(cookieParser());
 
-// Logging
+// Logging with Request ID correlation
+morgan.token('req-id', (req: any) => req.id || '-');
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(morgan(':method :url :status :response-time ms - [:req-id]'));
 } else {
   app.use(
-    morgan('combined', {
-      stream: {
-        write: (message: string) => logger.info(message.trim()),
-      },
-    })
+    morgan(
+      ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - req_id=:req-id',
+      {
+        stream: {
+          write: (message: string) => logger.info(message.trim()),
+        },
+      }
+    )
   );
 }
 
