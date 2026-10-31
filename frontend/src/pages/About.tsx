@@ -14,15 +14,18 @@ import {
 import { FaWhatsapp } from 'react-icons/fa';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import { useSettings } from '../hooks/useSettings';
 
 const About = () => {
+  const { settings } = useSettings();
+
   return (
     <>
       <Helmet>
-        <title>About Us | Apexbyte Laptops Kenya (Kisii)</title>
+        <title>About Us | {settings.store_name} ({settings.city})</title>
         <meta
           name="description"
-          content="Learn about Apexbyte Laptops Kenya - providing genuine, 7-point inspected laptops with local 1-year warranty and authentic showroom pickup at Mocha Place, Kisii CBD."
+          content={`Learn about ${settings.store_name} - providing genuine, 7-point inspected laptops with local 1-year warranty and authentic showroom pickup at ${settings.showroom_address}.`}
         />
       </Helmet>
 
@@ -37,7 +40,7 @@ const About = () => {
               className="max-w-3xl"
             >
               <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-4 transition-colors">
-                <FiMapPin /> Mocha Place, 2nd Floor, Hospital Road, Kisii CBD
+                <FiMapPin /> {settings.showroom_address}
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4 sm:mb-6 leading-tight text-slate-900 dark:text-white tracking-tight">
                 Built by Technicians, <br />
@@ -126,14 +129,14 @@ const About = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-                        The Apexbyte Showroom Experience
+                        The {settings.store_name} Showroom Experience
                       </h3>
-                      <p className="text-xs text-gray-500">Come visit us in Kisii Town CBD</p>
+                      <p className="text-xs text-gray-500">Come visit us in {settings.city} Town CBD</p>
                     </div>
                   </div>
 
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    We believe in complete transparency. When you visit our shop at Mocha Place on Hospital Road, we invite you to sit down, test the keyboard feel, run Cinebench or battery discharge tests, inspect the hinge tension, and verify the SSD read speeds before paying.
+                    We believe in complete transparency. When you visit our shop at {settings.showroom_address}, we invite you to sit down, test the keyboard feel, run Cinebench or battery discharge tests, inspect the hinge tension, and verify the SSD read speeds before paying.
                   </p>
 
                   <div className="space-y-3 bg-gray-50 dark:bg-gray-750 p-4 rounded-xl text-xs">
@@ -323,7 +326,7 @@ const About = () => {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <a
-                href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Tech%20Desk,%20I%20need%20advice%20choosing%20a%20laptop"
+                href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${settings.store_name} Tech Desk, I need advice choosing a laptop`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 text-sm"

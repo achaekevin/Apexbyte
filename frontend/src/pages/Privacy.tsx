@@ -12,8 +12,10 @@ import {
   FiServer,
 } from 'react-icons/fi';
 import Card from '../components/ui/Card';
+import { useSettings } from '../hooks/useSettings';
 
 const Privacy = () => {
+  const { settings } = useSettings();
   // Guarantee instant scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -315,9 +317,9 @@ const Privacy = () => {
                     <FiMapPin className="text-primary-600" /> Physical Showroom Address
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Apexbyte Laptops Kenya<br />
-                    Shop S14, 2nd Floor, Mocha Place<br />
-                    Hospital Road, Kisii CBD, Kenya
+                    {settings.store_name}<br />
+                    {settings.showroom_address}<br />
+                    {settings.city} CBD, Kenya
                   </p>
                 </div>
 
@@ -326,9 +328,8 @@ const Privacy = () => {
                     <FiMail className="text-primary-600" /> Compliance Desk
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Email: <a href="mailto:privacy@apexbyte.co.ke" className="text-primary-600 hover:underline">privacy@apexbyte.co.ke</a><br />
-                    Support: <a href="mailto:support@apexbyte.co.ke" className="text-primary-600 hover:underline">support@apexbyte.co.ke</a><br />
-                    Phone: <a href="tel:+254104504692" className="text-primary-600 hover:underline">+254 104 504 692</a>
+                    Support: <a href={`mailto:${settings.support_email}`} className="text-primary-600 hover:underline">{settings.support_email}</a><br />
+                    Phone: <a href={`tel:${settings.phone_primary.replace(/[^0-9+]/g, '')}`} className="text-primary-600 hover:underline">{settings.phone_primary}</a>
                   </p>
                 </div>
               </div>

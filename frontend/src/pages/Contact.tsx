@@ -16,6 +16,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import { useSettings } from '../hooks/useSettings';
 
 interface FAQItem {
   question: string;
@@ -56,6 +57,7 @@ const faqs: FAQItem[] = [
 ];
 
 const Contact = () => {
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -90,10 +92,10 @@ const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Contact & Showroom Location | Apexbyte Laptops Kenya (Kisii)</title>
+        <title>Contact & Showroom Location | {settings.store_name} ({settings.city})</title>
         <meta
           name="description"
-          content="Visit Apexbyte showroom at Mocha Place, 2nd Floor, Hospital Road, Kisii Town CBD. Call +254 104 504 692 or chat on WhatsApp for verified laptop sales and technical support."
+          content={`Visit ${settings.store_name} showroom at ${settings.showroom_address}. Call ${settings.phone_primary} or chat on WhatsApp for verified laptop sales and technical support.`}
         />
       </Helmet>
 
@@ -139,17 +141,16 @@ const Contact = () => {
 
                 <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2 leading-relaxed">
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    Apexbyte Laptops Kenya
+                    {settings.store_name}
                   </p>
-                  <p>Shop S14, 2nd Floor, Mocha Place</p>
-                  <p>Hospital Road (Opposite Kisii Central Police Station / near Quickmart)</p>
+                  <p>{settings.showroom_address}</p>
                   <p className="text-xs text-primary-600 dark:text-primary-400 font-medium">
-                    Kisii Central Business District, Kisii County
+                    {settings.city} Central Business District
                   </p>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-750 text-xs text-gray-500">
-                  <p>💡 <em>Walking from Kisii Bus Park or Quickmart takes only 3 minutes down Hospital Road.</em></p>
+                  <p>💡 <em>Walking from {settings.city} Bus Park takes only a few minutes.</em></p>
                 </div>
               </Card>
 
@@ -174,13 +175,13 @@ const Contact = () => {
                 </p>
 
                 <a
-                  href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Tech%20Desk,%20I%20have%20an%20inquiry%20regarding%20laptops"
+                  href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${settings.store_name} Tech Desk, I have an inquiry regarding laptops`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-md transition-all text-xs"
                 >
                   <FaWhatsapp size={16} />
-                  <span>Chat on WhatsApp (+254 104 504 692)</span>
+                  <span>Chat on WhatsApp ({settings.whatsapp_number})</span>
                 </a>
               </Card>
 
@@ -194,9 +195,14 @@ const Contact = () => {
                     <span className="block font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider mb-0.5">
                       Direct Telephone
                     </span>
-                    <a href="tel:+254104504692" className="hover:text-primary-600 font-medium block">
-                      +254 104 504 692
+                    <a href={`tel:${settings.phone_primary.replace(/[^0-9+]/g, '')}`} className="hover:text-primary-600 font-medium block">
+                      {settings.phone_primary}
                     </a>
+                    {settings.phone_secondary && (
+                      <a href={`tel:${settings.phone_secondary.replace(/[^0-9+]/g, '')}`} className="hover:text-primary-600 font-medium block text-xs text-gray-500">
+                        {settings.phone_secondary}
+                      </a>
+                    )}
                     <span className="text-xs text-gray-500 block">
                       Direct Showroom &amp; Support Line
                     </span>
@@ -211,11 +217,8 @@ const Contact = () => {
                     <span className="block font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider mb-0.5">
                       Customer Email
                     </span>
-                    <a href="mailto:support@apexbyte.co.ke" className="hover:text-primary-600 text-xs font-medium block">
-                      support@apexbyte.co.ke
-                    </a>
-                    <a href="mailto:sales@apexbyte.co.ke" className="text-xs text-gray-500 hover:text-primary-600 block">
-                      sales@apexbyte.co.ke
+                    <a href={`mailto:${settings.support_email}`} className="hover:text-primary-600 text-xs font-medium block">
+                      {settings.support_email}
                     </a>
                   </div>
                 </div>
@@ -229,13 +232,13 @@ const Contact = () => {
                       Operating Hours
                     </span>
                     <p className="text-xs text-gray-600 dark:text-gray-300">
-                      <strong>Mon – Fri:</strong> 8:30 AM – 6:30 PM
+                      <strong>Mon – Fri:</strong> {settings.hours_weekdays}
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-300">
-                      <strong>Saturday:</strong> 9:00 AM – 5:00 PM
+                      <strong>Saturday:</strong> {settings.hours_saturday}
                     </p>
                     <p className="text-xs text-gray-500">
-                      <strong>Sunday & Holidays:</strong> Closed (Delivery on request)
+                      <strong>Sunday & Holidays:</strong> {settings.hours_sunday}
                     </p>
                   </div>
                 </div>

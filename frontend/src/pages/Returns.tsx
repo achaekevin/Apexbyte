@@ -11,8 +11,10 @@ import {
   FiCheckCircle,
 } from 'react-icons/fi';
 import Card from '../components/ui/Card';
+import { useSettings } from '../hooks/useSettings';
 
 const Returns = () => {
+  const { settings } = useSettings();
   // Guarantee instant scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -237,13 +239,13 @@ const Returns = () => {
               </div>
               <ol className="list-decimal pl-5 sm:pl-6 space-y-3">
                 <li>
-                  <strong>Contact the Tech Desk:</strong> Reach our workshop via WhatsApp or phone at <a href="tel:+254104504692" className="text-primary-600 font-bold hover:underline">+254 104 504 692</a> with your Order Number and serial number.
+                  <strong>Contact the Tech Desk:</strong> Reach our workshop via WhatsApp or phone at <a href={`tel:${settings.phone_primary.replace(/[^0-9+]/g, '')}`} className="text-primary-600 font-bold hover:underline">{settings.phone_primary}</a> with your Order Number and serial number.
                 </li>
                 <li>
                   <strong>Describe the Issue:</strong> Share a 15-second video or photo showing the hardware symptom.
                 </li>
                 <li>
-                  <strong>Handover or Courier Drop-off:</strong> Visit our showroom in Kisii (Mocha Place, 2nd Floor) or drop the parcel off at your local registered Fargo Courier / Easy Coach branch using our return account code.
+                  <strong>Handover or Courier Drop-off:</strong> Visit our showroom in {settings.city} ({settings.showroom_address}) or drop the parcel off at your local registered Fargo Courier / Easy Coach branch using our return account code.
                 </li>
                 <li>
                   <strong>Resolution:</strong> Receive regular SMS/WhatsApp updates as your machine is tested, repaired, or swapped.

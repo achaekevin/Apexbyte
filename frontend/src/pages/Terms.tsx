@@ -11,8 +11,10 @@ import {
   FiMapPin,
 } from 'react-icons/fi';
 import Card from '../components/ui/Card';
+import { useSettings } from '../hooks/useSettings';
 
 const Terms = () => {
+  const { settings } = useSettings();
   // Guarantee instant scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -306,9 +308,9 @@ const Terms = () => {
                   <FiMapPin className="text-primary-600" /> Store Management Contacts
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Apexbyte Laptops Kenya • Shop S14, 2nd Floor, Mocha Place, Hospital Road, Kisii CBD<br />
-                  Direct Telephone: <a href="tel:+254104504692" className="text-primary-600 hover:underline font-semibold">+254 104 504 692</a><br />
-                  Customer Email: <a href="mailto:support@apexbyte.co.ke" className="text-primary-600 hover:underline font-semibold">support@apexbyte.co.ke</a>
+                  {settings.store_name} • {settings.showroom_address}, {settings.city} CBD<br />
+                  Direct Telephone: <a href={`tel:${settings.phone_primary.replace(/[^0-9+]/g, '')}`} className="text-primary-600 hover:underline font-semibold">{settings.phone_primary}</a><br />
+                  Customer Email: <a href={`mailto:${settings.support_email}`} className="text-primary-600 hover:underline font-semibold">{settings.support_email}</a>
                 </p>
               </div>
             </section>
