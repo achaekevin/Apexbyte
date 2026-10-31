@@ -18,9 +18,6 @@ import { authLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// Rate limiting: Maximum 5 attempts for all authentication routes per 15 minutes
-router.use(authLimiter);
-
 // Validation rules
 const registerValidation = [
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
@@ -69,14 +66,14 @@ const resendVerificationValidation = [
 ];
 
 // Routes
-router.post('/register', validate(registerValidation), register);
-router.post('/login', validate(loginValidation), login);
+router.post('/register', authLimiter, validate(registerValidation), register);
+router.post('/login', authLimiter, validate(loginValidation), login);
 router.post('/refresh-token', refreshToken);
 router.post('/logout', authenticate, logout);
 router.post('/verify-email', validate(verifyEmailValidation), verifyEmail);
-router.post('/resend-verification', validate(resendVerificationValidation), resendVerification);
-router.post('/forgot-password', validate(forgotPasswordValidation), forgotPassword);
-router.post('/reset-password', validate(resetPasswordValidation), resetPassword);
+router.post('/resend-verification', authLimiter, validate(resendVerificationValidation), resendVerification);
+router.post('/forgot-password', authLimiter, validate(forgotPasswordValidation), forgotPassword);
+router.post('/reset-password', authLimiter, validate(resetPasswordValidation), resetPassword);
 router.get('/me', authenticate, getCurrentUser);
 router.put('/change-password', authenticate, validate(changePasswordValidation), changePassword);
 

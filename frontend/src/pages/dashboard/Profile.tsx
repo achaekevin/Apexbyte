@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -8,7 +9,7 @@ import { useAuthStore } from '../../store/authStore';
 import api from '../../services/api';
 
 const Profile = () => {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const queryClient = useQueryClient();
 
   const [profileData, setProfileData] = useState({
@@ -26,9 +27,19 @@ const Profile = () => {
 
   const updateProfileMutation = useMutation({
     mutationFn: (data: any) => api.put('/users/profile', data),
-    onSuccess: () => {
+    onSuccess: (res: any) => {
+      const updated = res?.data || res;
+      updateUser({
+        firstName: updated.firstName || profileData.firstName,
+        lastName: updated.lastName || profileData.lastName,
+        email: updated.email || profileData.email,
+        phone: updated.phone || profileData.phone,
+      });
       queryClient.invalidateQueries({ queryKey: ['user'] });
-      alert('Profile updated successfully!');
+      toast.success('Profile details updated successfully!');
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || err?.message || 'Failed to update profile');
     },
   });
 
@@ -40,7 +51,10 @@ const Profile = () => {
         newPassword: '',
         confirmPassword: '',
       });
-      alert('Password updated successfully!');
+      toast.success('Password updated successfully!');
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || err?.message || 'Failed to update password');
     },
   });
 
@@ -52,7 +66,7 @@ const Profile = () => {
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     updatePasswordMutation.mutate({

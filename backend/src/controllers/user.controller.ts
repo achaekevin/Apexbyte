@@ -33,7 +33,7 @@ export const getProfile = asyncHandler(async (req: AuthRequest, res: Response) =
  */
 export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = req.user.id;
-  const { firstName, lastName, phone, avatar } = req.body;
+  const { firstName, lastName, phone, avatar, email } = req.body;
 
   // Explicitly whitelist only editable profile fields
   const safeData: {
@@ -41,12 +41,26 @@ export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response
     lastName?: string;
     phone?: string;
     avatar?: string;
+    email?: string;
   } = {};
 
   if (typeof firstName === 'string' && firstName.trim()) safeData.firstName = firstName.trim();
   if (typeof lastName === 'string' && lastName.trim()) safeData.lastName = lastName.trim();
   if (typeof phone === 'string') safeData.phone = phone.trim();
   if (typeof avatar === 'string') safeData.avatar = avatar.trim();
+
+  // Allow user / admin to update their login email credentials
+  if (typeof email === 'string' && email.trim()) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const currentUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (currentUser && currentUser.email !== normalizedEmail) {
+      const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+      if (existing) {
+        throw new AppError('An account with this email address already exists', 409, 'DUPLICATE_ENTRY');
+      }
+      safeData.email = normalizedEmail;
+    }
+  }
 
   const updatedUser = await prisma.user.update({
     where: { id: userId },

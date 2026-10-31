@@ -11,6 +11,7 @@ import {
   deleteAddress,
   getAllUsers,
 } from '../controllers/user.controller';
+import { changePassword } from '../controllers/auth.controller';
 
 const router = Router();
 
@@ -22,6 +23,14 @@ const profileValidation = [
   body('firstName').optional().trim().notEmpty().withMessage('First name cannot be empty'),
   body('lastName').optional().trim().notEmpty().withMessage('Last name cannot be empty'),
   body('phone').optional().trim().isMobilePhone('any').withMessage('Invalid phone number'),
+  body('email').optional().isEmail().normalizeEmail().withMessage('Valid email is required'),
+];
+
+const changePasswordValidation = [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword')
+    .isLength({ min: 8 })
+    .withMessage('New password must be at least 8 characters'),
 ];
 
 const addressValidation = [
@@ -45,6 +54,7 @@ router.get('/', authorize('ADMIN', 'SUPER_ADMIN'), getAllUsers);
 // Profile endpoints
 router.get('/profile', getProfile);
 router.put('/profile', validate(profileValidation), updateProfile);
+router.put('/password', validate(changePasswordValidation), changePassword);
 
 // Address endpoints with strict IDOR protections
 router.get('/addresses', getAddresses);
