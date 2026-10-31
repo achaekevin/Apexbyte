@@ -40,6 +40,7 @@ import searchRoutes from './routes/search.routes';
 import supportRoutes from './routes/support.routes';
 import warrantyRoutes from './routes/warranty.routes';
 import returnRoutes from './routes/return.routes';
+import settingRoutes from './routes/setting.routes';
 
 const app: Application = express();
 
@@ -214,6 +215,7 @@ app.use('/api/search', searchRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/warranties', warrantyRoutes);
 app.use('/api/returns', returnRoutes);
+app.use('/api/settings', settingRoutes);
 
 // Locate frontend dist directory across dev/prod environments
 const candidateDists = [
