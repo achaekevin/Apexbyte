@@ -10,6 +10,7 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
+import ErrorMessage from '../components/ui/ErrorMessage';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
@@ -40,7 +41,13 @@ const ProductDetail = () => {
   }, [productId]);
 
   // Fetch product details
-  const { data: product, isLoading } = useQuery({
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => productService.getProduct(productId!),
     enabled: !!productId,
@@ -163,16 +170,67 @@ const ProductDetail = () => {
     );
   }
 
+  if (isError) {
+    const errorStatus = (error as any)?.status;
+    const is404 = errorStatus === 404;
+
+    if (is404) {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Card className="text-center py-12 max-w-xl mx-auto">
+            <span className="text-5xl block mb-3">💻</span>
+            <h2 className="text-2xl font-bold mb-2">Laptop Model Not Found</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+              The laptop machine you're looking for does not exist in our catalog or may have been sold out and archived.
+            </p>
+            <div className="flex justify-center gap-3">
+              <Link to="/shop">
+                <Button className="bg-primary-600 text-white font-bold text-sm">
+                  Explore In-Stock Laptops
+                </Button>
+              </Link>
+              <Button variant="outline" onClick={() => navigate(-1)} className="text-sm">
+                Go Back
+              </Button>
+            </div>
+          </Card>
+        </div>
+      );
+    }
+
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <ErrorMessage
+          title="Unable to Load Laptop Details"
+          error={error}
+          onRetry={() => refetch()}
+          retryLabel="Retry Loading"
+          className="max-w-xl mx-auto"
+          action={
+            <Link to="/shop">
+              <Button variant="outline" size="sm">
+                Return to Shop
+              </Button>
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
+
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="text-center py-12">
-          <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            The product you're looking for doesn't exist or has been removed.
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Card className="text-center py-12 max-w-xl mx-auto">
+          <span className="text-5xl block mb-3">💻</span>
+          <h2 className="text-2xl font-bold mb-2">Laptop Not Found</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+            The laptop you are looking for is currently unavailable.
           </p>
           <Link to="/shop">
-            <Button>Back to Shop</Button>
+            <Button className="bg-primary-600 text-white font-bold text-sm">
+              Browse Available Laptops
+            </Button>
           </Link>
         </Card>
       </div>

@@ -7,13 +7,21 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
+import ErrorMessage from '../components/ui/ErrorMessage';
+import EmptyState from '../components/ui/EmptyState';
 import blogService from '../services/blogService';
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [page, setPage] = useState(1);
 
-  const { data: postsData, isLoading } = useQuery({
+  const {
+    data: postsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['blog-posts', selectedCategory, page],
     queryFn: () =>
       blogService.getPosts({
@@ -97,18 +105,30 @@ const Blog = () => {
                     <LoadingSkeleton key={i} className="h-80" />
                   ))}
                 </div>
+              ) : isError ? (
+                <ErrorMessage
+                  variant="card"
+                  title="Unable to load articles"
+                  message="We couldn't load the articles right now. Please check your connection or retry."
+                  error={error}
+                  onRetry={() => refetch()}
+                />
               ) : (!postsData?.data || postsData.data.length === 0) ? (
-                <Card className="text-center py-12">
-                  <div className="text-6xl mb-4">📝</div>
-                  <h3 className="text-xl font-bold mb-2">No posts found</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Check back later for new content
-                  </p>
-                </Card>
+                <EmptyState
+                  icon="📝"
+                  title="No articles found"
+                  description={
+                    selectedCategory
+                      ? "There are currently no articles in this category. Try another topic or view all posts."
+                      : "Check back soon for new guides, reviews, and tech insights from our team."
+                  }
+                  actionLabel={selectedCategory ? "View All Articles" : undefined}
+                  onAction={selectedCategory ? () => setSelectedCategory('') : undefined}
+                />
               ) : (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {postsData.data.map((post: any, index: number) => (
+                    {Array.isArray(postsData.data) && postsData.data.map((post: any, index: number) => (
                       <motion.div
                         key={post.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -122,6 +142,9 @@ const Blog = () => {
                                 <img
                                   src={post.featuredImage}
                                   alt={post.title}
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
                                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                 />
                               </div>

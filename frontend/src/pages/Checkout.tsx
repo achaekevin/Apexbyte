@@ -8,6 +8,7 @@ import { FiSmartphone, FiCheckCircle, FiAlertCircle, FiRefreshCw, FiClock, FiLoc
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
+import ErrorBoundary from '../components/ui/ErrorBoundary';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
@@ -871,9 +872,11 @@ const CheckoutForm = () => {
 
 const Checkout = () => {
   return (
-    <Elements stripe={stripePromise}>
-      <CheckoutForm />
-    </Elements>
+    <ErrorBoundary variant="section" title="Checkout Service Encountered an Issue">
+      <Elements stripe={stripePromise}>
+        <CheckoutForm />
+      </Elements>
+    </ErrorBoundary>
   );
 };
 

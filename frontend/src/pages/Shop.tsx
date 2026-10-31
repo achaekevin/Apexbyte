@@ -17,6 +17,8 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
+import ErrorMessage from '../components/ui/ErrorMessage';
+import EmptyState from '../components/ui/EmptyState';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useComparisonStore } from '../store/comparisonStore';
@@ -106,7 +108,13 @@ const Shop = () => {
   });
 
   // Fetch products with active filters
-  const { data: productsData, isLoading } = useQuery({
+  const {
+    data: productsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['products', filters],
     queryFn: () => productService.getProducts(filters),
   });
@@ -601,28 +609,43 @@ const Shop = () => {
                 )}
               </div>
 
-              {/* Products Loading / Empty / Grid */}
+              {/* Products Loading / Error / Empty / Grid */}
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <LoadingSkeleton key={i} />
                   ))}
                 </div>
+              ) : isError ? (
+                <ErrorMessage
+                  title="Unable to Load Laptop Catalog"
+                  error={error}
+                  onRetry={() => refetch()}
+                  retryLabel="Reload Products"
+                  action={
+                    <Button variant="outline" size="sm" onClick={handleResetFilters}>
+                      Reset Filters
+                    </Button>
+                  }
+                />
               ) : !productsData?.data || productsData.data.length === 0 ? (
-                <Card className="text-center py-16">
-                  <div className="text-6xl mb-4">💻</div>
-                  <h3 className="text-2xl font-bold mb-2">No Laptops Found</h3>
-                  <p className="text-gray-500 max-w-md mx-auto mb-6 text-sm">
-                    {activeBrandObj
+                <EmptyState
+                  title="No Laptops Match Your Filters"
+                  description={
+                    activeBrandObj
                       ? `We could not find any available laptops matching the "${activeBrandObj.name}" filter.`
-                      : 'No laptops match your selected filters. Try broadening your criteria or reset all filters.'}
-                  </p>
-                  <Button onClick={handleResetFilters}>Reset All Filters</Button>
-                </Card>
+                      : 'No laptops match your selected search or filter criteria. Try adjusting your filters to see more machines.'
+                  }
+                  action={
+                    <Button onClick={handleResetFilters} className="bg-primary-600 text-white font-bold text-xs sm:text-sm">
+                      Reset All Filters
+                    </Button>
+                  }
+                />
               ) : (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {productsData.data.map((product: any, index: number) => {
+                    {(productsData?.data || []).map((product: any, index: number) => {
                       const discountPercent =
                         product.compareAtPrice && product.compareAtPrice > product.price
                           ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
