@@ -20,6 +20,7 @@ import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
 import orderService from '../../services/orderService';
 import warrantyService from '../../services/warrantyService';
 import returnService from '../../services/returnService';
@@ -47,7 +48,13 @@ const OrderDetail = () => {
   const [selectedWarrantyId, setSelectedWarrantyId] = useState<string | null>(null);
   const [claimDescription, setClaimDescription] = useState('');
 
-  const { data: order, isLoading, error } = useQuery({
+  const {
+    data: order,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['order', id],
     queryFn: () => orderService.getOrder(id!),
     enabled: !!id,
@@ -102,16 +109,52 @@ const OrderDetail = () => {
     );
   }
 
-  if (error || !order) {
+  if (isError) {
+    const errorStatus = (error as any)?.status;
+    const is404 = errorStatus === 404;
+
+    if (is404) {
+      return (
+        <Card className="text-center py-12">
+          <FiAlertCircle className="text-5xl text-red-500 mx-auto mb-3" />
+          <h3 className="text-xl font-bold mb-2">Order Not Found</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+            The requested order could not be located in your account records.
+          </p>
+          <Link to="/dashboard/orders">
+            <Button className="bg-primary-600 text-white font-bold text-sm">Back to My Orders</Button>
+          </Link>
+        </Card>
+      );
+    }
+
+    return (
+      <ErrorMessage
+        title="Unable to Load Order Details"
+        error={error}
+        onRetry={() => refetch()}
+        retryLabel="Reload Order"
+        action={
+          <Link to="/dashboard/orders">
+            <Button variant="outline" size="sm">
+              Back to My Orders
+            </Button>
+          </Link>
+        }
+      />
+    );
+  }
+
+  if (!order) {
     return (
       <Card className="text-center py-12">
         <FiAlertCircle className="text-5xl text-red-500 mx-auto mb-3" />
-        <h3 className="text-xl font-bold mb-2">Order Not Found</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          The requested order could not be located or you don't have permission to view it.
+        <h3 className="text-xl font-bold mb-2">Order Information Unavailable</h3>
+        <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+          The requested order could not be loaded at this time.
         </p>
         <Link to="/dashboard/orders">
-          <Button>Back to My Orders</Button>
+          <Button className="bg-primary-600 text-white font-bold text-sm">Back to My Orders</Button>
         </Link>
       </Card>
     );

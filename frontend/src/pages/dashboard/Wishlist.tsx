@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import EmptyState from '../../components/ui/EmptyState';
 import wishlistService from '../../services/wishlistService';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 import { useCartStore } from '../../store/cartStore';
@@ -13,7 +15,13 @@ const Wishlist = () => {
   const queryClient = useQueryClient();
   const { addItem } = useCartStore();
 
-  const { data: rawWishlistData, isLoading } = useQuery({
+  const {
+    data: rawWishlistData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['wishlist'],
     queryFn: wishlistService.getWishlist,
   });
@@ -63,23 +71,33 @@ const Wishlist = () => {
           </p>
         </div>
 
+        {/* Wishlist Grid: Loading / Error / Empty / Data */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <LoadingSkeleton key={i} className="h-80" />
             ))}
           </div>
+        ) : isError ? (
+          <ErrorMessage
+            title="Unable to Load Your Wishlist"
+            error={error}
+            onRetry={() => refetch()}
+            retryLabel="Reload Wishlist"
+          />
         ) : wishlistItems.length === 0 ? (
-          <Card className="text-center py-12">
-            <div className="text-6xl mb-4">❤️</div>
-            <h3 className="text-xl font-bold mb-2">Your wishlist is empty</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Save items you love for later
-            </p>
-            <Link to="/shop">
-              <Button>Browse Products</Button>
-            </Link>
-          </Card>
+          <EmptyState
+            icon="❤️"
+            title="Your Wishlist is Empty"
+            description="You haven't saved any laptops to your wishlist yet. Click the heart icon on any laptop in the store to save it for later."
+            action={
+              <Link to="/shop">
+                <Button className="bg-primary-600 text-white font-bold text-sm">
+                  Browse Laptop Catalog
+                </Button>
+              </Link>
+            }
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {wishlistItems.map((item: any, index: number) => {

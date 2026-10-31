@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import { authService } from '../../services/authService';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -18,12 +18,20 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setErrorMessage(null);
+
+    if (formData.password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long');
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match');
       toast.error('Passwords do not match');
       return;
     }
@@ -35,7 +43,9 @@ const Register = () => {
       toast.success('Registration successful! Please check your email to verify your account.');
       navigate('/login');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      const msg = error.response?.data?.message || error.message || 'Registration failed';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -48,6 +58,19 @@ const Register = () => {
           <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 sm:mb-2">Create Account</h2>
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Join us today</p>
         </div>
+
+        {errorMessage && (
+          <div
+            role="alert"
+            className="mb-4 p-3.5 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 flex items-start gap-2.5 text-xs sm:text-sm text-red-800 dark:text-red-300"
+          >
+            <FiAlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <span className="font-bold block">Registration Notice</span>
+              <span>{errorMessage}</span>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

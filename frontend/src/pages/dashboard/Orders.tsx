@@ -7,13 +7,21 @@ import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import EmptyState from '../../components/ui/EmptyState';
 import orderService from '../../services/orderService';
 import { formatCurrency, getOrderStatusColor, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 
 const Orders = () => {
   const [filter, setFilter] = useState<string>('all');
 
-  const { data: ordersData, isLoading } = useQuery({
+  const {
+    data: ordersData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['orders', filter],
     queryFn: () =>
       orderService.getOrders({
@@ -54,26 +62,36 @@ const Orders = () => {
           ))}
         </div>
 
-        {/* Orders List */}
+        {/* Orders List: Loading / Error / Empty / Grid */}
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <LoadingSkeleton key={i} className="h-32" />
             ))}
           </div>
-        ) : ordersData?.data.length === 0 ? (
-          <Card className="text-center py-8 sm:py-12 px-4">
-            <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">📦</div>
-            <h3 className="text-lg sm:text-xl font-bold mb-2">No orders found</h3>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-6">
-              {filter === 'all'
-                ? "You haven't placed any orders yet"
-                : `No ${filter.toLowerCase()} orders`}
-            </p>
-            <Link to="/shop">
-              <Button size="sm">Start Shopping</Button>
-            </Link>
-          </Card>
+        ) : isError ? (
+          <ErrorMessage
+            title="Unable to Load Orders"
+            error={error}
+            onRetry={() => refetch()}
+            retryLabel="Reload Orders"
+          />
+        ) : !ordersData?.data || ordersData.data.length === 0 ? (
+          <EmptyState
+            title="No Orders Found"
+            description={
+              filter === 'all'
+                ? "You haven't placed any laptop orders yet. Browse our verified showroom inventory to find your next machine."
+                : `No ${filter.toLowerCase()} orders match this filter.`
+            }
+            action={
+              <Link to="/shop">
+                <Button size="sm" className="bg-primary-600 text-white font-bold">
+                  Browse Laptops in Store
+                </Button>
+              </Link>
+            }
+          />
         ) : (
           <div className="space-y-4">
             {ordersData?.data.map((order: any, index: number) => (
