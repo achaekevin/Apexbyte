@@ -47,6 +47,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            aria-invalid={!!error}
+            aria-describedby={
+              error
+                ? `${inputId}-error`
+                : helperText
+                ? `${inputId}-helper`
+                : undefined
+            }
             className={clsx(
               'w-full px-3.5 py-2.5 sm:px-4 sm:py-3 min-h-[44px] border rounded-lg transition-all duration-300',
               'text-base leading-normal placeholder:text-sm sm:placeholder:text-base',
@@ -71,11 +79,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p className="mt-1 text-sm text-error-500">{error}</p>
+          <p id={`${inputId}-error`} role="alert" className="mt-1 text-sm text-error-500 flex items-center gap-1">
+            <span>⚠</span> {error}
+          </p>
         )}
 
         {helperText && !error && (
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p id={`${inputId}-helper`} className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {helperText}
           </p>
         )}
