@@ -50,6 +50,13 @@ import Terms from './pages/Terms';
 import Returns from './pages/Returns';
 import NotFound from './pages/NotFound';
 
+// Error Pages
+import Forbidden from './pages/error/Forbidden';
+import Unauthorized from './pages/error/Unauthorized';
+import ServerError from './pages/error/ServerError';
+import ServiceUnavailable from './pages/error/ServiceUnavailable';
+import NetworkError from './pages/error/NetworkError';
+
 // Protected Route
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -92,6 +99,17 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/returns" element={<Returns />} />
         <Route path="/checkout" element={<Checkout />} />
+
+        {/* Dedicated Error Pages */}
+        <Route path="/403" element={<Forbidden />} />
+        <Route path="/forbidden" element={<Forbidden />} />
+        <Route path="/401" element={<Unauthorized />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/500" element={<ServerError />} />
+        <Route path="/server-error" element={<ServerError />} />
+        <Route path="/503" element={<ServiceUnavailable />} />
+        <Route path="/service-unavailable" element={<ServiceUnavailable />} />
+        <Route path="/offline" element={<NetworkError />} />
       </Route>
 
       {/* Auth Routes */}

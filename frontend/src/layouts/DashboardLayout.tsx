@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import ErrorBoundary from '../components/ui/ErrorBoundary';
 
 const menuItems = [
   { path: '/dashboard', label: 'Dashboard', icon: FiHome },
@@ -80,7 +81,9 @@ const DashboardLayout = () => {
 
             {/* Content Area */}
             <main className="md:col-span-3 min-w-0">
-              <Outlet />
+              <ErrorBoundary variant="section" title="Dashboard Content Unavailable">
+                <Outlet />
+              </ErrorBoundary>
             </main>
           </div>
         </div>

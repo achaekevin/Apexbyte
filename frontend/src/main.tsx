@@ -6,13 +6,20 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import App from './App';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 import './index.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1,
+      retry: (failureCount, error: any) => {
+        // Do not retry 4xx client errors (404, 401, 403)
+        if (error?.status && error.status >= 400 && error.status < 500) {
+          return false;
+        }
+        return failureCount < 1;
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
@@ -23,7 +30,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <App />
+          <ErrorBoundary variant="full-page">
+            <App />
+          </ErrorBoundary>
           <Toaster
             position="top-right"
             toastOptions={{

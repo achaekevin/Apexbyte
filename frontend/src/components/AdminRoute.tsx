@@ -1,23 +1,36 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import Forbidden from '../pages/error/Forbidden';
+import ErrorBoundary from './ui/ErrorBoundary';
 
 interface AdminRouteProps {
   children: ReactNode;
 }
 
-const AdminRoute = ({ children }: AdminRouteProps) => {
+export const AdminRoute = ({ children }: AdminRouteProps) => {
   const { isAuthenticated, user } = useAuthStore();
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname + location.search }}
+      />
+    );
   }
 
   if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
-    return <Navigate to="/" replace />;
+    return <Forbidden />;
   }
 
-  return <>{children}</>;
+  return (
+    <ErrorBoundary variant="section" title="Admin Control Center Error">
+      {children}
+    </ErrorBoundary>
+  );
 };
 
 export default AdminRoute;
