@@ -18,8 +18,10 @@ import { useCartStore } from '../../store/cartStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useComparisonStore } from '../../store/comparisonStore';
 import Button from '../ui/Button';
+import useSettings from '../../hooks/useSettings';
 
 const Header = () => {
+  const { settings } = useSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -78,43 +80,54 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 transition-colors">
-      {/* Top Authentic Store Notice Bar */}
-      <div className="bg-gray-100 text-gray-800 dark:bg-gray-950 dark:text-gray-200 text-xs sm:text-sm py-2 px-4 border-b border-gray-200 dark:border-gray-800 transition-colors">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 truncate">
-            <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Kisii CBD Showroom Open Today
-            </span>
-            <span className="hidden md:inline text-gray-400 dark:text-slate-600">•</span>
-            <span className="hidden md:inline text-gray-700 dark:text-slate-200 font-medium">
-              Mocha Place, 2nd Floor, Hospital Road, Kisii Town
-            </span>
-            <span className="hidden lg:inline text-gray-400 dark:text-slate-600">•</span>
-            <span className="hidden lg:inline text-amber-700 dark:text-amber-400 font-semibold">
-              🚚 Same-Day Delivery across Kisii, Nyamira & South Nyanza
-            </span>
-          </div>
+      {/* Top Store Notice Bar (Dynamically controlled from Admin Settings) */}
+      {settings.announcement_enabled && (
+        <div className="bg-gray-100 text-gray-800 dark:bg-gray-950 dark:text-gray-200 text-xs sm:text-sm py-2 px-4 border-b border-gray-200 dark:border-gray-800 transition-colors">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 truncate">
+              {settings.announcement_badge && (
+                <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  {settings.announcement_badge}
+                </span>
+              )}
+              {settings.announcement_badge && settings.showroom_address && (
+                <span className="hidden md:inline text-gray-400 dark:text-slate-600">•</span>
+              )}
+              {settings.showroom_address && (
+                <span className="hidden md:inline text-gray-700 dark:text-slate-200 font-medium">
+                  {settings.showroom_address}
+                </span>
+              )}
+              <span className="hidden lg:inline text-gray-400 dark:text-slate-600">•</span>
+              <Link
+                to={settings.announcement_link || '/contact'}
+                className="hover:underline text-amber-700 dark:text-amber-400 font-semibold truncate"
+              >
+                {settings.announcement_text}
+              </Link>
+            </div>
 
-          <div className="flex items-center gap-4 shrink-0 text-gray-700 dark:text-slate-200">
-            <a
-              href="tel:+254104504692"
-              className="flex items-center gap-1 hover:text-primary-600 dark:hover:text-white transition-colors font-bold"
-            >
-              <FiPhone className="text-emerald-500" />
-              <span>+254 104 504 692</span>
-            </a>
-            <span className="hidden sm:inline text-gray-300 dark:text-slate-700">|</span>
-            <Link
-              to="/contact"
-              className="hidden sm:flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-bold"
-            >
-              <FiMapPin className="text-amber-500" />
-              <span>Directions</span>
-            </Link>
+            <div className="flex items-center gap-4 shrink-0 text-gray-700 dark:text-slate-200">
+              <a
+                href={`tel:${settings.phone_primary.replace(/\s+/g, '')}`}
+                className="flex items-center gap-1 hover:text-primary-600 dark:hover:text-white transition-colors font-bold"
+              >
+                <FiPhone className="text-emerald-500" />
+                <span>{settings.phone_primary}</span>
+              </a>
+              <span className="hidden sm:inline text-gray-300 dark:text-slate-700">|</span>
+              <Link
+                to="/contact"
+                className="hidden sm:flex items-center gap-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-bold"
+              >
+                <FiMapPin className="text-amber-500" />
+                <span>Directions</span>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">

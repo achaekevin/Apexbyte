@@ -23,6 +23,7 @@ import productService from '../services/productService';
 import reviewService from '../services/reviewService';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE, getInitials } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
+import { useSettings } from '../hooks/useSettings';
 
 import api from '../services/api';
 
@@ -128,6 +129,7 @@ const heroLaptops = [
 const Home = () => {
   const navigate = useNavigate();
   const { addItem } = useCartStore();
+  const { settings } = useSettings();
   const [currentLaptopIndex, setCurrentLaptopIndex] = useState(0);
 
   // Auto-cycle continuously through alternating laptop models without stopping
@@ -259,7 +261,7 @@ const Home = () => {
             className="inline-flex items-center gap-2 px-3.5 py-1 sm:py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-[11px] sm:text-xs font-bold mb-2 shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Mocha Place, 2nd Floor, Kisii CBD • 1-Year Local Technical Warranty • Test Before Payment</span>
+            <span>{settings.showroom_address} • {settings.badge_warranty} • Test Before Payment</span>
           </motion.div>
 
           <motion.h1
@@ -268,11 +270,11 @@ const Home = () => {
             transition={{ duration: 0.5 }}
             className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
           >
-            Genuine Laptops. Zero Guesswork.
+            {settings.hero_title}
           </motion.h1>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mt-1 line-clamp-1 sm:line-clamp-none">
-            Kisii’s physical showroom for certified business, developer, and gaming laptops. Walk in to test or order for same-day delivery.
+            {settings.hero_subtitle}
           </p>
         </div>
 
@@ -504,7 +506,7 @@ const Home = () => {
                     <div className="min-w-0">
                       <span className="text-[10px] text-gray-400 block font-medium">Warranty Coverage</span>
                       <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate block">
-                        1-Year Local Technical Warranty
+                        {settings.badge_warranty}
                       </span>
                     </div>
                   </motion.div>
@@ -537,7 +539,7 @@ const Home = () => {
               Explore All Laptops in Stock
             </Button>
             <a
-              href="https://wa.me/254104504692?text=Hello%20Apexbyte%20Kisii,%20I%20am%20interested%20in%20testing%20the%20laptops%20shown%20on%20your%20website"
+              href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${settings.store_name}, I am interested in testing the laptops shown on your website`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 py-2 px-4 rounded-xl border border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-xs sm:text-sm font-bold transition-all shadow-sm"
@@ -601,28 +603,28 @@ const Home = () => {
             <div className="flex items-center gap-2.5">
               <span className="text-2xl">🏬</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Mocha Place Showroom</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_pickup}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Test before you pay</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
               <span className="text-2xl">🛡️</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">1-Year Local Warranty</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_warranty}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Authorized service centers</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
               <span className="text-2xl">🚚</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Same-Day Kisii Delivery</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_delivery}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Dispatched in 2-3 hours</span>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
               <span className="text-2xl">⚡</span>
               <div>
-                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">Free RAM/SSD Installation</span>
+                <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_returns}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Free labor with purchase</span>
               </div>
             </div>
@@ -1106,21 +1108,21 @@ const Home = () => {
             {[
               {
                 title: 'Showroom Testing',
-                desc: 'Walk into Mocha Place, Kisii CBD. Test battery health, thermals, and keyboards before paying.',
+                desc: `Walk into ${settings.showroom_address}. Test battery health, thermals, and keyboards before paying.`,
                 icon: '🏬',
               },
               {
-                title: '1-Year Local Warranty',
-                desc: '12 months comprehensive hardware coverage backed by local authorized technicians in Kisii.',
+                title: settings.badge_warranty,
+                desc: `${settings.badge_warranty} backed by local authorized technicians in ${settings.city}.`,
                 icon: '🛡️',
               },
               {
-                title: 'Same-Day Dispatch',
-                desc: 'Direct rider delivery within Kisii in 2-3 hours. Countrywide insured courier within 24 hours.',
+                title: settings.badge_delivery,
+                desc: `Direct rider delivery within ${settings.city} in 2-3 hours. Countrywide insured courier within 24 hours.`,
                 icon: '🚚',
               },
               {
-                title: 'Trade-Ins & Upgrades',
+                title: settings.badge_returns,
                 desc: 'Bring your old laptop for instant store credit. Free on-the-spot RAM & SSD upgrade installations.',
                 icon: '⚡',
               },

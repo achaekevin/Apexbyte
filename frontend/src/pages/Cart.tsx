@@ -10,19 +10,27 @@ import Badge from '../components/ui/Badge';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import couponService from '../services/couponService';
+import { useSettings } from '../hooks/useSettings';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const { items, updateQuantity, removeItem, clearCart } = useCartStore();
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [couponError, setCouponError] = useState('');
 
+  // Dynamic pricing settings
+  const freeShippingThreshold = Number(settings.free_shipping_threshold) || 50000;
+  const standardShippingFee = Number(settings.shipping_fee) || 1500;
+  const taxRatePercent = Number(settings.tax_rate_percent) || 0;
+  const taxRate = taxRatePercent / 100;
+
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
-  const shippingCost = subtotal > 50000 ? 0 : 1500;
-  const tax = (subtotal - discountAmount) * 0.08; // 8% tax
+  const shippingCost = subtotal >= freeShippingThreshold ? 0 : standardShippingFee;
+  const tax = (subtotal - discountAmount) * taxRate;
   const total = subtotal - discountAmount + shippingCost + tax;
 
   // Apply coupon mutation
@@ -351,15 +359,15 @@ const Cart = () => {
                     </span>
                   </div>
 
-                  {subtotal < 50000 && shippingCost > 0 && (
+                  {subtotal < freeShippingThreshold && shippingCost > 0 && (
                     <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                      Add {formatCurrency(50000 - subtotal)} more for free shipping!
+                      Add {formatCurrency(freeShippingThreshold - subtotal)} more for free shipping!
                     </p>
                   )}
 
                   <div className="flex justify-between text-base">
                     <span className="text-gray-700 dark:text-gray-300 font-medium">
-                      Tax (8%)
+                      Tax ({taxRatePercent}%)
                     </span>
                     <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(tax)}</span>
                   </div>
@@ -415,7 +423,7 @@ const Cart = () => {
               </Card>
 
               {/* Free Shipping Banner */}
-              {subtotal < 50000 && (
+              {subtotal < freeShippingThreshold && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -426,10 +434,10 @@ const Cart = () => {
                       <div className="text-3xl">🚚</div>
                       <div>
                         <p className="font-medium text-sm">
-                          Free Shipping on orders over KSh 50,000!
+                          Free Shipping on orders over {formatCurrency(freeShippingThreshold)}!
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">
-                          You're only {formatCurrency(50000 - subtotal)} away
+                          You're only {formatCurrency(freeShippingThreshold - subtotal)} away
                         </p>
                       </div>
                     </div>

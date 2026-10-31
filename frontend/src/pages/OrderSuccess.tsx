@@ -5,14 +5,16 @@ import { FiCheckCircle, FiPackage, FiTruck, FiPhone, FiArrowRight, FiShoppingBag
 import { FaWhatsapp } from 'react-icons/fa';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import { useSettings } from '../hooks/useSettings';
 
 const OrderSuccess = () => {
   const { orderId } = useParams<{ orderId: string }>();
+  const { settings } = useSettings();
 
   return (
     <>
       <Helmet>
-        <title>Order Confirmed - Apexbyte Laptops Kenya</title>
+        <title>Order Confirmed - {settings.store_name}</title>
       </Helmet>
 
       <div className="min-h-[75vh] py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -106,12 +108,12 @@ const OrderSuccess = () => {
               <div>
                 <h4 className="font-bold text-gray-900 dark:text-white text-sm">Need Help or Faster Showroom Collection?</h4>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Call or WhatsApp our Mocha Place technical dispatch team directly at <strong>+254 104 504 692</strong>.
+                  Call or WhatsApp our technical dispatch team directly at <strong>{settings.phone_primary}</strong>.
                 </p>
               </div>
             </div>
             <a
-              href="https://wa.me/254104504692?text=Hello%20Apexbyte,%20I%20just%20placed%20order%20"
+              href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${settings.store_name}, I just placed order #${orderId || ''}`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >

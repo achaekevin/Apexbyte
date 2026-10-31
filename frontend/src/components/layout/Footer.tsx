@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { FiPhone, FiMail, FiMapPin, FiClock, FiShield, FiTruck, FiRefreshCw } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import useSettings from '../../hooks/useSettings';
 
 const Footer = () => {
+  const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -17,7 +19,7 @@ const Footer = () => {
               </div>
               <div>
                 <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Showroom Pickup</h4>
-                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Mocha Place, Kisii CBD</p>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">{settings.badge_pickup}</p>
               </div>
             </div>
 
@@ -26,8 +28,8 @@ const Footer = () => {
                 <FiShield />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">1-Year Warranty</h4>
-                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Authorized local support</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Warranty</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">{settings.badge_warranty}</p>
               </div>
             </div>
 
@@ -36,8 +38,8 @@ const Footer = () => {
                 <FiTruck />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Same-Day Delivery</h4>
-                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Kisii & courier countrywide</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Delivery</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">{settings.badge_delivery}</p>
               </div>
             </div>
 
@@ -46,8 +48,8 @@ const Footer = () => {
                 <FiRefreshCw />
               </div>
               <div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">7-Point Bench Check</h4>
-                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">Thermal, battery, SSD verified</p>
+                <h4 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm uppercase tracking-wider">Swap &amp; Returns</h4>
+                <p className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-300">{settings.badge_returns}</p>
               </div>
             </div>
           </div>
@@ -72,40 +74,40 @@ const Footer = () => {
             </Link>
 
             <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed max-w-sm">
-              Kisii's authentic electronics hub for verified brand-new and certified business laptops. We bench-test every machine thoroughly before handover and provide direct technician support.
+              {settings.store_description}
             </p>
 
             <div className="space-y-2.5 text-sm sm:text-base text-gray-800 dark:text-gray-200">
               <div className="flex items-start gap-2.5">
                 <FiMapPin className="text-amber-500 mt-1 shrink-0" />
-                <span>Shop S14, 2nd Floor, Mocha Place, Hospital Road, Kisii Town CBD</span>
+                <span>{settings.showroom_address}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <FiPhone className="text-emerald-500 shrink-0" />
-                <a href="tel:+254104504692" className="hover:text-primary-600 dark:hover:text-white transition-colors font-semibold">
-                  +254 104 504 692
+                <a href={`tel:${settings.phone_primary.replace(/\s+/g, '')}`} className="hover:text-primary-600 dark:hover:text-white transition-colors font-semibold">
+                  {settings.phone_primary}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <FaWhatsapp className="text-emerald-500 shrink-0" />
                 <a
-                  href="https://wa.me/254104504692"
+                  href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-semibold"
                 >
-                  WhatsApp Tech Desk: 0104 504 692
+                  WhatsApp Tech Desk: {settings.phone_primary}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <FiMail className="text-primary-500 shrink-0" />
-                <a href="mailto:support@apexbyte.co.ke" className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
-                  support@apexbyte.co.ke
+                <a href={`mailto:${settings.support_email}`} className="hover:text-primary-600 dark:hover:text-white transition-colors font-medium">
+                  {settings.support_email}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <FiClock className="text-gray-400 shrink-0" />
-                <span>Mon–Fri: 8:30 AM – 6:30 PM | Sat: 9:00 AM – 5:00 PM</span>
+                <span>{settings.hours_weekdays} | {settings.hours_saturday}</span>
               </div>
             </div>
           </div>

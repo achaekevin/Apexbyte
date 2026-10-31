@@ -14,6 +14,7 @@ import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import orderService from '../services/orderService';
 import paymentService from '../services/paymentService';
+import { useSettings } from '../hooks/useSettings';
 
 // Initialize Stripe (use publishable key from env or fallback)
 const stripePromise = loadStripe((import.meta as any).env?.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -64,10 +65,17 @@ const CheckoutForm = () => {
     };
   }, []);
 
+  const { settings } = useSettings();
+
+  // Dynamic pricing and thresholds
+  const freeShippingThreshold = Number(settings.free_shipping_threshold) || 50000;
+  const standardShippingFee = Number(settings.shipping_fee) || 1500;
+  const taxRate = (Number(settings.tax_rate_percent) || 0) / 100;
+
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = subtotal > 50000 ? 0 : 500;
-  const tax = Math.round(subtotal * 0.08);
+  const shippingCost = subtotal >= freeShippingThreshold ? 0 : standardShippingFee;
+  const tax = Math.round(subtotal * taxRate);
   const total = subtotal + shippingCost + tax;
 
   const handleShippingSubmit = (e: React.FormEvent) => {
@@ -746,7 +754,7 @@ const CheckoutForm = () => {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Estimated VAT / Tax</span>
+                    <span className="text-gray-600 dark:text-gray-400">Estimated VAT / Tax ({settings.tax_rate_percent}%)</span>
                     <span className="font-semibold">{formatCurrency(tax)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-black border-t border-gray-200 dark:border-gray-700 pt-3">
@@ -759,9 +767,9 @@ const CheckoutForm = () => {
 
                 <div className="mt-6 p-3 bg-gray-50 dark:bg-gray-800/60 rounded-xl text-xs text-gray-500 dark:text-gray-400 space-y-1">
                   <p className="flex items-center gap-1.5 font-medium text-gray-700 dark:text-gray-300">
-                    <FiShield className="text-primary-600 text-sm" /> 1-Year Apexbyte Hardware Warranty
+                    <FiShield className="text-primary-600 text-sm" /> {settings.badge_warranty}
                   </p>
-                  <p>Includes thermal bench testing and free return within 7 days.</p>
+                  <p>{settings.badge_returns} • {settings.badge_pickup}</p>
                 </div>
               </Card>
             </div>
