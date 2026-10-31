@@ -18,14 +18,24 @@ import Badge from '../../components/ui/Badge';
 import { formatCurrency, getProductImage } from '../../utils/helpers';
 
 const AdminDashboard = () => {
-  // Fetch products summary
-  const { data: productsData, isLoading: loadingProducts } = useQuery({
+  // Fetch products summary with error detection
+  const {
+    data: productsData,
+    isLoading: loadingProducts,
+    isError: errorProducts,
+    refetch: refetchProducts,
+  } = useQuery({
     queryKey: ['admin-dashboard-products'],
     queryFn: () => productService.getProducts({ limit: 8, sortBy: 'createdAt', order: 'desc' }),
   });
 
-  // Fetch brands summary
-  const { data: brands, isLoading: loadingBrands } = useQuery({
+  // Fetch brands summary with error detection
+  const {
+    data: brands,
+    isLoading: loadingBrands,
+    isError: errorBrands,
+    refetch: refetchBrands,
+  } = useQuery({
     queryKey: ['admin-dashboard-brands'],
     queryFn: () => brandService.getBrands(),
   });
@@ -74,9 +84,21 @@ const AdminDashboard = () => {
           <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
               <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Total Laptops</p>
-              <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
-                {loadingProducts ? '...' : totalProducts}
-              </h3>
+              {errorProducts ? (
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="text-xs text-red-500 font-bold">Failed</span>
+                  <button
+                    onClick={() => refetchProducts()}
+                    className="text-[10px] text-primary-600 underline font-bold"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : (
+                <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
+                  {loadingProducts ? '...' : totalProducts}
+                </h3>
+              )}
               <p className="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 sm:mt-1 font-medium">
                 Active in Storefront
               </p>
@@ -92,9 +114,21 @@ const AdminDashboard = () => {
           <Card className="p-3.5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
               <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Laptop Brands</p>
-              <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
-                {loadingBrands ? '...' : totalBrands}
-              </h3>
+              {errorBrands ? (
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="text-xs text-red-500 font-bold">Failed</span>
+                  <button
+                    onClick={() => refetchBrands()}
+                    className="text-[10px] text-primary-600 underline font-bold"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : (
+                <h3 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
+                  {loadingBrands ? '...' : totalBrands}
+                </h3>
+              )}
               <p className="text-[11px] sm:text-xs text-primary-600 dark:text-primary-400 mt-0.5 sm:mt-1 font-medium">
                 Dell, Apple, HP & custom
               </p>

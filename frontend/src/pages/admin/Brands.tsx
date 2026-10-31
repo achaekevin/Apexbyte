@@ -8,6 +8,7 @@ import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
 
 const AdminBrands = () => {
   const queryClient = useQueryClient();
@@ -26,7 +27,13 @@ const AdminBrands = () => {
   const [formError, setFormError] = useState('');
 
   // Fetch all brands
-  const { data: brands, isLoading } = useQuery<Brand[]>({
+  const {
+    data: brands,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery<Brand[]>({
     queryKey: ['admin-brands'],
     queryFn: () => brandService.getBrands(),
   });
@@ -169,6 +176,13 @@ const AdminBrands = () => {
             <LoadingSkeleton key={i} className="h-44 rounded-xl" />
           ))}
         </div>
+      ) : isError ? (
+        <ErrorMessage
+          title="Unable to Load Laptop Brands"
+          error={error}
+          onRetry={() => refetch()}
+          retryLabel="Retry Loading Brands"
+        />
       ) : filteredBrands.length === 0 ? (
         <Card className="text-center py-12">
           <FiTag className="mx-auto text-gray-400 mb-3" size={48} />

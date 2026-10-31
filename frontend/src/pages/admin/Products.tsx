@@ -22,6 +22,7 @@ import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
 import { formatCurrency, getProductImage } from '../../utils/helpers';
 
 interface LaptopFormData {
@@ -113,7 +114,13 @@ const AdminProducts = () => {
   const [formError, setFormError] = useState('');
 
   // Fetch products
-  const { data: productsData, isLoading: loadingProducts } = useQuery({
+  const {
+    data: productsData,
+    isLoading: loadingProducts,
+    isError: errorProducts,
+    error: productsError,
+    refetch: refetchProducts,
+  } = useQuery({
     queryKey: ['admin-products', currentPage, searchTerm, selectedBrand],
     queryFn: () =>
       productService.getProducts({
@@ -443,6 +450,14 @@ const AdminProducts = () => {
             <LoadingSkeleton key={i} className="h-20 rounded-xl" />
           ))}
         </div>
+      ) : errorProducts ? (
+        <ErrorMessage
+          title="Unable to Load Laptops"
+          error={productsError}
+          onRetry={() => refetchProducts()}
+          retryLabel="Retry Loading"
+          className="my-6"
+        />
       ) : productsList.length === 0 ? (
         <Card className="text-center py-16">
           <FiPackage className="mx-auto text-gray-400 mb-3" size={48} />

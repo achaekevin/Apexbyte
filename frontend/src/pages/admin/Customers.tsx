@@ -7,6 +7,7 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import ErrorMessage from '../../components/ui/ErrorMessage';
 import userService, { CustomerUser } from '../../services/userService';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 
@@ -15,7 +16,13 @@ const AdminCustomers = () => {
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: response, isLoading } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['admin-customers', { page: currentPage, search: searchQuery, role: roleFilter }],
     queryFn: () =>
       userService.getCustomers({
@@ -103,6 +110,17 @@ const AdminCustomers = () => {
                       </td>
                     </tr>
                   ))
+                ) : isError ? (
+                  <tr>
+                    <td colSpan={6} className="p-6">
+                      <ErrorMessage
+                        title="Unable to Load Customer Directory"
+                        error={error}
+                        onRetry={() => refetch()}
+                        retryLabel="Retry Loading Customers"
+                      />
+                    </td>
+                  </tr>
                 ) : customers.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="text-center py-12 text-gray-500 dark:text-gray-400">
