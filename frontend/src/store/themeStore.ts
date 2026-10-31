@@ -25,6 +25,18 @@ const applyDocumentTheme = (isDark: boolean) => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Automatically adapt system settings & native browser controls
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+
+    // Adapt mobile browser address bar / system chrome
+    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) {
+      metaThemeColor = document.createElement('meta');
+      metaThemeColor.setAttribute('name', 'theme-color');
+      document.head.appendChild(metaThemeColor);
+    }
+    metaThemeColor.setAttribute('content', isDark ? '#0f172a' : '#ffffff');
   }
 };
 
@@ -41,17 +53,10 @@ export const useThemeStore = create<ThemeState>()(
       },
 
       toggleTheme: () => {
-        const currentMode = get().themeMode;
-        // Cycle: system -> dark -> light -> system
-        let nextMode: ThemeMode;
-        if (currentMode === 'light') {
-          nextMode = 'dark';
-        } else if (currentMode === 'dark') {
-          nextMode = 'system';
-        } else {
-          nextMode = 'light';
-        }
-        const isDark = nextMode === 'system' ? getSystemPrefersDark() : nextMode === 'dark';
+        const currentlyDark = get().isDarkMode;
+        // Direct toggle between light and dark with single button
+        const nextMode: ThemeMode = currentlyDark ? 'light' : 'dark';
+        const isDark = nextMode === 'dark';
         applyDocumentTheme(isDark);
         set({ themeMode: nextMode, isDarkMode: isDark });
       },
@@ -62,6 +67,7 @@ export const useThemeStore = create<ThemeState>()(
         applyDocumentTheme(isDark);
         set({ isDarkMode: isDark });
 
+        // Listen for OS system settings changes and adapt automatically
         if (typeof window !== 'undefined' && window.matchMedia) {
           const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
           const listener = (e: MediaQueryListEvent) => {

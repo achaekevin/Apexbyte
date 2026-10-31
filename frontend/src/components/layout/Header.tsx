@@ -9,7 +9,6 @@ import {
   FiSearch,
   FiSun,
   FiMoon,
-  FiMonitor,
   FiLogOut,
   FiMapPin,
   FiPhone,
@@ -27,7 +26,7 @@ const Header = () => {
   const location = useLocation();
   const { isAuthenticated, user, logout } = useAuthStore();
   const { getTotalItems } = useCartStore();
-  const { themeMode, setThemeMode } = useThemeStore();
+  const { isDarkMode, toggleTheme } = useThemeStore();
   const { products: comparisonProducts } = useComparisonStore();
   const navigate = useNavigate();
 
@@ -173,45 +172,40 @@ const Header = () => {
               <FiSearch className="w-5 h-5" />
             </button>
 
-            {/* 3-State Theme Mode Switcher (Desktop/Tablet) */}
-            <div className="hidden lg:flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-xl border border-gray-200 dark:border-gray-700 text-xs">
-              <button
-                onClick={() => setThemeMode('light')}
-                title="Light Mode"
-                aria-label="Light mode"
-                className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${
-                  themeMode === 'light'
-                    ? 'bg-white dark:bg-gray-700 text-amber-500 shadow-sm font-bold'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                <FiSun size={15} />
-              </button>
-              <button
-                onClick={() => setThemeMode('dark')}
-                title="Dark Mode"
-                aria-label="Dark mode"
-                className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${
-                  themeMode === 'dark'
-                    ? 'bg-white dark:bg-gray-700 text-sky-400 shadow-sm font-bold'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                <FiMoon size={15} />
-              </button>
-              <button
-                onClick={() => setThemeMode('system')}
-                title="System Mode (Auto adapt)"
-                aria-label="System mode"
-                className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${
-                  themeMode === 'system'
-                    ? 'bg-white dark:bg-gray-700 text-primary-500 shadow-sm font-bold'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                <FiMonitor size={15} />
-              </button>
-            </div>
+            {/* Single Theme Toggle Button (Light / Dark) */}
+            <motion.button
+              onClick={toggleTheme}
+              whileTap={{ scale: 0.92 }}
+              className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 transition-colors shadow-sm"
+              title={isDarkMode ? 'Dark Mode Active • Tap for Light Mode' : 'Light Mode Active • Tap for Dark Mode'}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDarkMode ? (
+                  <motion.div
+                    key="sun"
+                    initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                    animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                    exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-amber-400"
+                  >
+                    <FiSun size={19} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon"
+                    initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                    animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                    exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-gray-700 hover:text-primary-600"
+                  >
+                    <FiMoon size={19} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
 
             {/* Wishlist */}
             <Link
@@ -361,41 +355,27 @@ const Header = () => {
               ))}
               {/* Mobile Theme Selector */}
               <div className="pt-2.5 pb-1 border-t border-gray-200 dark:border-gray-800">
-                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-3.5 block mb-2">
-                  Theme Appearance
-                </span>
-                <div className="grid grid-cols-3 gap-2 px-1">
-                  <button
-                    onClick={() => setThemeMode('light')}
-                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      themeMode === 'light'
-                        ? 'bg-amber-500 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiSun size={14} /> Light
-                  </button>
-                  <button
-                    onClick={() => setThemeMode('dark')}
-                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      themeMode === 'dark'
-                        ? 'bg-sky-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiMoon size={14} /> Dark
-                  </button>
-                  <button
-                    onClick={() => setThemeMode('system')}
-                    className={`py-2 px-3 min-h-[40px] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      themeMode === 'system'
-                        ? 'bg-primary-600 text-white shadow-sm'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiMonitor size={14} /> Auto
-                  </button>
-                </div>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center justify-between px-3.5 py-3 min-h-[44px] rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  <span className="flex items-center gap-2.5 text-sm font-semibold">
+                    {isDarkMode ? (
+                      <span className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                        <FiSun className="w-4 h-4" />
+                      </span>
+                    ) : (
+                      <span className="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-600 flex items-center justify-center">
+                        <FiMoon className="w-4 h-4" />
+                      </span>
+                    )}
+                    <span>Theme: {isDarkMode ? 'Dark Mode' : 'Light Mode'}</span>
+                  </span>
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-primary-600 text-white font-bold">
+                    Switch to {isDarkMode ? 'Light' : 'Dark'}
+                  </span>
+                </button>
               </div>
 
               {!isAuthenticated && (
