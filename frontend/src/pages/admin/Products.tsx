@@ -23,7 +23,7 @@ import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import ErrorMessage from '../../components/ui/ErrorMessage';
-import { formatCurrency, getProductImage } from '../../utils/helpers';
+import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 
 interface LaptopFormData {
   name: string;
@@ -143,7 +143,23 @@ const AdminProducts = () => {
     queryFn: () => productService.getCategories(),
   });
 
-  const productsList = productsData?.data || [];
+  const brandsList: Brand[] = Array.isArray(brands)
+    ? brands
+    : Array.isArray((brands as any)?.data)
+    ? (brands as any).data
+    : [];
+
+  const categoriesList: any[] = Array.isArray(categories)
+    ? categories
+    : Array.isArray((categories as any)?.data)
+    ? (categories as any).data
+    : [];
+
+  const productsList: any[] = Array.isArray(productsData?.data)
+    ? productsData.data
+    : Array.isArray(productsData)
+    ? productsData
+    : [];
   const pagination = productsData?.pagination;
 
   // Create Laptop Mutation
@@ -197,8 +213,8 @@ const AdminProducts = () => {
       ram: '8',
       storage: '512',
       displaySize: '14.0',
-      brandId: brands && brands.length > 0 ? brands[0].id : '',
-      categoryId: categories && categories.length > 0 ? categories[0].id : '',
+      brandId: brandsList.length > 0 ? brandsList[0].id : '',
+      categoryId: categoriesList.length > 0 ? categoriesList[0].id : '',
     });
     setImageInput('');
     setFormError('');
@@ -430,7 +446,7 @@ const AdminProducts = () => {
             className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Laptop Brands</option>
-            {brands?.map((b) => (
+            {brandsList.map((b) => (
               <option key={b.id} value={b.id}>
                 {b.name}
               </option>
@@ -497,16 +513,17 @@ const AdminProducts = () => {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={mainImage}
-                            alt={product.name}
+                            src={mainImage || DEFAULT_LAPTOP_IMAGE}
+                            alt={product.name || 'Laptop'}
                             className="w-14 h-14 rounded-lg object-cover bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 flex-shrink-0"
                             onError={(e) => {
-                              e.currentTarget.src = getProductImage(product);
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                             }}
                           />
                           <div className="min-w-0">
                             <h4 className="font-semibold text-gray-900 dark:text-white line-clamp-1 hover:text-primary-600">
-                              <Link to={`/products/${product.id}`} target="_blank">
+                              <Link to={product.id ? `/products/${product.id}` : '#'} target="_blank">
                                 {product.name}
                               </Link>
                             </h4>
@@ -559,7 +576,7 @@ const AdminProducts = () => {
                             {formatCurrency(product.price)}
                           </span>
                         </div>
-                        {product.compareAtPrice && product.compareAtPrice > product.price && (
+                        {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
                           <div className="text-xs text-gray-400 line-through">
                             {formatCurrency(product.compareAtPrice)}
                           </div>
@@ -783,7 +800,7 @@ const AdminProducts = () => {
                         required
                       >
                         <option value="">Select Brand</option>
-                        {brands?.map((b) => (
+                        {brandsList.map((b) => (
                           <option key={b.id} value={b.id}>
                             {b.name}
                           </option>
@@ -802,7 +819,7 @@ const AdminProducts = () => {
                         required
                       >
                         <option value="">Select Category</option>
-                        {categories?.map((c: any) => (
+                        {categoriesList.map((c: any) => (
                           <option key={c.id} value={c.id}>
                             {c.name}
                           </option>

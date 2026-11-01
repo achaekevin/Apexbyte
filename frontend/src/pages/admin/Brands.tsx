@@ -130,10 +130,16 @@ const AdminBrands = () => {
   };
 
   // Filter brands by search
-  const filteredBrands = brands?.filter((b) =>
+  const brandsList: Brand[] = Array.isArray(brands)
+    ? brands
+    : Array.isArray((brands as any)?.data)
+    ? (brands as any).data
+    : [];
+
+  const filteredBrands = brandsList.filter((b) =>
     b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     b.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  );
 
   return (
     <div className="space-y-6">

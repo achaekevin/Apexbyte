@@ -40,9 +40,17 @@ const AdminDashboard = () => {
     queryFn: () => brandService.getBrands(),
   });
 
-  const products = productsData?.data || [];
+  const products = Array.isArray(productsData?.data)
+    ? productsData.data
+    : Array.isArray(productsData)
+    ? productsData
+    : [];
   const totalProducts = productsData?.pagination?.total || products.length;
-  const totalBrands = brands?.length || 0;
+  const totalBrands = Array.isArray(brands)
+    ? brands.length
+    : Array.isArray((brands as any)?.data)
+    ? (brands as any).data.length
+    : 0;
 
   // Calculate low stock / out of stock
   const lowStockCount = products.filter((p: any) => p.stock > 0 && p.stock <= 5).length;

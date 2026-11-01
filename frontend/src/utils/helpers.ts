@@ -1,11 +1,12 @@
 export const formatCurrency = (
-  amount: number,
+  amount: any,
   _currency: string = 'KES'
 ): string => {
-  if (isNaN(amount) || amount === null || amount === undefined) {
+  const num = typeof amount === 'number' ? amount : Number(amount);
+  if (isNaN(num) || amount === null || amount === undefined) {
     return 'KSh 0';
   }
-  return `KSh ${Math.round(amount).toLocaleString('en-KE')}`;
+  return `KSh ${Math.round(num).toLocaleString('en-KE')}`;
 };
 
 export const formatDate = (date: string | Date): string => {
