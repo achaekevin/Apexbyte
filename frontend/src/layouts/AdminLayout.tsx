@@ -176,7 +176,12 @@ const AdminLayout = () => {
 
         {/* Main Content Area */}
         <main className="flex-grow p-3.5 sm:p-6 lg:p-8 overflow-x-hidden min-w-0">
-          <ErrorBoundary variant="section" title="Admin View Encountered an Error">
+          <ErrorBoundary
+            key={location.pathname}
+            resetKeys={[location.pathname]}
+            variant="section"
+            title="Admin View Encountered an Error"
+          >
             <Outlet />
           </ErrorBoundary>
         </main>

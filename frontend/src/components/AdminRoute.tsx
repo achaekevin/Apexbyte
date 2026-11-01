@@ -27,7 +27,12 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
   }
 
   return (
-    <ErrorBoundary variant="section" title="Admin Control Center Error">
+    <ErrorBoundary
+      key={location.pathname}
+      resetKeys={[location.pathname]}
+      variant="section"
+      title="Admin Control Center Error"
+    >
       {children}
     </ErrorBoundary>
   );

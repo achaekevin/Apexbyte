@@ -11,6 +11,7 @@ interface ErrorBoundaryProps {
   fallback?: ReactNode;
   onReset?: () => void;
   showRetry?: boolean;
+  resetKeys?: any[];
 }
 
 interface ErrorBoundaryState {
@@ -49,6 +50,22 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       name: error.name,
       componentStack: errorInfo.componentStack,
     });
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    if (this.state.hasError && this.props.resetKeys && prevProps.resetKeys) {
+      const hasChanged = this.props.resetKeys.some(
+        (key, idx) => key !== prevProps.resetKeys?.[idx]
+      );
+      if (hasChanged) {
+        this.setState({
+          hasError: false,
+          error: null,
+          errorId: null,
+          retryCount: 0,
+        });
+      }
+    }
   }
 
   handleReset = () => {
