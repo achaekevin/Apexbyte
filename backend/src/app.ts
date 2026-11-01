@@ -16,7 +16,6 @@ import { sanitizeInput } from './middleware/sanitize';
 import { responseTrimmer } from './middleware/responseTrimmer';
 import logger from './config/logger';
 
-// Import passport configuration
 import './config/passport';
 
 // Import routes
@@ -44,13 +43,10 @@ import settingRoutes from './routes/setting.routes';
 
 const app: Application = express();
 
-// Trust reverse proxy (essential for rate limiting & secure cookie / HTTPS detection behind proxies)
 app.set('trust proxy', 1);
 
-// Attach traceable Request ID to every incoming request
 app.use(requestIdMiddleware);
 
-// Force HTTPS in production
 app.use((req, res, next) => {
   if (
     process.env.NODE_ENV === 'production' &&
@@ -62,7 +58,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Advanced Security Headers with Helmet
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -98,7 +93,6 @@ app.use(
   })
 );
 
-// Additional security headers (Permissions-Policy)
 app.use((_req, res, next) => {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(self)');
   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
@@ -141,16 +135,12 @@ app.use(compression());
 app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// Immediate body-parser error handler (catches malformed JSON and 413 oversized payloads)
 app.use(payloadErrorHandler);
 
-// Prevent deep nesting and excessive keys in JSON payloads
 app.use(payloadGuard);
 
-// Universal input sanitization across req.body, req.query, req.params (XSS, prototype pollution, null bytes)
 app.use(sanitizeInput);
 
-// Global response trimmer (deep-scrubs passwords, tokens, internal secrets from all JSON responses)
 app.use(responseTrimmer);
 
 // Serve uploaded media statically
