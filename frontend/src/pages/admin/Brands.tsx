@@ -9,6 +9,7 @@ import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import ErrorMessage from '../../components/ui/ErrorMessage';
+import { DEFAULT_LAPTOP_IMAGE } from '../../utils/helpers';
 
 const AdminBrands = () => {
   const queryClient = useQueryClient();
@@ -137,8 +138,8 @@ const AdminBrands = () => {
     : [];
 
   const filteredBrands = brandsList.filter((b) =>
-    b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    b.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    (b.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (b.description || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -215,20 +216,21 @@ const AdminBrands = () => {
                     {brand.logo ? (
                       <img
                         src={brand.logo}
-                        alt={brand.name}
+                        alt={brand.name || 'Brand logo'}
                         className="w-12 h-12 rounded-lg object-contain bg-gray-50 dark:bg-gray-900 p-1 border border-gray-200 dark:border-gray-700"
                         onError={(e) => {
-                          e.currentTarget.src = 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200';
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                         }}
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 font-bold flex items-center justify-center text-lg">
-                        {brand.name.charAt(0)}
+                        {(brand.name || 'B').charAt(0)}
                       </div>
                     )}
                     <div>
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">{brand.name}</h3>
-                      <span className="text-xs text-gray-500 font-mono">slug: {brand.slug}</span>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">{brand.name || 'Unnamed Brand'}</h3>
+                      <span className="text-xs text-gray-500 font-mono">slug: {brand.slug || 'n/a'}</span>
                     </div>
                   </div>
                   <Badge variant={brand.isActive !== false ? 'success' : 'info'}>

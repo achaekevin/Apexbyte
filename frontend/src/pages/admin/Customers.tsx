@@ -33,7 +33,11 @@ const AdminCustomers = () => {
       }),
   });
 
-  const customers = response?.data || [];
+  const customers = Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(response)
+    ? response
+    : [];
   const pagination = response?.pagination || { page: 1, totalPages: 1, total: customers.length };
 
   return (
