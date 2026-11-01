@@ -211,17 +211,22 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           <Button
             size="sm"
             variant="outline"
-            onClick={() => (window.location.href = '/shop')}
+            onClick={() => (window.location.href = window.location.pathname.startsWith('/admin') ? '/admin' : '/')}
             className="text-xs"
           >
-            Shop Catalog
+            {window.location.pathname.startsWith('/admin') ? 'Admin Dashboard' : 'Shop Catalog'}
           </Button>
         </div>
 
-        {isDev && this.state.error && (
-          <details className="mt-4 text-left p-3 rounded-lg bg-gray-100 dark:bg-gray-900 border text-[11px] font-mono overflow-auto max-h-40">
-            <summary className="cursor-pointer text-red-600 font-bold">Dev Error Info</summary>
-            <p className="text-red-500 mt-1">{this.state.error.message}</p>
+        {(isDev || window.location.pathname.startsWith('/admin')) && this.state.error && (
+          <details className="mt-4 text-left p-3 rounded-lg bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-[11px] font-mono overflow-auto max-h-40">
+            <summary className="cursor-pointer text-red-600 dark:text-red-400 font-bold">Diagnostic Error Details</summary>
+            <p className="text-red-600 dark:text-red-400 mt-1 font-semibold">{this.state.error.message}</p>
+            {this.state.error.stack && (
+              <pre className="whitespace-pre-wrap text-[10px] text-gray-500 mt-2 font-mono">
+                {this.state.error.stack}
+              </pre>
+            )}
           </details>
         )}
       </Card>
