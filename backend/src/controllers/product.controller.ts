@@ -458,7 +458,6 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
     },
   });
 
-  // If images array is provided, replace images
   if (images && Array.isArray(images) && images.length > 0) {
     const imageList: string[] = [];
     images.forEach((img) => {
@@ -500,7 +499,6 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
   });
 });
 
-// Delete product (Admin)
 export const deleteProduct = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
@@ -554,7 +552,6 @@ export const uploadProductImages = asyncHandler(
       )
     );
 
-    // Clear cache
     await cacheDel(`product:${id}`);
 
     res.json({
@@ -565,7 +562,6 @@ export const uploadProductImages = asyncHandler(
   }
 );
 
-// Upload product images generally (Admin)
 export const uploadGeneralProductImages = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const files = req.files as Express.Multer.File[];
@@ -584,7 +580,6 @@ export const uploadGeneralProductImages = asyncHandler(
   }
 );
 
-// Get filters data
 export const getFiltersData = asyncHandler(async (req: Request, res: Response) => {
   const [brands, categories, priceRange, ramOptions, storageOptions] = await Promise.all([
     prisma.brand.findMany({

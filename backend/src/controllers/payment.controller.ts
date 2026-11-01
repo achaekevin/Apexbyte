@@ -17,7 +17,6 @@ export const createStripePaymentIntent = asyncHandler(
     const { orderId } = req.body;
     let payableAmount = req.body.amount;
 
-    // Server-side price authority & IDOR check: if orderId is provided, enforce order total
     if (orderId) {
       const order = await prisma.order.findUnique({
         where: { id: orderId },
@@ -35,7 +34,6 @@ export const createStripePaymentIntent = asyncHandler(
         throw new AppError('This order has already been paid', 400);
       }
 
-      // Strictly enforce server-side database total - block any client-supplied price tampering
       payableAmount = Number(order.total);
     }
 
@@ -44,7 +42,7 @@ export const createStripePaymentIntent = asyncHandler(
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(payableAmount * 100), // Convert to smallest currency unit (cents)
+      amount: Math.round(payableAmount * 100),
       currency: 'kes',
       metadata: {
         orderId: orderId || '',
