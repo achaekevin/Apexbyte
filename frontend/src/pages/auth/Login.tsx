@@ -86,7 +86,7 @@ const Login = () => {
             placeholder="john@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            leftIcon={<FiMail className="text-gray-400" />}
+            leftIcon={<FiMail className="w-5 h-5 text-gray-400" />}
             required
           />
 
@@ -96,7 +96,7 @@ const Login = () => {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            leftIcon={<FiLock className="text-gray-400" />}
+            leftIcon={<FiLock className="w-5 h-5 text-gray-400" />}
             rightIcon={
               <button
                 type="button"

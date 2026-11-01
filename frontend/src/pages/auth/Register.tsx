@@ -79,7 +79,7 @@ const Register = () => {
               placeholder="John"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              leftIcon={<FiUser className="text-gray-400" />}
+              leftIcon={<FiUser className="w-5 h-5 text-gray-400" />}
               required
             />
             <Input
@@ -97,7 +97,7 @@ const Register = () => {
             placeholder="john@example.com"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            leftIcon={<FiMail className="text-gray-400" />}
+            leftIcon={<FiMail className="w-5 h-5 text-gray-400" />}
             required
           />
 
@@ -107,7 +107,7 @@ const Register = () => {
             placeholder="••••••••"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            leftIcon={<FiLock className="text-gray-400" />}
+            leftIcon={<FiLock className="w-5 h-5 text-gray-400" />}
             rightIcon={
               <button
                 type="button"
@@ -127,7 +127,7 @@ const Register = () => {
             placeholder="••••••••"
             value={formData.confirmPassword}
             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-            leftIcon={<FiLock className="text-gray-400" />}
+            leftIcon={<FiLock className="w-5 h-5 text-gray-400" />}
             rightIcon={
               <button
                 type="button"

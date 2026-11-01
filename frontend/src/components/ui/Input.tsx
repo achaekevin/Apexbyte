@@ -39,7 +39,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 z-10">
               {leftIcon}
             </div>
           )}
@@ -56,15 +56,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 : undefined
             }
             className={clsx(
-              'w-full px-3.5 py-2.5 sm:px-4 sm:py-3 min-h-[44px] border rounded-lg transition-all duration-300',
+              'w-full min-h-[44px] border rounded-lg transition-all duration-300',
+              'py-2.5 sm:py-3',
+              leftIcon ? 'pl-10 sm:pl-11' : 'pl-3.5 sm:pl-4',
+              rightIcon ? 'pr-10 sm:pr-11' : 'pr-3.5 sm:pr-4',
               'text-base leading-normal placeholder:text-sm sm:placeholder:text-base',
               'focus:outline-none focus:ring-2 focus:ring-primary-500',
               'dark:bg-gray-800 dark:text-white',
               error
                 ? 'border-error-500 focus:border-error-500 focus:ring-error-500'
                 : 'border-gray-300 dark:border-gray-600',
-              leftIcon && 'pl-10',
-              rightIcon && 'pr-10',
               props.disabled && 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900',
               className
             )}
@@ -72,7 +73,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
 
           {rightIcon && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center z-10">
               {rightIcon}
             </div>
           )}
