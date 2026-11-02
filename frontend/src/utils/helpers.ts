@@ -2,8 +2,19 @@ export const formatCurrency = (
   amount: any,
   _currency: string = 'KES'
 ): string => {
-  const num = typeof amount === 'number' ? amount : Number(amount);
-  if (isNaN(num) || amount === null || amount === undefined) {
+  if (amount === null || amount === undefined || amount === '') {
+    return 'KSh 0';
+  }
+  let num: number;
+  if (typeof amount === 'number') {
+    num = amount;
+  } else {
+    // Robustly clean any existing currency prefixes, commas, or spaces (e.g. "KSh 45,000" -> 45000)
+    const cleaned = String(amount).replace(/[^0-9.-]/g, '');
+    num = Number(cleaned);
+  }
+
+  if (isNaN(num) || num <= 0) {
     return 'KSh 0';
   }
   return `KSh ${Math.round(num).toLocaleString('en-KE')}`;

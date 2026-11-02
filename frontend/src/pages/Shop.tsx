@@ -648,8 +648,8 @@ const Shop = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {(productsData?.data || []).map((product: any, index: number) => {
                       const discountPercent =
-                        product.compareAtPrice && product.compareAtPrice > product.price
-                          ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+                        product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price)
+                          ? Math.round(((Number(product.compareAtPrice) - Number(product.price)) / Number(product.compareAtPrice)) * 100)
                           : null;
 
                       return (
@@ -752,7 +752,7 @@ const Shop = () => {
                                   <span className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
                                     {formatCurrency(product.price)}
                                   </span>
-                                  {product.compareAtPrice && product.compareAtPrice > product.price && (
+                                  {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
                                     <span className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through font-medium">
                                       {formatCurrency(product.compareAtPrice)}
                                     </span>

@@ -370,10 +370,20 @@ const ProductDetail = () => {
 
                 {/* Price */}
                 <div className="mb-4 sm:mb-6">
-                  <div className="flex items-baseline gap-3 mb-1.5">
+                  <div className="flex flex-wrap items-baseline gap-3 mb-1.5">
                     <span className="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
                       {formatCurrency(product.price)}
                     </span>
+                    {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                      <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through font-medium">
+                        {formatCurrency(product.compareAtPrice)}
+                      </span>
+                    )}
+                    {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                      <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">
+                        Save {formatCurrency(Number(product.compareAtPrice) - Number(product.price))} ({Math.round(((Number(product.compareAtPrice) - Number(product.price)) / Number(product.compareAtPrice)) * 100)}% Off)
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     {product.stock > 0 ? (

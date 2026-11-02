@@ -15,6 +15,11 @@ interface TechBackgroundProps {
   children?: React.ReactNode;
 }
 
+/**
+ * TechBackground provides a unified, laptop-centric background visual identity.
+ * Features vector circuit traces, precision silicon dot matrix, and ambient hardware lighting.
+ * Automatically adapts to light/dark themes and respects user's prefers-reduced-motion.
+ */
 export const TechBackground: FC<TechBackgroundProps> = memo(
   ({ variant = 'hero', className = '', children }) => {
     const shouldReduceMotion = useReducedMotion();
@@ -70,7 +75,7 @@ export const TechBackground: FC<TechBackgroundProps> = memo(
           >
             <defs>
               <pattern
-                id={`circuit-pattern-${variant}`}
+                id="circuit-pattern"
                 width="280"
                 height="280"
                 patternUnits="userSpaceOnUse"
@@ -108,7 +113,7 @@ export const TechBackground: FC<TechBackgroundProps> = memo(
                 <rect x="135" y="105" width="10" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1" />
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill={`url(#circuit-pattern-${variant})`} />
+            <rect width="100%" height="100%" fill="url(#circuit-pattern)" />
           </svg>
 
           {/* Layer 4: Laptop Wireframe Silhouette Watermark (Variant specific) */}
@@ -118,9 +123,9 @@ export const TechBackground: FC<TechBackgroundProps> = memo(
                 shouldReduceMotion
                   ? undefined
                   : {
-                    y: [0, -6, 0],
-                    opacity: [0.035, 0.055, 0.035],
-                  }
+                      y: [0, -6, 0],
+                      opacity: [0.035, 0.055, 0.035],
+                    }
               }
               transition={{
                 duration: 9,
@@ -174,3 +179,4 @@ export const TechBackground: FC<TechBackgroundProps> = memo(
 
 TechBackground.displayName = 'TechBackground';
 export default TechBackground;
+

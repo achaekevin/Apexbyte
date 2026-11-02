@@ -34,7 +34,9 @@ const heroLaptops = [
     name: 'Apexbyte Active Showroom Fleet',
     brand: 'Mocha Place Showroom',
     badge: 'Live Kisii Inventory',
-    price: 'From KSh 24,000',
+    price: 'KSh 32,000',
+    compareAtPrice: 'KSh 38,000',
+    saveAmount: 'Save KSh 6,000 (16% Off)',
     image: '/laptops/showroom-fleet.jpg',
     processor: 'Multi-Core Intel & Ryzen',
     ram: '8GB - 32GB RAM Options',
@@ -50,7 +52,9 @@ const heroLaptops = [
     name: 'HP ProBook & Pavilion 15',
     brand: 'HP Official',
     badge: 'Top Business Pick',
-    price: 'From KSh 36,000',
+    price: 'KSh 82,000',
+    compareAtPrice: 'KSh 92,000',
+    saveAmount: 'Save KSh 10,000 (11% Off)',
     image: '/laptops/hp-pavilion-natural.jpg',
     processor: 'Intel Core i5 / i7 Turbo',
     ram: '16GB DDR4 High-Speed',
@@ -66,7 +70,9 @@ const heroLaptops = [
     name: 'Apple MacBook Pro Retina / M-Series',
     brand: 'Apple',
     badge: 'Pro Creator & Dev',
-    price: 'From KSh 78,000',
+    price: 'KSh 245,000',
+    compareAtPrice: 'KSh 270,000',
+    saveAmount: 'Save KSh 25,000 (9% Off)',
     image: '/laptops/macbook-pro-natural.jpg',
     processor: 'Apple Silicon / Core i7 Turbo',
     ram: '16GB Unified High-Speed RAM',
@@ -82,7 +88,9 @@ const heroLaptops = [
     name: 'Dell XPS 13 & Latitude Series',
     brand: 'Dell Precision',
     badge: 'Executive Ultrabook',
-    price: 'From KSh 45,000',
+    price: 'KSh 155,000',
+    compareAtPrice: 'KSh 175,000',
+    saveAmount: 'Save KSh 20,000 (11% Off)',
     image: '/laptops/dell-xps-natural.jpg',
     processor: 'Intel Core i7 11th/12th Gen',
     ram: '16GB LPDDR5 Dual-Channel',
@@ -98,7 +106,9 @@ const heroLaptops = [
     name: 'Lenovo ThinkPad T-Series & X1',
     brand: 'Lenovo ThinkPad',
     badge: 'Military-Grade Durability',
-    price: 'From KSh 34,000',
+    price: 'KSh 115,000',
+    compareAtPrice: 'KSh 128,000',
+    saveAmount: 'Save KSh 13,000 (10% Off)',
     image: '/laptops/lenovo-thinkpad-natural.jpg',
     processor: 'Core i5 / i7 vPro Processor',
     ram: '16GB Upgradable to 32GB',
@@ -114,7 +124,9 @@ const heroLaptops = [
     name: 'ASUS ROG Strix & TUF Gaming Beast',
     brand: 'ASUS ROG',
     badge: 'Dedicated NVIDIA RTX GPU',
-    price: 'From KSh 89,000',
+    price: 'KSh 195,000',
+    compareAtPrice: 'KSh 215,000',
+    saveAmount: 'Save KSh 20,000 (9% Off)',
     image: '/laptops/asus-rog-natural.jpg',
     processor: 'Ryzen 7 / Core i7 Octa-Core',
     ram: '16GB / 32GB DDR5 Gaming RAM',
@@ -419,9 +431,16 @@ const Home = () => {
                             </h2>
                           </div>
                           <div className="text-right shrink-0">
-                            <span className="text-sm sm:text-lg font-black text-amber-300 block">
-                              {activeLaptop.price}
-                            </span>
+                            <div className="flex items-baseline justify-end gap-1.5">
+                              <span className="text-sm sm:text-lg font-black text-amber-300 block">
+                                {activeLaptop.price}
+                              </span>
+                              {activeLaptop.compareAtPrice && (
+                                <span className="text-[10px] sm:text-xs text-slate-400 line-through">
+                                  {activeLaptop.compareAtPrice}
+                                </span>
+                              )}
+                            </div>
                             <span className="text-[10px] sm:text-xs text-emerald-400 font-medium block">
                               {activeLaptop.display}
                             </span>
@@ -477,9 +496,21 @@ const Home = () => {
                     <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block mb-0.5">
                       Cash / M-Pesa Price
                     </span>
-                    <span className="text-2xl font-black text-primary-600 dark:text-primary-400 block">
-                      {activeLaptop.price}
-                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black text-primary-600 dark:text-primary-400 block">
+                        {activeLaptop.price}
+                      </span>
+                      {activeLaptop.compareAtPrice && (
+                        <span className="text-sm text-gray-400 line-through">
+                          {activeLaptop.compareAtPrice}
+                        </span>
+                      )}
+                    </div>
+                    {activeLaptop.saveAmount && (
+                      <span className="inline-block mt-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                        {activeLaptop.saveAmount}
+                      </span>
+                    )}
                     <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">
                       ✓ In Stock at Mocha Place CBD
                     </span>
@@ -715,10 +746,17 @@ const Home = () => {
                             ({product.reviewCount || 1})
                           </span>
                         </div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-                            {formatCurrency(product.price)}
-                          </span>
+                        <div className="flex items-baseline justify-between mb-3">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                              {formatCurrency(product.price)}
+                            </span>
+                            {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                              <span className="text-xs text-slate-400 dark:text-slate-500 line-through font-medium">
+                                {formatCurrency(product.compareAtPrice)}
+                              </span>
+                            )}
+                          </div>
                           {product.stock < 10 && product.stock > 0 && (
                             <Badge variant="warning" size="sm">
                               Only {product.stock} left
@@ -918,10 +956,17 @@ const Home = () => {
                           ({product.reviewCount})
                         </span>
                       </div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-                          {formatCurrency(product.price)}
-                        </span>
+                      <div className="flex items-baseline justify-between mb-3">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                            {formatCurrency(product.price)}
+                          </span>
+                          {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                            <span className="text-xs text-slate-400 dark:text-slate-500 line-through font-medium">
+                              {formatCurrency(product.compareAtPrice)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <Button
                         fullWidth
