@@ -15,6 +15,7 @@ import { useAuthStore } from '../store/authStore';
 import orderService from '../services/orderService';
 import paymentService from '../services/paymentService';
 import { useSettings } from '../hooks/useSettings';
+import TechBackground from '../components/ui/TechBackground';
 
 // Initialize Stripe (use publishable key from env or fallback)
 const stripePromise = loadStripe((import.meta as any).env?.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
@@ -295,7 +296,7 @@ const CheckoutForm = () => {
         <title>Secure Checkout - Apexbyte Laptops Kenya</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <TechBackground variant="minimal" className="min-h-screen bg-gray-50/90 dark:bg-gray-900/90 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Progress Steps */}
           <div className="mb-8">
@@ -775,7 +776,7 @@ const CheckoutForm = () => {
             </div>
           </div>
         </div>
-      </div>
+      </TechBackground>
 
       {/* M-PESA STK PUSH LIVE MODAL */}
       <AnimatePresence>

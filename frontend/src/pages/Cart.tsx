@@ -11,6 +11,7 @@ import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/
 import { useCartStore } from '../store/cartStore';
 import couponService from '../services/couponService';
 import { useSettings } from '../hooks/useSettings';
+import TechBackground from '../components/ui/TechBackground';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ const Cart = () => {
         <title>{`Shopping Cart (${items.length} items) - Apexbyte Laptops`}</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <TechBackground variant="minimal" className="min-h-screen bg-gray-50/90 dark:bg-gray-900/90 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
@@ -483,7 +484,7 @@ const Cart = () => {
             ))}
           </div>
         </div>
-      </div>
+      </TechBackground>
     </>
   );
 };

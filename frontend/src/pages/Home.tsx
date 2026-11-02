@@ -24,6 +24,7 @@ import reviewService from '../services/reviewService';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE, getInitials } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useSettings } from '../hooks/useSettings';
+import TechBackground from '../components/ui/TechBackground';
 
 import api from '../services/api';
 
@@ -221,8 +222,9 @@ const Home = () => {
       </Helmet>
 
       {/* Full-Page Screen-Filling Alternating Laptop Showcase Hero */}
+      <TechBackground variant="hero" className="w-full">
       <section
-        className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-100 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 transition-colors pt-4 pb-4 sm:pt-6 sm:pb-6"
+        className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-gray-50/80 via-white/80 to-gray-100/80 text-slate-900 border-b border-gray-200 dark:from-gray-950/80 dark:via-gray-900/80 dark:to-gray-950/80 dark:text-white dark:border-gray-800 transition-colors pt-4 pb-4 sm:pt-6 sm:pb-6"
       >
         {/* Full-Bleed Edge-to-Edge Dynamic Ambient Backdrop */}
         <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -395,12 +397,15 @@ const Home = () => {
                     transition={{ repeat: Infinity, duration: 5.5, ease: 'easeInOut' }}
                     className="relative w-full flex items-center justify-center group"
                   >
-                    <div className="relative w-full max-w-sm sm:max-w-xl lg:max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md">
+                    <div className="relative w-full max-w-sm sm:max-w-xl lg:max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md group-hover:border-primary-500/50 transition-colors">
                       <img
                         src={activeLaptop.image}
                         alt={activeLaptop.name}
                         className="w-full h-[32vh] sm:h-[42vh] lg:h-[48vh] max-h-[500px] object-contain object-center p-2 sm:p-4 group-hover:scale-105 transition-transform duration-700"
                       />
+
+                      {/* Specular chassis light beam reflection */}
+                      <div className="pointer-events-none absolute -inset-full top-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
 
                       {/* In-Frame Bottom HUD Bar */}
                       <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/75 to-transparent text-white">
@@ -428,6 +433,7 @@ const Home = () => {
 
                   {/* Realistic Ground Shadow & Depth Underglow */}
                   <div className="w-3/4 sm:w-2/3 h-5 bg-black/30 dark:bg-black/70 blur-xl rounded-full mt-2" />
+                  <div className="w-4/5 sm:w-3/4 h-8 bg-gradient-to-r from-primary-500/0 via-primary-500/20 to-emerald-500/0 blur-xl rounded-full -mt-4 pointer-events-none" />
 
                   {/* Mobile Spec Grid directly under laptop for small viewports */}
                   <div className="lg:hidden grid grid-cols-2 gap-2 w-full max-w-sm mt-3 px-1">
@@ -595,6 +601,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      </TechBackground>
 
       {/* Human Retail Trust Strip - Fully Responsive to Light & Dark Modes */}
       <section className="bg-gray-100 text-slate-900 border-b border-gray-200 dark:bg-gray-950 dark:text-white dark:border-gray-800 py-4 transition-colors">
@@ -633,7 +640,8 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-10 sm:py-16 bg-white dark:bg-gray-900 transition-colors">
+      <TechBackground variant="catalog" className="w-full">
+      <section className="py-10 sm:py-16 bg-white/80 dark:bg-gray-900/80 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -663,7 +671,7 @@ const Home = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="group hover:shadow-premium transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col justify-between">
+                  <Card className="group hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200/90 dark:border-gray-700/90 hover:border-primary-500/50 dark:hover:border-primary-500/50 h-full flex flex-col justify-between overflow-hidden">
                     <div>
                       <Link to={`/products/${product.id}`}>
                         <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
@@ -673,7 +681,7 @@ const Home = () => {
                             onError={(e) => {
                               e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                             }}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                           {product.isFeatured && (
                             <Badge className="absolute top-2 right-2" variant="primary">
@@ -750,6 +758,7 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+      </TechBackground>
 
       {/* Categories */}
       <section className="py-10 sm:py-16 bg-gray-50 dark:bg-gray-950 transition-colors">

@@ -11,6 +11,7 @@ import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
 import ErrorMessage from '../components/ui/ErrorMessage';
+import TechBackground from '../components/ui/TechBackground';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
@@ -250,7 +251,7 @@ const ProductDetail = () => {
         <meta property="og:image" content={getProductImage(product)} />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <TechBackground variant="detail" className="min-h-screen bg-gray-50/90 dark:bg-gray-900/90 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-8">
@@ -280,9 +281,10 @@ const ProductDetail = () => {
               <Card className="p-4">
                 <motion.div
                   key={selectedImage}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="aspect-square mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="aspect-square mb-4 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 relative group"
                 >
                   <img
                     src={getProductImage(product, selectedImage)}
@@ -290,8 +292,10 @@ const ProductDetail = () => {
                     onError={(e) => {
                       e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                     }}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  {/* Subtle specular reflection on laptop image */}
+                  <div className="pointer-events-none absolute -inset-full top-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
                 </motion.div>
 
                 <div className="grid grid-cols-4 gap-2">
@@ -850,7 +854,7 @@ const ProductDetail = () => {
             </div>
           )}
         </div>
-      </div>
+      </TechBackground>
     </>
   );
 };

@@ -19,6 +19,7 @@ import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import EmptyState from '../components/ui/EmptyState';
+import TechBackground from '../components/ui/TechBackground';
 import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useComparisonStore } from '../store/comparisonStore';
@@ -270,7 +271,7 @@ const Shop = () => {
         />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <TechBackground variant="catalog" className="min-h-screen bg-gray-50/90 dark:bg-gray-900/90">
         {/* Jumia-Style Official Brand Stores Strip */}
         <div className="bg-gray-900 text-white py-3 border-b border-gray-800 shadow-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -658,7 +659,7 @@ const Shop = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.04 }}
                         >
-                          <Card className="group hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
+                          <Card className="group hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-gray-200/90 dark:border-gray-700/90 hover:border-primary-500/50 dark:hover:border-primary-500/50 bg-white dark:bg-gray-800 overflow-hidden">
                             {/* Product Image & Badges */}
                             <Link to={`/products/${product.id}`} className="block relative">
                               <div className="aspect-square bg-gray-50 dark:bg-gray-900 overflow-hidden relative">
@@ -668,8 +669,11 @@ const Shop = () => {
                                   onError={(e) => {
                                     e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                                   }}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
+
+                                {/* Subtle specular shine bar on hover */}
+                                <div className="pointer-events-none absolute -inset-full top-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
 
                                 {/* Discount Tag (Jumia style) */}
                                 {discountPercent && discountPercent > 0 && (
@@ -817,7 +821,7 @@ const Shop = () => {
             </div>
           </div>
         </div>
-      </div>
+      </TechBackground>
 
       {/* Floating Comparison Dock */}
       {comparisonProducts.length > 0 && (
