@@ -443,6 +443,19 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
     data.slug = generateSlug(data.name);
   }
 
+  // Calculate discount automatically if price or compareAtPrice changed
+  const targetPrice = data.price !== undefined ? Number(data.price) : Number(product.price);
+  const targetCompareAtPrice = data.compareAtPrice !== undefined
+    ? (data.compareAtPrice ? Number(data.compareAtPrice) : null)
+    : (product.compareAtPrice ? Number(product.compareAtPrice) : null);
+
+  let calculatedDiscount = data.discount !== undefined ? Number(data.discount) : undefined;
+  if (calculatedDiscount === undefined && targetCompareAtPrice && targetCompareAtPrice > targetPrice) {
+    calculatedDiscount = Math.round(((targetCompareAtPrice - targetPrice) / targetCompareAtPrice) * 100);
+  } else if (calculatedDiscount === undefined && (!targetCompareAtPrice || targetCompareAtPrice <= targetPrice)) {
+    calculatedDiscount = 0;
+  }
+
   const updated = await prisma.product.update({
     where: { id },
     data: {
@@ -450,7 +463,7 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
       price: data.price !== undefined ? Number(data.price) : undefined,
       compareAtPrice: data.compareAtPrice !== undefined ? (data.compareAtPrice ? Number(data.compareAtPrice) : null) : undefined,
       costPrice: data.costPrice !== undefined ? (data.costPrice ? Number(data.costPrice) : null) : undefined,
-      discount: data.discount !== undefined ? Number(data.discount) : undefined,
+      discount: calculatedDiscount !== undefined ? calculatedDiscount : undefined,
       stock: data.stock !== undefined ? Number(data.stock) : undefined,
       status: data.status !== undefined ? data.status : undefined,
       ram: data.ram !== undefined ? Number(data.ram) : undefined,
@@ -490,6 +503,8 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
   // Clear cache
   await cacheDel(`product:${id}`);
   await cacheDel('products:*');
+  await cacheDel('homepage:*');
+  await cacheDel('featured:*');
 
   const fullProduct = await prisma.product.findUnique({
     where: { id },

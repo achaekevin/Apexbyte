@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
   FiPlus,
   FiEdit2,
@@ -201,10 +202,13 @@ const AdminProducts = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('New laptop created and published successfully!');
       closeModal();
     },
     onError: (err: any) => {
-      setFormError(err.response?.data?.message || 'Failed to create laptop product');
+      const msg = err.response?.data?.message || err.message || 'Failed to create laptop product';
+      toast.error(msg);
+      setFormError(msg);
     },
   });
 
@@ -218,9 +222,13 @@ const AdminProducts = () => {
       queryClient.invalidateQueries({ queryKey: ['product'] });
       closeModal();
       setIsQuickPriceOpen(false);
+      setIsPhotoModalOpen(false);
+      setPhotoProduct(null);
     },
     onError: (err: any) => {
-      setFormError(err.response?.data?.message || 'Failed to update laptop');
+      const msg = err.response?.data?.message || err.message || 'Failed to update laptop';
+      toast.error(msg);
+      setFormError(msg);
     },
   });
 
@@ -230,9 +238,11 @@ const AdminProducts = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Laptop deleted from catalog');
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || 'Failed to delete product');
+      const msg = err.response?.data?.message || err.message || 'Failed to delete product';
+      toast.error(msg);
     },
   });
 
@@ -322,6 +332,14 @@ const AdminProducts = () => {
     updateMutation.mutate({
       id: product.id,
       data: { status: nextStatus } as any,
+    }, {
+      onSuccess: () => {
+        if (nextStatus === 'PUBLISHED') {
+          toast.success(`"${product.name}" is now LIVE in store!`);
+        } else {
+          toast(`"${product.name}" is now set to DRAFT (hidden from store)`, { icon: '🟡' });
+        }
+      }
     });
   };
 
@@ -349,7 +367,7 @@ const AdminProducts = () => {
   const handleSaveQuickPhotos = () => {
     if (!photoProduct) return;
     if (photoList.length === 0) {
-      alert('Please keep at least one laptop photo');
+      toast.error('Please keep at least one laptop photo');
       return;
     }
     updateMutation.mutate({
@@ -359,6 +377,7 @@ const AdminProducts = () => {
       onSuccess: () => {
         setIsPhotoModalOpen(false);
         setPhotoProduct(null);
+        toast.success(`Photos updated successfully for "${photoProduct.name}"!`);
       }
     });
   };
@@ -499,7 +518,7 @@ const AdminProducts = () => {
     if (!selectedProduct) return;
     const priceNum = parsePrice(quickPrice);
     if (!priceNum || priceNum <= 0) {
-      alert('Price must be greater than 0');
+      toast.error('Price must be greater than 0');
       return;
     }
 
@@ -513,6 +532,11 @@ const AdminProducts = () => {
         compareAtPrice: compareNum && compareNum > 0 ? compareNum : null,
         stock: stockNum !== undefined ? stockNum : undefined,
       } as any,
+    }, {
+      onSuccess: () => {
+        setIsQuickPriceOpen(false);
+        toast.success(`Price updated to ${formatCurrency(priceNum)}!`);
+      }
     });
   };
 
