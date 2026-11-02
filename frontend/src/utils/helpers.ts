@@ -276,27 +276,39 @@ export const sleep = (ms: number): Promise<void> => {
 
 export const DEFAULT_LAPTOP_IMAGE = '/laptops/hp-pavilion-natural.jpg';
 
-export const getBrandNaturalImage = (nameOrBrand: string, index: number = 0): string => {
+export const getBrandNaturalImage = (nameOrBrand: string, _index: number = 0): string => {
   const text = (nameOrBrand || '').toLowerCase();
   if (text.includes('apple') || text.includes('macbook')) {
-    return index > 0 ? 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800' : '/laptops/macbook-pro-natural.jpg';
+    return '/laptops/macbook-pro-natural.jpg';
   }
-  if (text.includes('hp') || text.includes('pavilion') || text.includes('spectre') || text.includes('envy') || text.includes('omen')) {
-    return index > 0 ? 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800' : '/laptops/hp-pavilion-natural.jpg';
+  if (text.includes('hp') || text.includes('pavilion') || text.includes('spectre') || text.includes('envy') || text.includes('omen') || text.includes('probook')) {
+    return '/laptops/hp-pavilion-natural.jpg';
   }
-  if (text.includes('lenovo') || text.includes('thinkpad') || text.includes('yoga') || text.includes('legion')) {
-    return index > 0 ? 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800' : '/laptops/lenovo-thinkpad-natural.jpg';
+  if (text.includes('lenovo') || text.includes('thinkpad') || text.includes('yoga') || text.includes('legion') || text.includes('ideapad')) {
+    return '/laptops/lenovo-thinkpad-natural.jpg';
   }
   if (text.includes('samsung') || text.includes('galaxy')) {
-    return index > 0 ? 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800' : '/laptops/samsung-galaxybook-natural.jpg';
+    return '/laptops/samsung-galaxybook-natural.jpg';
   }
-  if (text.includes('asus') || text.includes('rog') || text.includes('zenbook') || text.includes('tuf')) {
-    return index > 0 ? 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800' : '/laptops/asus-rog-natural.jpg';
+  if (text.includes('asus') || text.includes('rog') || text.includes('zenbook') || text.includes('tuf') || text.includes('vivobook')) {
+    return '/laptops/asus-rog-natural.jpg';
   }
-  if (text.includes('dell') || text.includes('xps') || text.includes('vostro') || text.includes('inspiron') || text.includes('alienware')) {
-    return index > 0 ? '/laptops/dell-vostro-natural.png' : '/laptops/dell-xps-natural.jpg';
+  if (text.includes('dell') || text.includes('xps') || text.includes('vostro') || text.includes('inspiron') || text.includes('alienware') || text.includes('latitude')) {
+    return text.includes('vostro') ? '/laptops/dell-vostro-natural.png' : '/laptops/dell-xps-natural.jpg';
   }
-  return index > 0 ? '/laptops/dell-xps-natural.jpg' : '/laptops/hp-pavilion-natural.jpg';
+  if (text.includes('acer') || text.includes('swift') || text.includes('aspire') || text.includes('predator') || text.includes('nitro') || text.includes('travelmate')) {
+    return '/laptops/acer-swift-natural.jpg';
+  }
+  if (text.includes('msi') || text.includes('stealth') || text.includes('katana') || text.includes('raider') || text.includes('prestige') || text.includes('titan')) {
+    return '/laptops/msi-stealth-natural.jpg';
+  }
+  if (text.includes('razer') || text.includes('blade')) {
+    return '/laptops/razer-blade-natural.jpg';
+  }
+  if (text.includes('microsoft') || text.includes('surface')) {
+    return '/laptops/surface-studio-natural.jpg';
+  }
+  return '/laptops/hero-showcase.png';
 };
 
 // Filter out known cyber neon / AI-rendered stock images
