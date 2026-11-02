@@ -20,7 +20,7 @@ import Input from '../components/ui/Input';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import EmptyState from '../components/ui/EmptyState';
 import TechBackground from '../components/ui/TechBackground';
-import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
+import { formatCurrency, parsePrice, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useComparisonStore } from '../store/comparisonStore';
 import api from '../services/api';
@@ -647,9 +647,11 @@ const Shop = () => {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {(productsData?.data || []).map((product: any, index: number) => {
+                      const priceNum = parsePrice(product.price);
+                      const compareNum = parsePrice(product.compareAtPrice);
                       const discountPercent =
-                        product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price)
-                          ? Math.round(((Number(product.compareAtPrice) - Number(product.price)) / Number(product.compareAtPrice)) * 100)
+                        compareNum > priceNum && priceNum > 0
+                          ? Math.round(((compareNum - priceNum) / compareNum) * 100)
                           : null;
 
                       return (
@@ -752,7 +754,7 @@ const Shop = () => {
                                   <span className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
                                     {formatCurrency(product.price)}
                                   </span>
-                                  {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                                  {compareNum > priceNum && priceNum > 0 && (
                                     <span className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 line-through font-medium">
                                       {formatCurrency(product.compareAtPrice)}
                                     </span>

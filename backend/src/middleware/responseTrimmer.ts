@@ -27,6 +27,19 @@ const cleanResponseData = (data: any): any => {
   }
 
   if (typeof data === 'object') {
+    // Preserve and convert Prisma Decimal / Decimal.js instances into clean standard numbers
+    if (typeof data.toNumber === 'function') {
+      return data.toNumber();
+    }
+    if (typeof data.toJSON === 'function' && (data.constructor?.name === 'Decimal' || data.isDecimal)) {
+      return Number(data.toJSON());
+    }
+    if (Array.isArray(data.d) && typeof data.s === 'number' && typeof data.e === 'number') {
+      const digitsStr = data.d.join('');
+      const exp = data.e - (digitsStr.length - 1);
+      return data.s * parseFloat(digitsStr) * Math.pow(10, exp);
+    }
+
     // Preserve Date and Buffer instances
     if (data instanceof Date || Buffer.isBuffer(data)) {
       return data;

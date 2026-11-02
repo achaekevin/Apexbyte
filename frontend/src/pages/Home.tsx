@@ -21,7 +21,7 @@ import Badge from '../components/ui/Badge';
 import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import productService from '../services/productService';
 import reviewService from '../services/reviewService';
-import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE, getInitials } from '../utils/helpers';
+import { formatCurrency, parsePrice, getProductImage, DEFAULT_LAPTOP_IMAGE, getInitials } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useSettings } from '../hooks/useSettings';
 import TechBackground from '../components/ui/TechBackground';
@@ -751,7 +751,7 @@ const Home = () => {
                             <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                               {formatCurrency(product.price)}
                             </span>
-                            {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                            {parsePrice(product.compareAtPrice) > parsePrice(product.price) && parsePrice(product.price) > 0 && (
                               <span className="text-xs text-slate-400 dark:text-slate-500 line-through font-medium">
                                 {formatCurrency(product.compareAtPrice)}
                               </span>
@@ -961,7 +961,7 @@ const Home = () => {
                           <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                             {formatCurrency(product.price)}
                           </span>
-                          {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                          {parsePrice(product.compareAtPrice) > parsePrice(product.price) && parsePrice(product.price) > 0 && (
                             <span className="text-xs text-slate-400 dark:text-slate-500 line-through font-medium">
                               {formatCurrency(product.compareAtPrice)}
                             </span>

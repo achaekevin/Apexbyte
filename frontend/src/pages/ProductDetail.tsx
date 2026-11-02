@@ -12,7 +12,7 @@ import LoadingSkeleton from '../components/ui/LoadingSkeleton';
 import Input from '../components/ui/Input';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import TechBackground from '../components/ui/TechBackground';
-import { formatCurrency, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
+import { formatCurrency, parsePrice, getProductImage, DEFAULT_LAPTOP_IMAGE } from '../utils/helpers';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useComparisonStore } from '../store/comparisonStore';
@@ -374,14 +374,14 @@ const ProductDetail = () => {
                     <span className="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
                       {formatCurrency(product.price)}
                     </span>
-                    {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                    {parsePrice(product.compareAtPrice) > parsePrice(product.price) && parsePrice(product.price) > 0 && (
                       <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through font-medium">
                         {formatCurrency(product.compareAtPrice)}
                       </span>
                     )}
-                    {product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price) && (
+                    {parsePrice(product.compareAtPrice) > parsePrice(product.price) && parsePrice(product.price) > 0 && (
                       <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">
-                        Save {formatCurrency(Number(product.compareAtPrice) - Number(product.price))} ({Math.round(((Number(product.compareAtPrice) - Number(product.price)) / Number(product.compareAtPrice)) * 100)}% Off)
+                        Save {formatCurrency(parsePrice(product.compareAtPrice) - parsePrice(product.price))} ({Math.round(((parsePrice(product.compareAtPrice) - parsePrice(product.price)) / parsePrice(product.compareAtPrice)) * 100)}% Off)
                       </span>
                     )}
                   </div>

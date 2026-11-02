@@ -1,20 +1,45 @@
+export const parsePrice = (amount: any): number => {
+  if (amount === null || amount === undefined || amount === '') {
+    return 0;
+  }
+  if (typeof amount === 'number') {
+    return isNaN(amount) ? 0 : amount;
+  }
+  if (typeof amount === 'string') {
+    const cleaned = amount.replace(/[^0-9.-]/g, '');
+    const num = Number(cleaned);
+    return isNaN(num) ? 0 : num;
+  }
+  if (typeof amount === 'object') {
+    if (typeof amount.toNumber === 'function') {
+      const n = amount.toNumber();
+      return isNaN(n) ? 0 : n;
+    }
+    if (typeof amount.toJSON === 'function') {
+      const n = Number(amount.toJSON());
+      return isNaN(n) ? 0 : n;
+    }
+    if (Array.isArray(amount.d) && typeof amount.s === 'number' && typeof amount.e === 'number') {
+      const digitsStr = amount.d.join('');
+      const exp = amount.e - (digitsStr.length - 1);
+      const n = amount.s * parseFloat(digitsStr) * Math.pow(10, exp);
+      return isNaN(n) ? 0 : n;
+    }
+    if (amount.value !== undefined) {
+      const n = Number(amount.value);
+      return isNaN(n) ? 0 : n;
+    }
+  }
+  const fallback = Number(amount);
+  return isNaN(fallback) ? 0 : fallback;
+};
+
 export const formatCurrency = (
   amount: any,
   _currency: string = 'KES'
 ): string => {
-  if (amount === null || amount === undefined || amount === '') {
-    return 'KSh 0';
-  }
-  let num: number;
-  if (typeof amount === 'number') {
-    num = amount;
-  } else {
-    // Robustly clean any existing currency prefixes, commas, or spaces (e.g. "KSh 45,000" -> 45000)
-    const cleaned = String(amount).replace(/[^0-9.-]/g, '');
-    num = Number(cleaned);
-  }
-
-  if (isNaN(num) || num <= 0) {
+  const num = parsePrice(amount);
+  if (num <= 0) {
     return 'KSh 0';
   }
   return `KSh ${Math.round(num).toLocaleString('en-KE')}`;
