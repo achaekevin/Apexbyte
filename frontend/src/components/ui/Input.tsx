@@ -58,8 +58,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className={clsx(
               'w-full min-h-[44px] border rounded-lg transition-all duration-300',
               'py-2.5 sm:py-3',
-              leftIcon ? 'pl-10 sm:pl-11' : 'pl-3.5 sm:pl-4',
-              rightIcon ? 'pr-10 sm:pr-11' : 'pr-3.5 sm:pr-4',
+              leftIcon ? 'pl-11 sm:pl-12' : 'pl-3.5 sm:pl-4',
+              rightIcon ? 'pr-11 sm:pr-12' : 'pr-3.5 sm:pr-4',
               'text-base leading-normal placeholder:text-sm sm:placeholder:text-base',
               'focus:outline-none focus:ring-2 focus:ring-primary-500',
               'dark:bg-gray-800 dark:text-white',
