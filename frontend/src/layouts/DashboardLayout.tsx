@@ -9,6 +9,7 @@ import {
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
+import TechBackground from '../components/ui/TechBackground';
 
 const menuItems = [
   { path: '/dashboard', label: 'Dashboard', icon: FiHome },
@@ -24,7 +25,7 @@ const DashboardLayout = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
-      <div className="flex-grow">
+      <TechBackground variant="dashboard" className="flex-grow">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
           {/* Mobile Horizontal Tab Navigation (under md) */}
           <div className="md:hidden mb-4 overflow-x-auto scrollbar-none pb-1">
@@ -87,7 +88,7 @@ const DashboardLayout = () => {
             </main>
           </div>
         </div>
-      </div>
+      </TechBackground>
       <Footer />
     </div>
   );
