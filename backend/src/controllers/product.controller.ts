@@ -28,6 +28,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     brand,
     categoryId,
     category,
+    status,
     minPrice,
     maxPrice,
     ram,
@@ -48,9 +49,15 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
 
   const { skip, take } = getPagination(Number(page), Number(limit));
 
-  const where: any = {
-    status: 'PUBLISHED',
-  };
+  const where: any = {};
+  if (status) {
+    if (status !== 'ALL') {
+      where.status = status;
+    }
+  } else {
+    // Default to PUBLISHED for storefront customer browsing
+    where.status = 'PUBLISHED';
+  }
 
   if (search) {
     where.OR = [
@@ -445,6 +452,7 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
       costPrice: data.costPrice !== undefined ? (data.costPrice ? Number(data.costPrice) : null) : undefined,
       discount: data.discount !== undefined ? Number(data.discount) : undefined,
       stock: data.stock !== undefined ? Number(data.stock) : undefined,
+      status: data.status !== undefined ? data.status : undefined,
       ram: data.ram !== undefined ? Number(data.ram) : undefined,
       storage: data.storage !== undefined ? Number(data.storage) : undefined,
       displaySize: data.displaySize !== undefined ? Number(data.displaySize) : undefined,

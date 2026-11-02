@@ -8,6 +8,7 @@ export interface ProductFilters {
   category?: string;
   brandId?: string;
   categoryId?: string;
+  status?: string;
   minPrice?: number | string;
   maxPrice?: number | string;
   ram?: number[] | string;
