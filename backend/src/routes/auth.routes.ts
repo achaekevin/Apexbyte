@@ -65,16 +65,16 @@ const resendVerificationValidation = [
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
 ];
 
-// Routes
+// Routes - All authentication endpoints are protected by the shared 5-attempt/15-minute rate limiter
 router.post('/register', authLimiter, validate(registerValidation), register);
 router.post('/login', authLimiter, validate(loginValidation), login);
-router.post('/refresh-token', refreshToken);
+router.post('/refresh-token', authLimiter, refreshToken);
 router.post('/logout', authenticate, logout);
-router.post('/verify-email', validate(verifyEmailValidation), verifyEmail);
+router.post('/verify-email', authLimiter, validate(verifyEmailValidation), verifyEmail);
 router.post('/resend-verification', authLimiter, validate(resendVerificationValidation), resendVerification);
 router.post('/forgot-password', authLimiter, validate(forgotPasswordValidation), forgotPassword);
 router.post('/reset-password', authLimiter, validate(resetPasswordValidation), resetPassword);
 router.get('/me', authenticate, getCurrentUser);
-router.put('/change-password', authenticate, validate(changePasswordValidation), changePassword);
+router.put('/change-password', authenticate, authLimiter, validate(changePasswordValidation), changePassword);
 
 export default router;

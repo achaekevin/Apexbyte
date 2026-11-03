@@ -1,7 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import logger from './logger';
+import { isValidImageSignature } from '../middleware/upload';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,24 +22,36 @@ const isCloudinaryConfigured = (): boolean => {
   );
 };
 
-// Fallback to local server disk storage
+// Fallback to local server disk storage with path traversal & extension execution protection
 const saveLocalImage = async (
   file: Express.Multer.File,
   folder: string = 'laptops'
 ): Promise<{ url: string; publicId: string }> => {
-  const uploadDir = path.join(process.cwd(), 'uploads', folder);
+  // Validate magic bytes before writing to disk
+  if (!isValidImageSignature(file.buffer)) {
+    throw new Error('Security check failed: File buffer does not match a valid image signature (JPEG, PNG, or WebP).');
+  }
+
+  // Sanitize folder name to prevent directory traversal
+  const safeFolder = folder.replace(/[^a-zA-Z0-9_-]/g, '') || 'laptops';
+  const uploadDir = path.join(process.cwd(), 'uploads', safeFolder);
   await fs.promises.mkdir(uploadDir, { recursive: true });
 
-  const ext = path.extname(file.originalname) || '.jpg';
-  const rawBase = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
-  const filename = `${rawBase || 'laptop'}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}${ext}`;
+  // Whitelist safe image extensions only
+  let safeExt = path.extname(file.originalname).toLowerCase();
+  if (!['.jpg', '.jpeg', '.png', '.webp'].includes(safeExt)) {
+    safeExt = '.jpg';
+  }
+
+  // Generate an unguessable UUID filename preventing path traversal and file overwriting
+  const filename = `${crypto.randomUUID()}${safeExt}`;
   const filePath = path.join(uploadDir, filename);
 
   await fs.promises.writeFile(filePath, file.buffer);
-  logger.info(`Saved image locally: /uploads/${folder}/${filename}`);
+  logger.info(`Saved image locally: /uploads/${safeFolder}/${filename}`);
 
   return {
-    url: `/uploads/${folder}/${filename}`,
+    url: `/uploads/${safeFolder}/${filename}`,
     publicId: filename,
   };
 };

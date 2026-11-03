@@ -77,6 +77,13 @@ export const errorHandler = (
   let message = err.message || 'An unexpected error occurred';
   let details = err.details || null;
 
+  // 0. CORS Blocked Origin
+  if (err && typeof err.message === 'string' && err.message.startsWith('CORS blocked for origin')) {
+    statusCode = 403;
+    errorCode = 'CORS_FORBIDDEN';
+    message = 'Cross-Origin Resource Sharing (CORS) blocked: origin not allowed';
+  }
+
   // 1. Body-parser malformed JSON syntax error
   if (err instanceof SyntaxError && (err as any).status === 400 && 'body' in err) {
     statusCode = 400;

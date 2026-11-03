@@ -112,11 +112,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     role: user.role,
   });
 
-  // Update user with refresh token and last login
+  // Update user with refresh token and last login (cryptographically hash token at rest)
   await prisma.user.update({
     where: { id: user.id },
     data: {
-      refreshToken,
+      refreshToken: hashToken(refreshToken),
       lastLogin: new Date(),
     },
   });
@@ -149,7 +149,8 @@ export const refreshToken = asyncHandler(
       where: { id: decoded.id },
     });
 
-    if (!user || user.refreshToken !== refreshToken) {
+    const hashedIncomingToken = hashToken(refreshToken);
+    if (!user || (user.refreshToken !== hashedIncomingToken && user.refreshToken !== refreshToken)) {
       throw new AppError('Invalid refresh token', 401);
     }
 
@@ -166,10 +167,10 @@ export const refreshToken = asyncHandler(
       role: user.role,
     });
 
-    // Update refresh token
+    // Update refresh token with hashed value
     await prisma.user.update({
       where: { id: user.id },
-      data: { refreshToken: newRefreshToken },
+      data: { refreshToken: hashToken(newRefreshToken) },
     });
 
     res.json({
@@ -239,7 +240,7 @@ export const verifyEmail = asyncHandler(
   }
 );
 
-// Resend verification email
+// Resend verification email - user enumeration safe
 export const resendVerification = asyncHandler(
   async (req: Request, res: Response) => {
     const { email } = req.body;
@@ -248,12 +249,12 @@ export const resendVerification = asyncHandler(
       where: { email },
     });
 
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    if (user.isVerified) {
-      throw new AppError('Email is already verified', 400);
+    // Prevent user enumeration: return generic success even if user doesn't exist or is already verified
+    if (!user || user.isVerified) {
+      return res.json({
+        success: true,
+        message: 'If an unverified account exists with this email, a verification link has been sent.',
+      });
     }
 
     const rawVerificationToken = generateVerificationToken();
@@ -267,7 +268,7 @@ export const resendVerification = asyncHandler(
 
     res.json({
       success: true,
-      message: 'Verification email sent',
+      message: 'If an unverified account exists with this email, a verification link has been sent.',
     });
   }
 );
