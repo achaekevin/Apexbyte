@@ -41,13 +41,27 @@ const roleAwareStorage: StateStorage = {
       // Check sessionStorage first (active admin sessions)
       const sessionItem = window.sessionStorage.getItem(name);
       if (sessionItem) {
-        return sessionItem;
+        // Validate it's parseable before returning
+        try {
+          JSON.parse(sessionItem);
+          return sessionItem;
+        } catch {
+          window.sessionStorage.removeItem(name);
+        }
       }
 
       // Check localStorage (customer sessions)
       const localItem = window.localStorage.getItem(name);
       if (localItem) {
-        const parsed = JSON.parse(localItem);
+        let parsed: any;
+        try {
+          parsed = JSON.parse(localItem);
+        } catch {
+          // Corrupted data — purge and start fresh
+          window.localStorage.removeItem(name);
+          return null;
+        }
+
         const role = parsed?.state?.user?.role;
 
         // Security enforcement: If an ADMIN session was saved in localStorage from a previous session,
@@ -60,7 +74,12 @@ const roleAwareStorage: StateStorage = {
         return localItem;
       }
     } catch (err) {
-      console.warn('[AuthStore] Error reading storage item:', err);
+      // Catastrophic storage failure — clear everything for this key to prevent repeat crashes
+      console.warn('[AuthStore] Error reading storage, clearing corrupted state:', err);
+      try {
+        window.sessionStorage.removeItem(name);
+        window.localStorage.removeItem(name);
+      } catch { /* ignore */ }
     }
 
     return null;
@@ -137,6 +156,21 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => roleAwareStorage),
+      version: 2, // Bumped from implicit 0 → 2 after roleAwareStorage + loginTimestamp changes
+      migrate: (persistedState: any, version: number) => {
+        // Version < 2: old schema before roleAwareStorage and loginTimestamp.
+        // Discard stale tokens and force re-login to avoid hydration crashes.
+        if (version < 2) {
+          return {
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            loginTimestamp: null,
+          };
+        }
+        return persistedState as AuthState;
+      },
     }
   )
 );
