@@ -37,6 +37,7 @@ import AdminProducts from './pages/admin/Products';
 import AdminBrands from './pages/admin/Brands';
 import AdminOrders from './pages/admin/Orders';
 import AdminCustomers from './pages/admin/Customers';
+import AdminTeam from './pages/admin/AdminTeam';
 import AdminSettings from './pages/admin/Settings';
 
 // Other Pages
@@ -169,6 +170,7 @@ function App() {
         <Route path="brands" element={<AdminBrands />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="customers" element={<AdminCustomers />} />
+        <Route path="team" element={<AdminTeam />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 

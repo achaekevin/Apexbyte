@@ -74,6 +74,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                 avatar: profile.photos?.[0].value,
                 provider: 'GOOGLE',
                 providerId: profile.id,
+                role: 'CUSTOMER',
                 isVerified: true,
               },
             });
@@ -135,6 +136,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
                 avatar: profile.photos?.[0].value,
                 provider: 'GITHUB',
                 providerId: profile.id,
+                role: 'CUSTOMER',
                 isVerified: true,
               },
             });

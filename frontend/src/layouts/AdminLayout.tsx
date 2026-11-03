@@ -7,6 +7,7 @@ import {
   FiTag,
   FiShoppingBag,
   FiUsers,
+  FiShield,
   FiSettings,
   FiExternalLink,
   FiMenu,
@@ -22,6 +23,7 @@ const menuItems = [
   { path: '/admin/brands', label: 'Brands', icon: FiTag },
   { path: '/admin/orders', label: 'Orders', icon: FiShoppingBag },
   { path: '/admin/customers', label: 'Customers', icon: FiUsers },
+  { path: '/admin/team', label: 'Admin Team', icon: FiShield },
   { path: '/admin/settings', label: 'Settings', icon: FiSettings },
 ];
 

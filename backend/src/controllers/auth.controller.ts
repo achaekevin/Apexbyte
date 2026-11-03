@@ -49,7 +49,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   // Generate verification token
   const rawVerificationToken = generateVerificationToken();
 
-  // Create user
+  // Create user (Public registration is strictly restricted to CUSTOMER role only)
   const user = await prisma.user.create({
     data: {
       email,
@@ -57,6 +57,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       firstName,
       lastName,
       phone,
+      role: 'CUSTOMER',
       verificationToken: hashToken(rawVerificationToken),
     },
   });
