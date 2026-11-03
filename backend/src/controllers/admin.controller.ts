@@ -240,3 +240,4 @@ export const deleteAdmin = asyncHandler(async (req: AuthRequest, res: Response) 
     message: `Administrator "${targetAdmin.firstName} ${targetAdmin.lastName}" has been removed`,
   });
 });
+
