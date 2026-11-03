@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiHome,
@@ -12,7 +12,9 @@ import {
   FiExternalLink,
   FiMenu,
   FiX,
+  FiLogOut,
 } from 'react-icons/fi';
+import { useAuthStore } from '../store/authStore';
 import Header from '../components/layout/Header';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 import TechBackground from '../components/ui/TechBackground';
@@ -29,7 +31,14 @@ const menuItems = [
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+
+  const handleAdminLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
@@ -102,7 +111,7 @@ const AdminLayout = () => {
             </nav>
           </div>
 
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-1.5">
             <Link
               to="/"
               target="_blank"
@@ -111,6 +120,13 @@ const AdminLayout = () => {
               <FiExternalLink size={14} />
               <span>View Live Store</span>
             </Link>
+            <button
+              onClick={handleAdminLogout}
+              className="w-full flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+            >
+              <FiLogOut size={14} />
+              <span>Sign Out</span>
+            </button>
           </div>
         </aside>
 
@@ -162,7 +178,7 @@ const AdminLayout = () => {
                   </nav>
                 </div>
 
-                <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-1.5">
                   <Link
                     to="/"
                     target="_blank"
@@ -171,6 +187,16 @@ const AdminLayout = () => {
                     <FiExternalLink size={14} />
                     <span>View Live Store</span>
                   </Link>
+                  <button
+                    onClick={() => {
+                      setMobileDrawerOpen(false);
+                      handleAdminLogout();
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                  >
+                    <FiLogOut size={14} />
+                    <span>Sign Out</span>
+                  </button>
                 </div>
               </motion.div>
             </div>

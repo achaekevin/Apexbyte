@@ -95,6 +95,15 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
+        const user = useAuthStore.getState().user;
+        const loginTimestamp = useAuthStore.getState().loginTimestamp;
+        const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+
+        // Administrative sessions must never silently refresh after the session window has expired
+        if (isAdmin && loginTimestamp && Date.now() - loginTimestamp > 2 * 60 * 60 * 1000) {
+          throw new Error('Admin session expired due to inactivity or window timeout');
+        }
+
         const refreshToken = useAuthStore.getState().refreshToken;
         if (!refreshToken) {
           throw new Error('No refresh token available');
@@ -107,7 +116,6 @@ api.interceptors.response.use(
         const refreshData = refreshResponse.data?.data || refreshResponse.data;
         const accessToken = refreshData?.accessToken;
         const newRefreshToken = refreshData?.refreshToken;
-        const user = useAuthStore.getState().user;
 
         if (accessToken && user) {
           useAuthStore.getState().setAuth(user, accessToken, newRefreshToken || refreshToken);

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore, ADMIN_SESSION_TIMEOUT_MS } from '../store/authStore';
 import Forbidden from '../pages/error/Forbidden';
 import ErrorBoundary from './ui/ErrorBoundary';
 
@@ -9,10 +9,11 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, loginTimestamp, logout } = useAuthStore();
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  // 1. Not authenticated: redirect to login and preserve destination
+  if (!isAuthenticated || !user) {
     return (
       <Navigate
         to="/login"
@@ -22,7 +23,27 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
     );
   }
 
-  if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
+  // 2. Check for administrative session expiration (e.g. inactive or exceeded window)
+  const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
+  if (isAdmin && loginTimestamp) {
+    const isExpired = Date.now() - loginTimestamp > ADMIN_SESSION_TIMEOUT_MS;
+    if (isExpired) {
+      logout();
+      return (
+        <Navigate
+          to="/login"
+          replace
+          state={{
+            from: location.pathname + location.search,
+            sessionExpired: true,
+          }}
+        />
+      );
+    }
+  }
+
+  // 3. User is logged in but does not have administrator privileges
+  if (!isAdmin) {
     return <Forbidden />;
   }
 
