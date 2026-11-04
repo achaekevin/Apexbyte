@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiGlobe, FiTag, FiX } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiGlobe, FiTag, FiX, FiPackage } from 'react-icons/fi';
 import brandService, { Brand, CreateBrandData } from '../../services/brandService';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -244,8 +244,9 @@ const AdminBrands = () => {
 
                 <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-4">
                   {brand._count?.products !== undefined && (
-                    <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                      📦 {brand._count.products} laptops
+                    <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded inline-flex items-center gap-1">
+                      <FiPackage size={12} className="text-slate-500 dark:text-slate-400" />
+                      <span>{brand._count.products} laptops</span>
                     </span>
                   )}
                   {brand.website && (

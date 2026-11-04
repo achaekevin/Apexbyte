@@ -347,12 +347,14 @@ const AdminTeam = () => {
                         {/* Role Badge */}
                         <td className="px-4 py-4">
                           {isSuperAdmin ? (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 shadow-2xs">
-                              👑 Super Admin
+                            <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 shadow-2xs">
+                              <FiShield size={12} className="text-amber-600 dark:text-amber-400" />
+                              Super Admin
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800">
-                              🛡️ Administrator
+                            <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800">
+                              <FiShield size={12} className="text-blue-600 dark:text-blue-400" />
+                              Administrator
                             </span>
                           )}
                         </td>
@@ -619,9 +621,9 @@ const AdminTeam = () => {
                         }
                         className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-semibold focus:ring-2 focus:ring-primary-500"
                       >
-                        <option value="ADMIN">🛡️ Administrator (Standard Admin)</option>
+                        <option value="ADMIN">Administrator (Standard Admin)</option>
                         {currentUser?.role === 'SUPER_ADMIN' && (
-                          <option value="SUPER_ADMIN">👑 Super Administrator (Full Ownership)</option>
+                          <option value="SUPER_ADMIN">Super Administrator (Full Ownership)</option>
                         )}
                       </select>
                     </div>

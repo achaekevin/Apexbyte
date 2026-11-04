@@ -242,7 +242,7 @@ const AdminSettings = () => {
 
       <div className="space-y-6 sm:space-y-8">
         {/* Top Header Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-primary-900 to-indigo-950 rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-xl border border-white/10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-sm border border-slate-800">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-xs font-bold uppercase tracking-wider border border-primary-500/30">
@@ -533,7 +533,7 @@ const AdminSettings = () => {
             <div>
               <Card className="p-4 sm:p-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-850">
                 <div className="text-center pb-6 border-b border-gray-200 dark:border-gray-700">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-primary-600 to-indigo-600 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-primary-500/20">
+                  <div className="w-20 h-20 rounded-full bg-primary-600 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
                     {user?.firstName?.charAt(0) || 'A'}
                   </div>
                   <h3 className="font-bold text-base sm:text-lg text-gray-900 dark:text-white">
@@ -652,7 +652,7 @@ const AdminSettings = () => {
                     onChange={(e) =>
                       setStoreSettings((prev) => ({ ...prev, announcement_text: e.target.value }))
                     }
-                    placeholder="e.g. 🚚 Same-Day Delivery across Kisii, Nyamira & South Nyanza"
+                    placeholder="e.g. Same-Day Delivery across Kisii, Nyamira & South Nyanza"
                     required
                   />
                 </div>
@@ -712,7 +712,7 @@ const AdminSettings = () => {
                     onChange={(e) =>
                       setStoreSettings((prev) => ({ ...prev, hero_title: e.target.value }))
                     }
-                    placeholder="e.g. Next-Gen Laptops for Professionals, Gamers & Creators"
+                    placeholder="e.g. Tested & Warranted Laptops in Kisii CBD"
                     required
                   />
                 </div>

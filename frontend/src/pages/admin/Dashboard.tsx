@@ -59,13 +59,13 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Top Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-primary-700 via-primary-600 to-indigo-700 rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 rounded-2xl p-4 sm:p-6 lg:p-8 text-white shadow-sm border border-slate-800">
         <div>
-          <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary-400 mb-1.5">
             Store Owner & Executive Control Center
-          </span>
+          </p>
           <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-            Welcome to Apexbyte Admin
+            Apexbyte Admin Overview
           </h1>
           <p className="text-blue-100 mt-1.5 sm:mt-2 max-w-xl text-xs sm:text-sm lg:text-base">
             Manage your entire laptop catalog, update prices in Kenyan Shillings, and upload new laptop brands seamlessly.

@@ -337,7 +337,7 @@ const AdminProducts = () => {
         if (nextStatus === 'PUBLISHED') {
           toast.success(`"${product.name}" is now LIVE in store!`);
         } else {
-          toast(`"${product.name}" is now set to DRAFT (hidden from store)`, { icon: '🟡' });
+          toast(`"${product.name}" is now set to DRAFT (hidden from store)`);
         }
       }
     });
@@ -612,8 +612,8 @@ const AdminProducts = () => {
             className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 font-medium"
           >
             <option value="ALL">All Laptops (Live & Drafts)</option>
-            <option value="PUBLISHED">🟢 Live in Store Only</option>
-            <option value="DRAFT">🟡 Drafts / Hidden Only</option>
+            <option value="PUBLISHED">Live in Store Only</option>
+            <option value="DRAFT">Drafts / Hidden Only</option>
           </select>
         </div>
 
@@ -1382,10 +1382,10 @@ const AdminProducts = () => {
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                         className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-medium focus:ring-2 focus:ring-primary-500"
                       >
-                        <option value="PUBLISHED">🟢 Live on Storefront (PUBLISHED)</option>
-                        <option value="DRAFT">🟡 Draft / Hidden from Store (DRAFT)</option>
-                        <option value="OUT_OF_STOCK">🔴 Out of Stock</option>
-                        <option value="DISCONTINUED">⚪ Discontinued</option>
+                        <option value="PUBLISHED">Live on Storefront (PUBLISHED)</option>
+                        <option value="DRAFT">Draft / Hidden from Store (DRAFT)</option>
+                        <option value="OUT_OF_STOCK">Out of Stock</option>
+                        <option value="DISCONTINUED">Discontinued</option>
                       </select>
                     </div>
                   </div>
