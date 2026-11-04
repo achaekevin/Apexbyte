@@ -144,7 +144,7 @@ export const DEFAULT_SETTINGS: SettingDefinition[] = [
   },
   {
     key: 'announcement_text',
-    value: '🚚 Same-Day Delivery across Kisii, Nyamira & South Nyanza • Showroom Open Today',
+    value: 'Same-Day Delivery across Kisii, Nyamira & South Nyanza • Showroom Open Today',
     type: 'string',
     group: 'announcement',
     isPublic: true,
@@ -164,7 +164,7 @@ export const DEFAULT_SETTINGS: SettingDefinition[] = [
   // 4. Homepage Hero Section
   {
     key: 'hero_title',
-    value: 'Next-Gen Laptops for Professionals, Gamers & Creators',
+    value: 'Tested & Warranted Laptops in Kisii CBD',
     type: 'string',
     group: 'hero',
     isPublic: true,

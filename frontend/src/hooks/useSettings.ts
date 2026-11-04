@@ -17,9 +17,9 @@ export const DEFAULT_PUBLIC_SETTINGS: PublicSettings = {
   hours_sunday: 'Sun: 10:00 AM - 4:00 PM',
   announcement_enabled: true,
   announcement_badge: 'Kisii CBD Showroom Open Today',
-  announcement_text: '🚚 Same-Day Delivery across Kisii, Nyamira & South Nyanza • Showroom Open Today',
+  announcement_text: 'Same-Day Delivery across Kisii, Nyamira & South Nyanza • Showroom Open Today',
   announcement_link: '/contact',
-  hero_title: 'Next-Gen Laptops for Professionals, Gamers & Creators',
+  hero_title: 'Tested & Warranted Laptops in Kisii CBD',
   hero_subtitle:
     'Certified genuine HP, Dell, Lenovo, Apple and Asus machines with 1-Year Local Kisii Warranty, flexible M-Pesa payments, and same-day delivery.',
   hero_cta_primary_text: 'Shop All Laptops',
