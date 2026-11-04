@@ -19,8 +19,8 @@
   }
 
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply bg-white dark:bg-gray-900 text-slate-900 dark:text-slate-100;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 0.9375rem; /* 15px base body for mobile & desktop */
     line-height: 1.55;
     letter-spacing: -0.011em;
@@ -88,18 +88,18 @@
 }
 
 @layer components {
-  /* Glassmorphism */
+  /* Solid Modern Clean Surface (replaces artificial glassmorphism) */
   .glass {
-    @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-white/20;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm;
   }
 
   .glass-hover {
-    @apply hover:bg-white/80 dark:hover:bg-gray-800/80 hover:backdrop-blur-lg transition-all duration-300;
+    @apply hover:bg-gray-50 dark:hover:bg-gray-750 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200;
   }
 
-  /* Gradient Text */
+  /* Crisp High-Contrast Text (replaces vibecoded gradient-text) */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent;
+    @apply text-slate-900 dark:text-white font-extrabold tracking-tight;
   }
 
   /* Premium Card */
