@@ -11,6 +11,11 @@ import {
   FiShoppingCart,
   FiLayers,
   FiAward,
+  FiBookOpen,
+  FiCode,
+  FiBriefcase,
+  FiCpu,
+  FiImage,
 } from 'react-icons/fi';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -34,35 +39,35 @@ const USAGE_OPTIONS = [
     id: 'student',
     title: 'Student & General Use',
     desc: 'Web browsing, Zoom classes, Microsoft Office, lightweight & long battery life.',
-    icon: '🎓',
+    icon: FiBookOpen,
     priorities: ['Affordability', 'Battery Life', 'Lightweight Portability'],
   },
   {
     id: 'programming',
     title: 'Coding & Software Engineering',
     desc: 'Docker, VS Code, fast multi-core processor, 16GB+ RAM, and fast NVMe SSD.',
-    icon: '💻',
+    icon: FiCode,
     priorities: ['High-Performance CPU', '16GB+ RAM', 'Fast SSD'],
   },
   {
     id: 'business',
     title: 'Business & Professional Work',
     desc: 'Sleek design, enterprise security (TPM/Fingerprint), durability, reliable build.',
-    icon: '💼',
+    icon: FiBriefcase,
     priorities: ['Durability & Keyboard', 'Crisp Display', 'Enterprise Security'],
   },
   {
     id: 'gaming',
     title: 'Gaming & 3D Simulation',
     desc: 'Dedicated NVIDIA/Radeon GPU, high refresh rate screen, robust cooling.',
-    icon: '🎮',
+    icon: FiCpu,
     priorities: ['Dedicated GPU', '144Hz+ Display', 'Thermal Cooling'],
   },
   {
     id: 'creative',
     title: 'Creative Design & 4K Video',
     desc: 'Color-accurate IPS/OLED display, dedicated graphics, large storage.',
-    icon: '🎨',
+    icon: FiImage,
     priorities: ['Color Accuracy', 'GPU Acceleration', 'Large Storage'],
   },
 ];
@@ -350,7 +355,9 @@ const LaptopFinder = () => {
                       }`}
                     >
                       <div className="flex items-start gap-4">
-                        <span className="text-3xl">{opt.icon}</span>
+                        <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 flex items-center justify-center flex-shrink-0">
+                          <opt.icon size={20} />
+                        </div>
                         <div>
                           <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
                             {opt.title}
@@ -598,7 +605,7 @@ const LaptopFinder = () => {
                             <div className="absolute top-2.5 right-2.5 bg-emerald-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1">
                               <FiAward /> {laptop.matchScore}% Match
                             </div>
-                            <div className="absolute top-2.5 left-2.5 bg-gray-900/80 text-white text-[11px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase">
+                            <div className="absolute top-2.5 left-2.5 bg-gray-900 text-white text-[11px] font-bold px-2 py-0.5 rounded uppercase">
                               {laptop.brand?.name || 'LAPTOP'}
                             </div>
                           </div>

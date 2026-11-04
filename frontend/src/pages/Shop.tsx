@@ -774,14 +774,14 @@ const Shop = () => {
                                   <button
                                     type="button"
                                     onClick={() => handleToggleCompare(product)}
-                                    className={`min-h-[40px] py-2 px-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-colors flex items-center justify-center whitespace-nowrap ${
+                                    className={`min-h-[40px] py-2 px-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-colors flex items-center justify-center whitespace-nowrap gap-1 ${
                                       isInComparison(product.id)
                                         ? 'border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-950/40 dark:text-primary-400'
                                         : 'border-gray-300 dark:border-gray-600 hover:border-primary-500 text-gray-700 dark:text-gray-200'
                                     }`}
                                     title={isInComparison(product.id) ? 'Remove from comparison' : 'Add to comparison'}
                                   >
-                                    {isInComparison(product.id) ? '✓' : '+ Compare'}
+                                    {isInComparison(product.id) ? <FiCheck size={16} /> : '+ Compare'}
                                   </button>
                                 </div>
                               </div>
@@ -830,7 +830,7 @@ const Shop = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white dark:bg-gray-800 dark:text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 border border-gray-700 dark:border-gray-600 backdrop-blur-md"
+          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white dark:bg-gray-800 dark:text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-4 border border-gray-700 dark:border-gray-600"
         >
           <div className="flex items-center gap-2.5">
             <span className="w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center text-xs font-black">

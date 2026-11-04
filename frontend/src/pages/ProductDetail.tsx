@@ -16,6 +16,7 @@ import { formatCurrency, parsePrice, getProductImage, DEFAULT_LAPTOP_IMAGE } fro
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useComparisonStore } from '../store/comparisonStore';
+import { FiCpu } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 const ProductDetail = () => {
@@ -179,9 +180,11 @@ const ProductDetail = () => {
       return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Card className="text-center py-12 max-w-xl mx-auto">
-            <span className="text-5xl block mb-3">💻</span>
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 flex items-center justify-center mx-auto mb-4">
+              <FiCpu size={32} />
+            </div>
             <h2 className="text-2xl font-bold mb-2">Laptop Model Not Found</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+            <p className="text-gray-600 dark:text-slate-300 mb-6 text-sm">
               The laptop machine you're looking for does not exist in our catalog or may have been sold out and archived.
             </p>
             <div className="flex justify-center gap-3">
@@ -223,9 +226,11 @@ const ProductDetail = () => {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Card className="text-center py-12 max-w-xl mx-auto">
-          <span className="text-5xl block mb-3">💻</span>
+          <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 flex items-center justify-center mx-auto mb-4">
+            <FiCpu size={32} />
+          </div>
           <h2 className="text-2xl font-bold mb-2">Laptop Not Found</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+          <p className="text-gray-600 dark:text-slate-300 mb-6 text-sm">
             The laptop you are looking for is currently unavailable.
           </p>
           <Link to="/shop">

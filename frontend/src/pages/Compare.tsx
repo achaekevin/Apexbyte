@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiPlus, FiX, FiSearch, FiShoppingCart, FiCheck } from 'react-icons/fi';
+import { FiPlus, FiX, FiSearch, FiShoppingCart, FiCheck, FiBarChart2 } from 'react-icons/fi';
 import { useQuery } from '@tanstack/react-query';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
@@ -112,9 +112,9 @@ const Compare = () => {
                   {products.length > 0 && (
                     <button
                       onClick={() => setIsSearchOpen(false)}
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm flex items-center gap-1"
                     >
-                      Close Selector ✕
+                      Close Selector <FiX size={14} />
                     </button>
                   )}
                 </div>
@@ -197,7 +197,9 @@ const Compare = () => {
           {/* Comparison Content */}
           {products.length === 0 ? (
             <Card className="text-center py-16 px-4">
-              <div className="text-6xl mb-4">⚖️</div>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                <FiBarChart2 size={32} />
+              </div>
               <h2 className="text-2xl font-bold mb-2">No Laptops Selected Yet</h2>
               <p className="text-gray-500 max-w-md mx-auto mb-6 text-sm">
                 Use the selector above or browse our store to pick any 2 or more laptops to compare specs, performance, and prices.
@@ -244,7 +246,7 @@ const Compare = () => {
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                               {product.brand?.name && (
-                                <span className="absolute bottom-2 left-2 bg-black/75 text-white text-[11px] font-black px-2 py-0.5 rounded backdrop-blur-sm uppercase tracking-wide">
+                                <span className="absolute bottom-2 left-2 bg-gray-900 text-white text-[11px] font-black px-2 py-0.5 rounded uppercase tracking-wide">
                                   {product.brand.name}
                                 </span>
                               )}
