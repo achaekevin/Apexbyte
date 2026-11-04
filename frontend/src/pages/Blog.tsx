@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { FiFileText } from 'react-icons/fi';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
@@ -115,7 +116,7 @@ const Blog = () => {
                 />
               ) : (!postsData?.data || postsData.data.length === 0) ? (
                 <EmptyState
-                  icon="📝"
+                  icon={<FiFileText size={44} className="text-gray-400" />}
                   title="No articles found"
                   description={
                     selectedCategory

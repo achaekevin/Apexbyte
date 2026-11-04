@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { FiClock, FiEye, FiUser, FiCalendar, FiArrowLeft, FiMessageSquare } from 'react-icons/fi';
+import { FiClock, FiEye, FiUser, FiCalendar, FiArrowLeft, FiMessageSquare, FiFileText } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import blogService from '../services/blogService';
 import Card from '../components/ui/Card';
@@ -68,7 +68,9 @@ const BlogPost = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center py-16 px-4">
         <Card className="text-center p-10 max-w-md">
-          <div className="text-6xl mb-4">📰</div>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
+            <FiFileText size={32} />
+          </div>
           <h2 className="text-2xl font-bold mb-2">Article Not Found</h2>
           <p className="text-gray-500 mb-6 text-sm">
             The article you are looking for does not exist or may have been moved.

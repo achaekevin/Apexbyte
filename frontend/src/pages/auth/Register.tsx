@@ -55,8 +55,8 @@ const Register = () => {
     <Card>
       <Card.Body>
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 sm:mb-2">Create Account</h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Join us today</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-1.5 sm:mb-2">Create Account</h2>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">Create an account to track your orders and warranty</p>
         </div>
 
         {errorMessage && (

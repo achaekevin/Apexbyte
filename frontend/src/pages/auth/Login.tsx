@@ -58,8 +58,8 @@ const Login = () => {
     <Card>
       <Card.Body>
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 sm:mb-2">Welcome Back</h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Login to your account</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-1.5 sm:mb-2">Welcome Back</h2>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">Sign in to your account</p>
           {safeRedirect && !isSessionExpired && (
             <p className="mt-2 text-xs text-primary-600 dark:text-primary-400 font-semibold bg-primary-50 dark:bg-primary-950/40 py-1 px-2 rounded-lg border border-primary-200 dark:border-primary-800">
               Please sign in to continue to your requested page
