@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { FiPackage } from 'react-icons/fi';
 import Card from './Card';
 import Button from './Button';
 
@@ -27,11 +28,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <Card className={`p-8 sm:p-12 text-center border-dashed border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 ${className}`}>
       {icon ? (
-        <div className="text-5xl sm:text-6xl mb-4 flex justify-center text-primary-500">
+        <div className="mb-4 flex justify-center text-primary-500">
           {icon}
         </div>
       ) : (
-        <div className="text-5xl sm:text-6xl mb-4">📦</div>
+        <div className="mb-4 flex justify-center text-gray-400 dark:text-gray-500">
+          <FiPackage size={44} />
+        </div>
       )}
 
       <h3 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -39,7 +42,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </h3>
 
       {description && (
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6 leading-relaxed">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-300 max-w-md mx-auto mb-6 leading-relaxed">
           {description}
         </p>
       )}

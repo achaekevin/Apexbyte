@@ -8,18 +8,15 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   glass?: boolean;
 }
 
-const Card = ({ children, hover = false, glass = false, className, ...props }: CardProps) => {
+const Card = ({ children, hover = false, glass: _glass = false, className, ...props }: CardProps) => {
   const Component: any = hover ? motion.div : 'div';
 
   return (
     <Component
-      whileHover={hover ? { y: -8, transition: { duration: 0.3 } } : undefined}
+      whileHover={hover ? { y: -3, transition: { duration: 0.2 } } : undefined}
       className={clsx(
-        'rounded-2xl transition-all duration-300',
-        glass
-          ? 'glass backdrop-blur-md'
-          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-        hover && 'shadow-lg hover:shadow-premium cursor-pointer',
+        'rounded-2xl transition-all duration-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm',
+        hover && 'shadow-md hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer',
         className
       )}
       {...props}

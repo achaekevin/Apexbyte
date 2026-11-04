@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, forwardRef, ReactNode } from 'react';
+import { FiAlertCircle } from 'react-icons/fi';
 import clsx from 'clsx';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -80,13 +81,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p id={`${inputId}-error`} role="alert" className="mt-1 text-sm text-error-500 flex items-center gap-1">
-            <span>⚠</span> {error}
+          <p id={`${inputId}-error`} role="alert" className="mt-1 text-sm text-error-500 flex items-center gap-1.5">
+            <FiAlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
           </p>
         )}
 
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p id={`${inputId}-helper`} className="mt-1 text-sm text-slate-500 dark:text-slate-300">
             {helperText}
           </p>
         )}

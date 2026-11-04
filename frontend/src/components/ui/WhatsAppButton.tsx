@@ -51,7 +51,7 @@ export const WhatsAppButton = () => {
             <div className="p-4 space-y-3.5 bg-gray-50 dark:bg-gray-900/60 text-sm">
               <div className="bg-white dark:bg-gray-800 p-3.5 rounded-xl shadow-sm border border-gray-150 dark:border-gray-700 leading-relaxed">
                 <p className="font-bold text-gray-900 dark:text-white mb-1.5 text-sm">
-                  Habari! Welcome to Apexbyte Kenya 👋
+                  Habari! Welcome to Apexbyte Kenya
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                   Need quick specs advice, confirmation on showroom stock, or custom RAM/SSD upgrade before dispatch? Chat directly with our hardware technicians.
