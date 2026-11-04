@@ -224,10 +224,10 @@ const Privacy = () => {
               </p>
               <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-750 border border-gray-200 dark:border-gray-700 space-y-2 text-xs sm:text-sm">
                 <p>
-                  🔒 <strong>Lipa Na M-Pesa STK Push:</strong> Payment triggers communicate directly with Safaricom Daraja API over HTTPS TLS 1.3 encrypted tunnels. Your M-Pesa PIN is entered directly into your Safaricom SIM Toolkit on your own handset and is never transmitted to, viewed, or stored on Apexbyte servers.
+                  <strong>Lipa Na M-Pesa STK Push:</strong> Payment triggers communicate directly with Safaricom Daraja API over HTTPS TLS 1.3 encrypted tunnels. Your M-Pesa PIN is entered directly into your Safaricom SIM Toolkit on your own handset and is never transmitted to, viewed, or stored on Apexbyte servers.
                 </p>
                 <p>
-                  💳 <strong>Card &amp; Bank Payments:</strong> Card payments are handled by PCI-DSS Level 1 certified processors. We do not store 16-digit credit card numbers, expiration dates, or 3-digit CVV security codes.
+                  <strong>Card &amp; Bank Payments:</strong> Card payments are handled by PCI-DSS Level 1 certified processors. We do not store 16-digit credit card numbers, expiration dates, or 3-digit CVV security codes.
                 </p>
               </div>
             </section>

@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
-  FiAward,
   FiArrowRight,
   FiChevronLeft,
   FiChevronRight,
@@ -14,6 +13,11 @@ import {
   FiHardDrive,
   FiBatteryCharging,
   FiShield,
+  FiTruck,
+  FiMapPin,
+  FiCheckCircle,
+  FiPackage,
+  FiMessageCircle,
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
@@ -44,8 +48,8 @@ const heroLaptops = [
     display: '13" to 15.6" Anti-Glare',
     battery: '85% - 100% Battery Health',
     ideal: 'Walk-In Testing Today in Kisii CBD',
-    accentGradient: 'from-emerald-500/20 via-teal-500/15 to-transparent',
-    tagColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
   {
     id: 'hp',
@@ -62,8 +66,8 @@ const heroLaptops = [
     display: '15.6" Micro-Edge FHD IPS',
     battery: 'Up to 9 Hours Runtime',
     ideal: 'Office Work, University & Accounting',
-    accentGradient: 'from-cyan-500/20 via-blue-500/15 to-transparent',
-    tagColor: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
   {
     id: 'macbook',
@@ -80,8 +84,8 @@ const heroLaptops = [
     display: 'Liquid Retina XDR True Tone',
     battery: 'All-Day 15-Hour Endurance',
     ideal: 'Software Engineering & Video Editing',
-    accentGradient: 'from-purple-500/20 via-indigo-500/15 to-transparent',
-    tagColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
   {
     id: 'dell',
@@ -98,8 +102,8 @@ const heroLaptops = [
     display: '13.4" InfinityEdge 4K / FHD+',
     battery: 'ExpressCharge 80% in 60m',
     ideal: 'Corporate Travel & Remote Multitasking',
-    accentGradient: 'from-blue-600/20 via-sky-500/15 to-transparent',
-    tagColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
   {
     id: 'thinkpad',
@@ -116,8 +120,8 @@ const heroLaptops = [
     display: '14.0" Matte Anti-Glare IPS',
     battery: 'Dual Hot-Swap Battery Support',
     ideal: 'Data Science, Diagnostics & Typing',
-    accentGradient: 'from-rose-500/20 via-red-500/15 to-transparent',
-    tagColor: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
   {
     id: 'asus',
@@ -134,8 +138,8 @@ const heroLaptops = [
     display: '144Hz / 240Hz High-Refresh IPS',
     battery: 'Dual Fan Liquid Metal Thermal',
     ideal: 'AAA Gaming, Blender 3D, CAD & Arch',
-    accentGradient: 'from-amber-500/20 via-orange-500/15 to-transparent',
-    tagColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+    accentGradient: 'from-slate-100/60 dark:from-slate-800/60 to-transparent',
+    tagColor: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700',
   },
 ];
 
@@ -236,58 +240,22 @@ const Home = () => {
       {/* Full-Page Screen-Filling Alternating Laptop Showcase Hero */}
       <TechBackground variant="hero" className="w-full">
       <section
-        className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-gray-50/80 via-white/80 to-gray-100/80 text-slate-900 border-b border-gray-200 dark:from-gray-950/80 dark:via-gray-900/80 dark:to-gray-950/80 dark:text-white dark:border-gray-800 transition-colors pt-4 pb-4 sm:pt-6 sm:pb-6"
+        className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-slate-50 dark:bg-gray-950 text-slate-900 border-b border-gray-200 dark:text-white dark:border-gray-800 transition-colors pt-6 pb-6"
       >
-        {/* Full-Bleed Edge-to-Edge Dynamic Ambient Backdrop */}
-        <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeLaptop.id + '-ambient-img'}
-              initial={{ opacity: 0, scale: 1.15 }}
-              animate={{ opacity: 0.18, scale: 1.02 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.85 }}
-              className="absolute inset-0 w-full h-full bg-center bg-cover filter blur-3xl scale-110"
-              style={{ backgroundImage: `url(${activeLaptop.image})` }}
-            />
-          </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/60 to-white/95 dark:from-gray-950/90 dark:via-gray-950/70 dark:to-gray-950/95" />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeLaptop.id + '-ambient-glow'}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className={`absolute inset-0 bg-gradient-to-tr ${activeLaptop.accentGradient} blur-3xl`}
-            />
-          </AnimatePresence>
-          {/* Tech dot matrix grid */}
-          <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.08] bg-[radial-gradient(#808080_1px,transparent_1px)] [background-size:24px_24px]" />
-        </div>
+        {/* Clean Neutral Backdrop */}
+        <div className="absolute inset-0 pointer-events-none -z-10 bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950" />
 
-        {/* Top Header & Verification Pill */}
+        {/* Top Header */}
         <div className="w-full px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto shrink-0 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 sm:py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-[11px] sm:text-xs font-bold mb-2 shadow-sm"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{settings.showroom_address} • {settings.badge_warranty} • Test Before Payment</span>
-          </motion.div>
+          <div className="text-xs sm:text-sm font-semibold text-primary-600 dark:text-primary-400 mb-1.5 tracking-wide">
+            {settings.showroom_address} • {settings.badge_warranty}
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
-          >
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             {settings.hero_title}
-          </motion.h1>
+          </h1>
 
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mt-1 line-clamp-1 sm:line-clamp-none">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mt-2">
             {settings.hero_subtitle}
           </p>
         </div>
@@ -296,20 +264,20 @@ const Home = () => {
         <button
           type="button"
           onClick={prevLaptop}
-          className="absolute left-2 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer backdrop-blur-md"
+          className="absolute left-2 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
           aria-label="Previous laptop model"
           title="Previous Model"
         >
-          <FiChevronLeft size={26} />
+          <FiChevronLeft size={24} />
         </button>
         <button
           type="button"
           onClick={nextLaptop}
-          className="absolute right-2 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer backdrop-blur-md"
+          className="absolute right-2 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 cursor-pointer"
           aria-label="Next laptop model"
           title="Next Model"
         >
-          <FiChevronRight size={26} />
+          <FiChevronRight size={24} />
         </button>
 
         {/* Full-Page Center Stage Arena: Spans Entire Screen Width & Height */}
@@ -333,7 +301,7 @@ const Home = () => {
                   <motion.div
                     animate={{ y: [-3, 3, -3] }}
                     transition={{ repeat: Infinity, duration: 4.2, ease: 'easeInOut' }}
-                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-3 shadow-sm"
                   >
                     <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                       <FiCpu size={20} />
@@ -349,7 +317,7 @@ const Home = () => {
                   <motion.div
                     animate={{ y: [3, -3, 3] }}
                     transition={{ repeat: Infinity, duration: 4.6, ease: 'easeInOut' }}
-                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-3 shadow-sm"
                   >
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                       <FiZap size={20} />
@@ -365,7 +333,7 @@ const Home = () => {
                   <motion.div
                     animate={{ y: [-3, 3, -3] }}
                     transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-3 shadow-sm"
                   >
                     <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
                       <FiHardDrive size={20} />
@@ -394,30 +362,24 @@ const Home = () => {
                 >
                   {/* Floating Top Badge & Ideal Usage */}
                   <div className="mb-2 sm:mb-3 flex items-center gap-2 flex-wrap justify-center">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${activeLaptop.tagColor} shadow-md backdrop-blur-md bg-white/90 dark:bg-gray-900/90`}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300">
                       {activeLaptop.badge}
                     </span>
-                    <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700 shadow-sm backdrop-blur-md">
+                    <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                       {activeLaptop.ideal}
                     </span>
                   </div>
 
-                  {/* Grand Laptop Showcase Window */}
-                  <motion.div
-                    animate={{ y: [-4, 4, -4] }}
-                    transition={{ repeat: Infinity, duration: 5.5, ease: 'easeInOut' }}
-                    className="relative w-full flex items-center justify-center group"
+                  {/* Laptop Showcase Window */}
+                  <div
+                    className="relative w-full flex items-center justify-center"
                   >
-                    <div className="relative w-full max-w-sm sm:max-w-xl lg:max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-gray-200/90 dark:border-gray-700/90 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md group-hover:border-primary-500/50 transition-colors">
+                    <div className="relative w-full max-w-sm sm:max-w-xl lg:max-w-2xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
                       <img
                         src={activeLaptop.image}
                         alt={activeLaptop.name}
-                        className="w-full h-[32vh] sm:h-[42vh] lg:h-[48vh] max-h-[500px] object-contain object-center p-2 sm:p-4 group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-[32vh] sm:h-[42vh] lg:h-[48vh] max-h-[500px] object-contain object-center p-2 sm:p-4"
                       />
-
-                      {/* Specular chassis light beam reflection */}
-                      <div className="pointer-events-none absolute -inset-full top-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
 
                       {/* In-Frame Bottom HUD Bar */}
                       <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-gray-950/95 via-gray-950/75 to-transparent text-white">
@@ -448,7 +410,7 @@ const Home = () => {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Realistic Ground Shadow & Depth Underglow */}
                   <div className="w-3/4 sm:w-2/3 h-5 bg-black/30 dark:bg-black/70 blur-xl rounded-full mt-2" />
@@ -491,7 +453,7 @@ const Home = () => {
                   <motion.div
                     animate={{ y: [3, -3, 3] }}
                     transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
-                    className="p-4 rounded-2xl bg-primary-50/90 dark:bg-primary-950/60 backdrop-blur-md border border-primary-200 dark:border-primary-800 shadow-lg"
+                    className="p-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg"
                   >
                     <span className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 block mb-0.5">
                       Cash / M-Pesa Price
@@ -511,15 +473,16 @@ const Home = () => {
                         {activeLaptop.saveAmount}
                       </span>
                     )}
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">
-                      ✓ In Stock at Mocha Place CBD
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
+                      <FiCheckCircle size={13} />
+                      <span>In Stock at Mocha Place CBD</span>
                     </span>
                   </motion.div>
 
                   <motion.div
                     animate={{ y: [-3, 3, -3] }}
                     transition={{ repeat: Infinity, duration: 4.8, ease: 'easeInOut' }}
-                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-3 shadow-lg"
                   >
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                       <FiBatteryCharging size={20} />
@@ -535,7 +498,7 @@ const Home = () => {
                   <motion.div
                     animate={{ y: [3, -3, 3] }}
                     transition={{ repeat: Infinity, duration: 5.2, ease: 'easeInOut' }}
-                    className="p-3.5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/90 dark:border-gray-700/90 flex items-center gap-3 shadow-lg"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center gap-3 shadow-lg"
                   >
                     <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                       <FiShield size={20} />
@@ -579,32 +542,28 @@ const Home = () => {
               href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${settings.store_name}, I am interested in testing the laptops shown on your website`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 py-2 px-4 rounded-xl border border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-xs sm:text-sm font-bold transition-all shadow-sm"
+              className="inline-flex items-center gap-2 py-2.5 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-slate-800 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-750 text-xs sm:text-sm font-semibold transition-all shadow-xs"
             >
-              <span>💬</span> Chat on WhatsApp / Test in Showroom
+              <FiMessageCircle size={16} className="text-emerald-600 dark:text-emerald-400" />
+              <span>Chat on WhatsApp / Kisii Showroom</span>
             </a>
             <Button
               variant="outline"
               size="md"
               onClick={() => navigate('/finder')}
-              className="border-gray-300 dark:border-gray-600 text-slate-800 dark:text-white text-xs sm:text-sm hidden sm:inline-flex"
+              className="border-gray-300 dark:border-gray-700 text-slate-800 dark:text-white text-xs sm:text-sm hidden sm:inline-flex"
             >
               Interactive Laptop Finder
             </Button>
-            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-50/80 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-sm backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <span>Continuous Live Showcase</span>
-            </div>
           </div>
 
-          {/* Model Selector Track across the entire page */}
-          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5 px-1">
-            <span className="font-bold uppercase tracking-wider text-[10px] sm:text-xs">
-              Alternating Fleet Showcase: {activeLaptop.name}
+          {/* Model Selector Track */}
+          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2 px-1">
+            <span className="font-semibold uppercase tracking-wider text-[11px]">
+              Available Showcase: {activeLaptop.name}
             </span>
-            <span className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Model {currentLaptopIndex + 1} of {heroLaptops.length} • Auto-Alternating Continuously
+            <span className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+              Model {currentLaptopIndex + 1} of {heroLaptops.length}
             </span>
           </div>
 
@@ -614,16 +573,15 @@ const Home = () => {
                 key={laptop.id}
                 type="button"
                 onClick={() => setCurrentLaptopIndex(idx)}
-                className={`shrink-0 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
+                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer border ${
                   currentLaptopIndex === idx
-                    ? 'bg-primary-600 text-white shadow-md border-primary-600 scale-105'
-                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 backdrop-blur-sm'
+                    ? 'bg-primary-600 text-white shadow-sm border-primary-600'
+                    : 'bg-white dark:bg-gray-800 text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700'
                 }`}
               >
-                <span className={`w-2 h-2 rounded-full ${currentLaptopIndex === idx ? 'bg-white animate-pulse' : 'bg-gray-400 dark:bg-gray-500'}`} />
                 <span>{laptop.name.split(' ')[0]} {laptop.name.split(' ')[1] || ''}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                  currentLaptopIndex === idx ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                  currentLaptopIndex === idx ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                 }`}>
                   {laptop.price.replace('From ', '')}
                 </span>
@@ -635,32 +593,40 @@ const Home = () => {
       </TechBackground>
 
       {/* Human Retail Trust Strip - Fully Responsive to Light & Dark Modes */}
-      <section className="bg-gray-100 text-slate-900 border-b border-gray-200 dark:bg-gray-950 dark:text-white dark:border-gray-800 py-4 transition-colors">
+      <section className="bg-slate-50 text-slate-900 border-b border-gray-200 dark:bg-gray-900 dark:text-white dark:border-gray-800 py-6 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm sm:text-base">
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl">🏬</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm sm:text-base">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                <FiMapPin size={20} />
+              </div>
               <div>
                 <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_pickup}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Test before you pay</span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl">🛡️</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                <FiShield size={20} />
+              </div>
               <div>
                 <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_warranty}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Authorized service centers</span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl">🚚</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                <FiTruck size={20} />
+              </div>
               <div>
                 <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_delivery}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Dispatched in 2-3 hours</span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl">⚡</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                <FiZap size={20} />
+              </div>
               <div>
                 <span className="font-bold block text-slate-900 dark:text-white text-sm sm:text-base">{settings.badge_returns}</span>
                 <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">Free labor with purchase</span>
@@ -672,19 +638,14 @@ const Home = () => {
 
       {/* Featured Products */}
       <TechBackground variant="catalog" className="w-full">
-      <section className="py-10 sm:py-16 bg-white/80 dark:bg-gray-900/80 transition-colors">
+      <section className="py-12 lg:py-16 bg-white dark:bg-gray-900 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 sm:mb-10"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2 text-slate-900 dark:text-white tracking-tight">Featured Laptops</h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-              Hand-picked certified laptops for every workload
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Featured Laptops</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-2">
+              Hand-picked certified laptops tested and in stock in Kisii
             </p>
-          </motion.div>
+          </div>
 
           {loadingFeatured ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -694,15 +655,9 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {(featuredProducts?.data || []).map((product: any, index: number) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="group hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 border-gray-200/90 dark:border-gray-700/90 hover:border-primary-500/50 dark:hover:border-primary-500/50 h-full flex flex-col justify-between overflow-hidden">
+              {(featuredProducts?.data || []).map((product: any) => (
+                <div key={product.id}>
+                  <Card className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full flex flex-col justify-between overflow-hidden">
                     <div>
                       <Link to={`/products/${product.id}`}>
                         <div className="relative overflow-hidden rounded-t-xl aspect-square bg-gray-100 dark:bg-gray-800">
@@ -777,80 +732,62 @@ const Home = () => {
                       </Button>
                     </div>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
+          <div className="text-center mt-10">
             <Link to="/shop">
               <Button size="lg" variant="outline" className="border-gray-300 dark:border-gray-700 text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800">
                 View All Laptops
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
       </TechBackground>
 
       {/* Categories */}
-      <section className="py-10 sm:py-16 bg-gray-50 dark:bg-gray-950 transition-colors">
+      <section className="py-12 lg:py-16 bg-slate-50 dark:bg-gray-950 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 sm:mb-10"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2 text-slate-900 dark:text-white tracking-tight">Shop by Category</h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Find the perfect laptop for your specific usage</p>
-          </motion.div>
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Shop by Category</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-2">Find the right machine for your workload</p>
+          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-            {(categories || []).slice(0, 4).map((category: any, index: number) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-              >
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {(categories || []).slice(0, 4).map((category: any) => (
+              <div key={category.id}>
                 <Link to={`/shop?category=${category.id}`}>
-                  <Card className="text-center hover:shadow-premium cursor-pointer transition-all p-4 sm:p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 h-full flex flex-col justify-between">
+                  <Card className="text-center hover:shadow-md cursor-pointer transition-all p-5 sm:p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 h-full flex flex-col justify-between">
                     <div>
-                      <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">💻</div>
+                      <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center mx-auto mb-3">
+                        <FiCpu size={24} />
+                      </div>
                       <h3 className="text-base sm:text-lg font-bold mb-1 text-slate-900 dark:text-white">{category.name}</h3>
-                      <p className="text-slate-500 dark:text-slate-400 mb-3 text-xs sm:text-sm line-clamp-2">
+                      <p className="text-slate-600 dark:text-slate-300 mb-3 text-xs sm:text-sm line-clamp-2">
                         Explore {category.name.toLowerCase()} laptops
                       </p>
                     </div>
-                    <span className="font-bold text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                    <span className="font-semibold text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:underline">
                       View Collection →
                     </span>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Official Laptop Brand Stores */}
-      <section id="official-brand-stores" className="py-14 bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800 transition-colors">
+      <section id="official-brand-stores" className="py-12 lg:py-16 bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/40 px-3 py-1 rounded-full border border-primary-200 dark:border-primary-800 mb-2">
-                <FiAward size={14} /> Official Brand Stores
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Shop by Brand</h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">100% genuine laptops with authorized distributor warranty</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Shop by Brand</h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-1">100% genuine laptops with authorized distributor warranty</p>
             </div>
             <Link to="/shop" className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
               Explore All Brands <FiArrowRight size={14} />
@@ -880,19 +817,14 @@ const Home = () => {
       </section>
 
       {/* New Arrivals */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-950 transition-colors">
+      <section className="py-12 lg:py-16 bg-slate-50 dark:bg-gray-950 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white tracking-tight">New Arrivals</h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">New Arrivals</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-2">
               Freshly inspected machines added to our Kisii showroom this week
             </p>
-          </motion.div>
+          </div>
 
           {loadingNew ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -902,23 +834,17 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {(newArrivals?.data || []).slice(0, 4).map((product: any, index: number) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                    <Link to={`/products/${product.id}`} className="block relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
+              {(newArrivals?.data || []).slice(0, 4).map((product: any) => (
+                <div key={product.id}>
+                  <Card className="hover:shadow-md transition-shadow border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                    <Link to={`/products/${product.id}`} className="block relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-t-xl">
                       <img
                         src={getProductImage(product)}
                         alt={product.name}
                         onError={(e) => {
                           e.currentTarget.src = DEFAULT_LAPTOP_IMAGE;
                         }}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover"
                       />
                       <div className="absolute top-2 right-2 flex flex-col gap-1">
                         <Badge variant="success" size="sm">
@@ -931,7 +857,7 @@ const Home = () => {
                         )}
                       </div>
                     </Link>
-                    <div className="p-3.5 sm:p-5">
+                    <div className="p-4 sm:p-5">
                       <Link to={`/products/${product.id}`}>
                         <h3 className="font-bold text-sm sm:text-base mb-1.5 text-slate-900 dark:text-white hover:underline transition-colors line-clamp-2 leading-snug">
                           {product.name}
@@ -944,8 +870,8 @@ const Home = () => {
                               key={star}
                               className={`text-xs sm:text-sm ${
                                 star <= product.averageRating
-                                  ? 'text-amber-400'
-                                  : 'text-gray-300 dark:text-gray-600'
+                                    ? 'text-amber-400'
+                                    : 'text-gray-300 dark:text-gray-600'
                               }`}
                             >
                               ★
@@ -953,7 +879,7 @@ const Home = () => {
                           ))}
                         </div>
                         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                          ({product.reviewCount})
+                          ({product.reviewCount || 1})
                         </span>
                       </div>
                       <div className="flex items-baseline justify-between mb-3">
@@ -973,13 +899,13 @@ const Home = () => {
                         size="sm"
                         onClick={() => handleAddToCart(product)}
                         disabled={product.stock === 0}
-                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 shadow-sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 shadow-xs"
                       >
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </Button>
                     </div>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
@@ -987,44 +913,30 @@ const Home = () => {
       </section>
 
       {/* Real Customer Reviews Section - Fully Responsive to Light & Dark Modes */}
-      <section className="py-16 bg-gray-100 text-slate-900 border-y border-gray-200 dark:bg-gray-950 dark:text-white dark:border-gray-800 transition-colors">
+      <section className="py-12 lg:py-16 bg-slate-50 text-slate-900 border-y border-gray-200 dark:bg-gray-950 dark:text-white dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-white dark:border-white/20 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium mb-3 transition-colors">
-              <span>★</span> 100% Verified Buyer Reviews
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white tracking-tight">Verified Customer Feedback</h2>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-slate-900 dark:text-white tracking-tight">Verified Customer Feedback</h2>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
               Direct reviews submitted exclusively by verified purchasers following delivery or showroom pickup
             </p>
-          </motion.div>
+          </div>
 
           {loadingReviews ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-56 bg-gray-200 dark:bg-white/10 animate-pulse rounded-2xl" />
+                <div key={i} className="h-56 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-2xl" />
               ))}
             </div>
           ) : realReviews && realReviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {realReviews.slice(0, 6).map((review: any, index: number) => {
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {realReviews.slice(0, 6).map((review: any) => {
                 const authorName = review.user
                   ? `${review.user.firstName} ${review.user.lastName}`
                   : 'Verified Customer';
                 return (
-                  <motion.div
-                    key={review.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card className="bg-white border-gray-200 text-slate-900 shadow-sm dark:bg-gray-900 dark:border-gray-800 dark:text-white h-full flex flex-col justify-between p-6 hover:shadow-md transition-all duration-300">
+                  <div key={review.id}>
+                    <Card className="bg-white border-gray-200 text-slate-900 shadow-sm dark:bg-gray-900 dark:border-gray-800 dark:text-white h-full flex flex-col justify-between p-6 hover:shadow-md transition-shadow">
                       <div>
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -1035,19 +947,17 @@ const Home = () => {
                                 onError={(e) => {
                                   e.currentTarget.style.display = 'none';
                                 }}
-                                className="w-12 h-12 rounded-full object-cover ring-2 ring-primary-500/30 dark:ring-white/30"
+                                className="w-11 h-11 rounded-full object-cover ring-2 ring-primary-500/20 dark:ring-white/20"
                               />
                             ) : (
-                              <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-700 dark:bg-slate-800 dark:text-white font-bold flex items-center justify-center ring-2 ring-primary-500/20 dark:ring-white/30 text-sm">
+                              <div className="w-11 h-11 rounded-full bg-primary-100 text-primary-700 dark:bg-slate-800 dark:text-white font-bold flex items-center justify-center ring-2 ring-primary-500/20 dark:ring-white/20 text-xs">
                                 {review.user ? getInitials(review.user.firstName, review.user.lastName) : 'VC'}
                               </div>
                             )}
                             <div>
-                              <h4 className="font-semibold text-slate-900 dark:text-white leading-tight">{authorName}</h4>
+                              <h4 className="font-semibold text-slate-900 dark:text-white text-sm leading-tight">{authorName}</h4>
                               <span className="inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
+                                <FiCheckCircle size={12} />
                                 Verified Purchase
                               </span>
                             </div>
@@ -1062,12 +972,12 @@ const Home = () => {
                         </div>
 
                         {review.title && (
-                          <h5 className="font-bold text-slate-900 dark:text-white mb-2 text-base line-clamp-1">
+                          <h5 className="font-bold text-slate-900 dark:text-white mb-2 text-sm sm:text-base line-clamp-1">
                             "{review.title}"
                           </h5>
                         )}
 
-                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4 line-clamp-4">
+                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-4">
                           {review.comment}
                         </p>
                       </div>
@@ -1084,59 +994,59 @@ const Home = () => {
                         </Link>
                       )}
                     </Card>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           ) : (
-            <div className="bg-white border-gray-200 text-slate-900 dark:bg-gray-900 dark:border-gray-800 dark:text-white rounded-2xl border p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-xl transition-colors">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-100 text-primary-700 dark:bg-white/20 dark:text-white text-3xl mb-5 shadow-inner">
-                🛡️
+            <div className="bg-white border-gray-200 text-slate-900 dark:bg-gray-900 dark:border-gray-800 dark:text-white rounded-2xl border p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-md transition-colors">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 mb-4">
+                <FiShield size={28} />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-3">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
                 100% Genuine Purchaser Reviews Policy
               </h3>
-              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-                We strictly prohibit artificial, seeded, or simulated reviews. Every review is strictly linked to a verified delivered purchase so you can shop with complete peace of mind. Real purchaser reviews appear here as orders are completed.
+              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+                We strictly prohibit artificial or simulated reviews. Every review is strictly linked to a verified delivered purchase.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-8">
-                <div className="bg-gray-50 border-gray-200 dark:bg-gray-800/80 dark:border-gray-700 rounded-xl p-5 border transition-colors">
-                  <div className="text-2xl mb-2">🔒</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left mb-8">
+                <div className="bg-slate-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl p-5 border transition-colors">
+                  <FiCheckCircle size={22} className="text-primary-600 dark:text-primary-400 mb-2" />
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-sm sm:text-base">Verified Buyers Only</h4>
                   <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                     Only customers who placed and received their order can submit verified reviews.
                   </p>
                 </div>
-                <div className="bg-gray-50 border-gray-200 dark:bg-gray-800/80 dark:border-gray-700 rounded-xl p-5 border transition-colors">
-                  <div className="text-2xl mb-2">⚖️</div>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-sm sm:text-base">Zero Fake Feedback</h4>
+                <div className="bg-slate-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl p-5 border transition-colors">
+                  <FiShield size={22} className="text-primary-600 dark:text-primary-400 mb-2" />
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-sm sm:text-base">Authentic Feedback</h4>
                   <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                     No fabricated or seeded reviews. Real performance and hands-on impressions only.
                   </p>
                 </div>
-                <div className="bg-gray-50 border-gray-200 dark:bg-gray-800/80 dark:border-gray-700 rounded-xl p-5 border transition-colors">
-                  <div className="text-2xl mb-2">📦</div>
+                <div className="bg-slate-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl p-5 border transition-colors">
+                  <FiPackage size={22} className="text-primary-600 dark:text-primary-400 mb-2" />
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-sm sm:text-base">Post-Delivery Reviews</h4>
                   <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                    Purchasers can rate their laptop and attach genuine photos directly after delivery.
+                    Purchasers can rate their laptop directly after collection or courier delivery.
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <Button
-                  size="lg"
+                  size="md"
                   onClick={() => navigate('/shop')}
-                  className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg"
+                  className="bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-xs text-sm"
                 >
                   Explore Laptops
                 </Button>
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="md"
                   onClick={() => navigate('/about')}
-                  className="border-gray-300 dark:border-gray-700 text-slate-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="border-gray-300 dark:border-gray-700 text-slate-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
                 >
                   Learn About Our Guarantee
                 </Button>
@@ -1147,13 +1057,13 @@ const Home = () => {
       </section>
 
       {/* Authentic Store Guarantees */}
-      <section id="store-guarantees" className="py-16 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors">
+      <section id="store-guarantees" className="py-12 lg:py-16 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Why Kenyan & South Nyanza Professionals Choose Apexbyte
             </h2>
-            <p className="text-slate-600 dark:text-slate-300 mt-2 sm:mt-3 text-sm sm:text-base lg:text-lg">
+            <p className="text-slate-600 dark:text-slate-300 mt-2 text-sm sm:text-base">
               Certified retail store with a physical showroom and bench-tested inventory in Kisii
             </p>
           </div>
@@ -1163,36 +1073,34 @@ const Home = () => {
               {
                 title: 'Showroom Testing',
                 desc: `Walk into ${settings.showroom_address}. Test battery health, thermals, and keyboards before paying.`,
-                icon: '🏬',
+                icon: <FiMapPin size={24} />,
               },
               {
                 title: settings.badge_warranty,
-                desc: `${settings.badge_warranty} backed by local authorized technicians in ${settings.city}.`,
-                icon: '🛡️',
+                desc: `${settings.badge_warranty} backed by local authorized technicians in ${settings.showroom_city || 'Kisii'}.`,
+                icon: <FiShield size={24} />,
               },
               {
                 title: settings.badge_delivery,
-                desc: `Direct rider delivery within ${settings.city} in 2-3 hours. Countrywide insured courier within 24 hours.`,
-                icon: '🚚',
+                desc: `Direct rider delivery within ${settings.showroom_city || 'Kisii'} in 2-3 hours. Countrywide courier in 24 hours.`,
+                icon: <FiTruck size={24} />,
               },
               {
                 title: settings.badge_returns,
-                desc: 'Bring your old laptop for instant store credit. Free on-the-spot RAM & SSD upgrade installations.',
-                icon: '⚡',
+                desc: 'Bring your old laptop for store credit. Free on-the-spot RAM & SSD upgrade installations.',
+                icon: <FiZap size={24} />,
               },
-            ].map((feature, index) => (
-              <motion.div
+            ].map((feature) => (
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 text-center hover:shadow-premium transition-all"
+                className="bg-slate-50 dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 text-center hover:shadow-md transition-shadow"
               >
-                <div className="text-4xl mb-3">{feature.icon}</div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2 text-slate-900 dark:text-white">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">{feature.desc}</p>
-              </motion.div>
+                <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center mx-auto mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-slate-900 dark:text-white">{feature.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{feature.desc}</p>
+              </div>
             ))}
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
   FiMapPin,
@@ -11,6 +10,8 @@ import {
   FiHelpCircle,
   FiChevronDown,
   FiChevronUp,
+  FiLock,
+  FiInfo,
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Card from '../components/ui/Card';
@@ -103,21 +104,17 @@ const Contact = () => {
         {/* Header Hero - Adaptive Light & Dark */}
         <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 text-slate-900 border-b border-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white dark:border-gray-800 py-16 text-center transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 dark:bg-white/10 dark:text-amber-300 dark:border-white/20 text-xs font-semibold mb-3 transition-colors">
-                📍 Kisii CBD Physical Showroom
-              </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">
+                Kisii CBD Physical Showroom
+              </p>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-3 text-slate-900 dark:text-white tracking-tight">
                 We're Here to Help You Choose Right
               </h1>
               <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 max-w-2xl mx-auto">
                 Have questions about laptop specs, current showroom stock, or custom upgrades? Speak directly with our hardware technicians.
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -149,13 +146,14 @@ const Contact = () => {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-750 text-xs text-gray-500">
-                  <p>💡 <em>Walking from {settings.city} Bus Park takes only a few minutes.</em></p>
+                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 flex items-center gap-1.5">
+                  <FiInfo size={14} className="flex-shrink-0 text-primary-500" />
+                  <span>Walking from {settings.city} Bus Park takes only a few minutes.</span>
                 </div>
               </Card>
 
               {/* Direct WhatsApp & Call Card */}
-              <Card className="p-6 bg-gradient-to-br from-emerald-900/30 to-teal-900/20 border border-emerald-500/30 dark:bg-gray-800">
+              <Card className="p-6 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-md">
                     <FaWhatsapp />
@@ -336,8 +334,9 @@ const Contact = () => {
                   </div>
 
                   <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-xs text-gray-500">
-                      🔒 We never share your phone number with 3rd parties.
+                    <p className="text-xs text-gray-500 flex items-center gap-1.5">
+                      <FiLock size={12} className="text-gray-400" />
+                      <span>We never share your phone number with 3rd parties.</span>
                     </p>
                     <Button
                       type="submit"

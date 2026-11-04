@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { FiWifiOff, FiRefreshCw, FiHome } from 'react-icons/fi';
+import { FiWifiOff, FiRefreshCw, FiHome, FiCheck } from 'react-icons/fi';
 import Button from '../../components/ui/Button';
 
 export const NetworkError = () => {
@@ -52,9 +52,9 @@ export const NetworkError = () => {
             <FiWifiOff className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
 
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 mb-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-2">
             Network Unreachable
-          </span>
+          </p>
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">
             Unable to Connect to Store
@@ -64,16 +64,19 @@ export const NetworkError = () => {
             Your browser cannot reach the Apexbyte e-commerce server. Please check your Wi-Fi, mobile data, or proxy settings.
           </p>
 
-          <div className="p-3.5 rounded-xl bg-gray-100 dark:bg-gray-800 border text-xs text-left max-w-sm mx-auto mb-8 space-y-1.5">
+          <div className="p-3.5 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs text-left max-w-sm mx-auto mb-8 space-y-1.5">
             <span className="font-bold text-gray-700 dark:text-gray-300 block mb-1">Troubleshooting Checklist:</span>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-              <span className="text-emerald-500">✓</span> Verify Wi-Fi or cellular connection is active
+              <FiCheck size={14} className="text-emerald-500 flex-shrink-0" />
+              <span>Verify Wi-Fi or cellular connection is active</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-              <span className="text-emerald-500">✓</span> Disable aggressive ad-blockers or VPN tunnels
+              <FiCheck size={14} className="text-emerald-500 flex-shrink-0" />
+              <span>Disable aggressive ad-blockers or VPN tunnels</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-              <span className="text-emerald-500">✓</span> Browser status: {isOnline ? 'Online' : 'Offline'}
+              <FiCheck size={14} className="text-emerald-500 flex-shrink-0" />
+              <span>Browser status: {isOnline ? 'Online' : 'Offline'}</span>
             </div>
           </div>
 

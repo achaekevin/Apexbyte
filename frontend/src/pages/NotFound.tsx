@@ -122,25 +122,25 @@ const NotFound = () => {
                 to="/shop?brand=hp"
                 className="p-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block text-center"
               >
-                💻 HP Laptops
+                HP Laptops
               </Link>
               <Link
                 to="/shop?brand=apple"
                 className="p-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block text-center"
               >
-                🍎 Apple MacBooks
+                Apple MacBooks
               </Link>
               <Link
                 to="/shop?brand=dell"
                 className="p-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block text-center"
               >
-                ⚡ Dell XPS & Latitude
+                Dell XPS & Latitude
               </Link>
               <Link
                 to="/shop?brand=lenovo"
                 className="p-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block text-center"
               >
-                🛡️ Lenovo ThinkPads
+                Lenovo ThinkPads
               </Link>
             </div>
           </div>

@@ -10,6 +10,7 @@ import {
   FiBatteryCharging,
   FiTool,
   FiArrowRight,
+  FiZap,
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Card from '../components/ui/Card';
@@ -22,7 +23,7 @@ const About = () => {
   return (
     <>
       <Helmet>
-        <title>About Us | {settings.store_name} ({settings.city})</title>
+        <title>About Us | {settings.store_name} ({settings.showroom_city || 'Kisii'})</title>
         <meta
           name="description"
           content={`Learn about ${settings.store_name} - providing genuine, 7-point inspected laptops with local 1-year warranty and authentic showroom pickup at ${settings.showroom_address}.`}
@@ -124,14 +125,14 @@ const About = () => {
               <div className="relative">
                 <Card className="p-8 border-2 border-primary-100 dark:border-primary-900/40 bg-white dark:bg-gray-800 shadow-xl rounded-2xl space-y-6">
                   <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl">
-                      🏬
+                    <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                      <FiMapPin size={24} />
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-gray-900 dark:text-white">
                         The {settings.store_name} Showroom Experience
                       </h3>
-                      <p className="text-xs text-gray-500">Come visit us in {settings.city} Town CBD</p>
+                      <p className="text-xs text-gray-500">Come visit us in {settings.showroom_city || 'Kisii'} Town CBD</p>
                     </div>
                   </div>
 
@@ -235,8 +236,8 @@ const About = () => {
               {/* 7th Feature Highlight */}
               <div className="md:col-span-2 lg:col-span-3 bg-gradient-to-r from-primary-600 to-sky-700 text-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shrink-0">
-                    🔌
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                    <FiZap size={24} className="text-white" />
                   </div>
                   <div>
                     <h3 className="font-bold text-lg sm:text-xl mb-1">
