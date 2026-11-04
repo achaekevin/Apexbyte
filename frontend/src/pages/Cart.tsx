@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation } from '@tanstack/react-query';
+import { FiShoppingCart, FiTruck, FiShield, FiRotateCcw, FiCheckCircle } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
@@ -90,14 +91,9 @@ const Cart = () => {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <Card className="text-center py-12">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 200 }}
-                className="text-8xl mb-6"
-              >
-                🛒
-              </motion.div>
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                <FiShoppingCart size={40} />
+              </div>
               <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
               <p className="text-gray-600 dark:text-gray-400 mb-8">
                 Looks like you haven't added any items to your cart yet.
@@ -425,14 +421,10 @@ const Cart = () => {
 
               {/* Free Shipping Banner */}
               {subtotal < freeShippingThreshold && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4"
-                >
-                  <Card className="p-4 bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/20 dark:to-accent-900/20 border-primary-200 dark:border-primary-800">
+                <div className="mt-4">
+                  <Card className="p-4 bg-blue-50/80 dark:bg-gray-800/80 border-blue-200 dark:border-blue-900/50">
                     <div className="flex items-center gap-3">
-                      <div className="text-3xl">🚚</div>
+                      <FiTruck className="text-primary-600 dark:text-primary-400 flex-shrink-0" size={24} />
                       <div>
                         <p className="font-medium text-sm">
                           Free Shipping on orders over {formatCurrency(freeShippingThreshold)}!
@@ -443,7 +435,7 @@ const Cart = () => {
                       </div>
                     </div>
                   </Card>
-                </motion.div>
+                </div>
               )}
             </div>
           </div>
@@ -452,36 +444,34 @@ const Cart = () => {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                icon: '🔒',
+                icon: FiShield,
                 title: 'Secure Payment',
                 desc: 'Your payment information is encrypted',
               },
               {
-                icon: '↩️',
+                icon: FiRotateCcw,
                 title: '30-Day Returns',
                 desc: 'Easy returns within 30 days',
               },
               {
-                icon: '✓',
+                icon: FiCheckCircle,
                 title: 'Warranty Included',
                 desc: 'All products come with manufacturer warranty',
               },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="p-4 text-center">
-                  <div className="text-4xl mb-2">{feature.icon}</div>
-                  <h3 className="font-bold mb-1">{feature.title}</h3>
+            ].map((feature) => {
+              const IconComp = feature.icon;
+              return (
+                <Card key={feature.title} className="p-5 text-center">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                    <IconComp size={22} />
+                  </div>
+                  <h3 className="font-bold text-base mb-1">{feature.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {feature.desc}
                   </p>
                 </Card>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </TechBackground>

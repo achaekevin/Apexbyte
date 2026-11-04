@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { FiHeart } from 'react-icons/fi';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
@@ -87,7 +88,7 @@ const Wishlist = () => {
           />
         ) : wishlistItems.length === 0 ? (
           <EmptyState
-            icon="❤️"
+            icon={<FiHeart size={44} className="text-rose-500" />}
             title="Your Wishlist is Empty"
             description="You haven't saved any laptops to your wishlist yet. Click the heart icon on any laptop in the store to save it for later."
             action={

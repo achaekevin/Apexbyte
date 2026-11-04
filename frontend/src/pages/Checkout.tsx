@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { FiSmartphone, FiCheckCircle, FiAlertCircle, FiRefreshCw, FiClock, FiLock, FiShield } from 'react-icons/fi';
+import { FiSmartphone, FiCheckCircle, FiAlertCircle, FiRefreshCw, FiClock, FiLock, FiShield, FiCreditCard, FiGlobe, FiTruck, FiCheck } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
@@ -311,7 +311,7 @@ const CheckoutForm = () => {
                           : 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                       }`}
                     >
-                      {index < currentStepIndex ? '✓' : step.number}
+                      {index < currentStepIndex ? <FiCheck size={16} /> : step.number}
                     </div>
                     <span
                       className={`text-xs sm:text-sm mt-1.5 font-semibold text-center leading-tight ${
@@ -567,7 +567,7 @@ const CheckoutForm = () => {
                               : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                           }`}
                         >
-                          <div className="text-xl sm:text-2xl mb-1">📱</div>
+                          <FiSmartphone className="mx-auto mb-1.5 text-emerald-600 dark:text-emerald-400" size={22} />
                           <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">M-Pesa Express</div>
                           <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">STK Push</span>
                         </button>
@@ -581,7 +581,7 @@ const CheckoutForm = () => {
                               : 'border-gray-200 dark:border-gray-700 hover:border-amber-300'
                           }`}
                         >
-                          <div className="text-xl sm:text-2xl mb-1">💵</div>
+                          <FiTruck className="mx-auto mb-1.5 text-amber-600 dark:text-amber-400" size={22} />
                           <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">Pay on Delivery</div>
                           <span className="text-[11px] sm:text-xs font-semibold text-amber-700 dark:text-amber-400">Inspect & Pay</span>
                         </button>
@@ -595,7 +595,7 @@ const CheckoutForm = () => {
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
                           }`}
                         >
-                          <div className="text-xl sm:text-2xl mb-1">💳</div>
+                          <FiCreditCard className="mx-auto mb-1.5 text-primary-600 dark:text-primary-400" size={22} />
                           <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">Card (Stripe)</div>
                           <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">Visa / MC</span>
                         </button>
@@ -609,7 +609,7 @@ const CheckoutForm = () => {
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'
                           }`}
                         >
-                          <div className="text-xl sm:text-2xl mb-1">🅿️</div>
+                          <FiGlobe className="mx-auto mb-1.5 text-blue-600 dark:text-blue-400" size={22} />
                           <div className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white">PayPal</div>
                           <span className="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">International</span>
                         </button>
@@ -628,15 +628,19 @@ const CheckoutForm = () => {
                               onChange={(e) => setMpesaPhone(e.target.value)}
                               required
                             />
-                            <p className="text-xs text-emerald-800 dark:text-emerald-400 mt-2 font-medium">
-                              ✓ You will receive an instant STK push prompt on this handset to authorize {formatCurrency(total)}. Never share your PIN with anyone.
+                            <p className="text-xs text-emerald-800 dark:text-emerald-400 mt-2 font-medium flex items-center gap-1.5">
+                              <FiCheckCircle size={14} className="flex-shrink-0" />
+                              <span>You will receive an instant STK push prompt on this handset to authorize {formatCurrency(total)}. Never share your PIN with anyone.</span>
                             </p>
                           </div>
                         )}
 
                         {paymentMethod === 'cod' && (
                           <div className="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-300 leading-relaxed">
-                            <p className="font-bold text-sm mb-1">🏬 Pay on Delivery (Kisii & Selected Regions)</p>
+                            <p className="font-bold text-sm mb-1 flex items-center gap-1.5">
+                              <FiTruck size={16} />
+                              <span>Pay on Delivery (Kisii & Selected Regions)</span>
+                            </p>
                             <p>
                               Our dispatch technician will bring your laptop. You have the right to unbox, inspect the hardware condition, verify specs and power it on before paying via M-Pesa or Cash.
                             </p>

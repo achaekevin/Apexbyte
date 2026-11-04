@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { FiPackage, FiClock, FiCheckCircle, FiDollarSign, FiShoppingBag, FiHeart } from 'react-icons/fi';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -34,24 +35,24 @@ const Dashboard = () => {
     {
       label: 'Total Orders',
       value: isLoading ? '...' : totalOrders,
-      icon: '📦',
-      color: 'bg-blue-500',
+      icon: <FiPackage size={22} className="text-white" />,
+      color: 'bg-primary-600',
     },
     {
       label: 'Pending Orders',
       value: isLoading
         ? '...'
         : ordersList.filter((o: any) => o.status === 'PENDING').length,
-      icon: '⏳',
-      color: 'bg-yellow-500',
+      icon: <FiClock size={22} className="text-white" />,
+      color: 'bg-amber-500',
     },
     {
       label: 'Completed',
       value: isLoading
         ? '...'
         : ordersList.filter((o: any) => o.status === 'DELIVERED').length,
-      icon: '✓',
-      color: 'bg-green-500',
+      icon: <FiCheckCircle size={22} className="text-white" />,
+      color: 'bg-emerald-600',
     },
     {
       label: 'Total Spent',
@@ -63,8 +64,8 @@ const Dashboard = () => {
               0
             )
           ),
-      icon: '💰',
-      color: 'bg-purple-500',
+      icon: <FiDollarSign size={22} className="text-white" />,
+      color: 'bg-slate-700 dark:bg-slate-600',
     },
   ];
 
@@ -115,28 +116,34 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <Link to="/shop">
-            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">🛍️</div>
+            <Card className="p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
+                <FiShoppingBag size={22} />
+              </div>
               <h3 className="font-bold text-sm sm:text-base mb-1">Browse Products</h3>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                 Explore our latest laptops and deals
               </p>
             </Card>
           </Link>
           <Link to="/dashboard/orders">
-            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">📦</div>
+            <Card className="p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
+                <FiPackage size={22} />
+              </div>
               <h3 className="font-bold text-sm sm:text-base mb-1">Track Orders</h3>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                 View and manage your orders
               </p>
             </Card>
           </Link>
           <Link to="/dashboard/wishlist">
-            <Card className="p-4 sm:p-6 hover:shadow-premium transition-all cursor-pointer">
-              <div className="text-2xl sm:text-4xl mb-2 sm:mb-3">❤️</div>
+            <Card className="p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
+                <FiHeart size={22} />
+              </div>
               <h3 className="font-bold text-sm sm:text-base mb-1">Wishlist</h3>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                 Manage your saved items
               </p>
             </Card>
@@ -168,7 +175,7 @@ const Dashboard = () => {
             />
           ) : ordersList.length === 0 ? (
             <EmptyState
-              icon="📦"
+              icon={<FiPackage size={44} />}
               title="No orders yet"
               description="You haven't placed any orders yet. Discover our curated collection of high-performance laptops."
               actionLabel="Start Shopping"
