@@ -63,9 +63,14 @@ const Header = () => {
   const cartItemsCount = getTotalItems();
 
   const handleLogout = () => {
+    const wasInAdmin = location.pathname.startsWith('/admin');
     setIsUserMenuOpen(false);
     logout();
-    navigate('/');
+    if (wasInAdmin) {
+      navigate('/admin/login', { replace: true });
+    } else {
+      navigate('/');
+    }
   };
 
   const navLinks = [

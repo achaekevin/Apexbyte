@@ -12,11 +12,11 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
   const { isAuthenticated, user, loginTimestamp, logout } = useAuthStore();
   const location = useLocation();
 
-  // 1. Not authenticated: redirect to login and preserve destination
+  // 1. Not authenticated: redirect to dedicated admin login and preserve destination
   if (!isAuthenticated || !user) {
     return (
       <Navigate
-        to="/login"
+        to="/admin/login"
         replace
         state={{ from: location.pathname + location.search }}
       />
@@ -31,7 +31,7 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
       logout();
       return (
         <Navigate
-          to="/login"
+          to="/admin/login"
           replace
           state={{
             from: location.pathname + location.search,
