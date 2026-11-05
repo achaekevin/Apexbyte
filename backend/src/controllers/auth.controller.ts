@@ -355,12 +355,9 @@ export const resetPassword = asyncHandler(
       throw new AppError('Invalid or expired reset token', 400);
     }
 
-    // Validate password strength
-    if (!isStrongPassword(password)) {
-      throw new AppError(
-        'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character',
-        400
-      );
+    // Validate password: must be at least 8 characters long
+    if (!password || String(password).length < 8) {
+      throw new AppError('Password must be at least 8 characters long', 400);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -456,12 +453,9 @@ export const changePassword = asyncHandler(
       throw new AppError('Current password is incorrect', 400);
     }
 
-    // Validate new password strength
-    if (!isStrongPassword(newPassword)) {
-      throw new AppError(
-        'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character',
-        400
-      );
+    // Validate new password: must be at least 8 characters long
+    if (!newPassword || String(newPassword).length < 8) {
+      throw new AppError('Password must be at least 8 characters long', 400);
     }
 
     const hashedPassword = await hashPassword(newPassword);

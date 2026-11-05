@@ -68,7 +68,11 @@ const AdminSettings = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-  const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [passwordMessage, setPasswordMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+    strength?: PasswordStrengthInfo;
+  } | null>(null);
 
   // Public Storefront Configuration Settings (All dynamically editable without code changes)
   const [storeSettings, setStoreSettings] = useState(DEFAULT_PUBLIC_SETTINGS);
@@ -100,20 +104,73 @@ const AdminSettings = () => {
     };
   }, []);
 
-  // Password strength checklist
-  const passwordCriteria = {
-    length: passwordData.newPassword.length >= 8,
-    hasUpper: /[A-Z]/.test(passwordData.newPassword),
-    hasLower: /[a-z]/.test(passwordData.newPassword),
-    hasNumber: /[0-9]/.test(passwordData.newPassword),
-    hasSpecial: /[^A-Za-z0-9]/.test(passwordData.newPassword),
-  };
-  const isPasswordStrong =
-    passwordCriteria.length &&
-    passwordCriteria.hasUpper &&
-    passwordCriteria.hasLower &&
-    passwordCriteria.hasNumber &&
-    passwordCriteria.hasSpecial;
+interface PasswordStrengthInfo {
+  score: number;
+  label: 'Weak' | 'Fair' | 'Good' | 'Strong';
+  badgeBg: string;
+  progressBarClass: string;
+  percentage: number;
+  feedback: string;
+}
+
+const evaluatePasswordStrength = (pwd: string): PasswordStrengthInfo => {
+  if (!pwd || pwd.length < 8) {
+    return {
+      score: 1,
+      label: 'Weak',
+      badgeBg: 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-300 dark:border-rose-700',
+      progressBarClass: 'bg-rose-500',
+      percentage: 20,
+      feedback: 'Password must be at least 8 characters long.',
+    };
+  }
+
+  const hasUpper = /[A-Z]/.test(pwd);
+  const hasLower = /[a-z]/.test(pwd);
+  const hasNumber = /[0-9]/.test(pwd);
+  const hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+  const isLong = pwd.length >= 12;
+
+  const points = [hasUpper, hasLower, hasNumber, hasSpecial, isLong].filter(Boolean).length;
+
+  if (points <= 1) {
+    return {
+      score: 1,
+      label: 'Weak',
+      badgeBg: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-700',
+      progressBarClass: 'bg-amber-500',
+      percentage: 35,
+      feedback: 'Basic strength. You can use this password, but adding mixed case, numbers, or special symbols will make it stronger.',
+    };
+  } else if (points === 2 || points === 3) {
+    return {
+      score: 2,
+      label: 'Fair',
+      badgeBg: 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-300 dark:border-blue-700',
+      progressBarClass: 'bg-blue-500',
+      percentage: 65,
+      feedback: 'Good balance. Adding special characters or reaching 12+ characters can achieve maximum rating.',
+    };
+  } else if (points === 4) {
+    return {
+      score: 3,
+      label: 'Good',
+      badgeBg: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700',
+      progressBarClass: 'bg-emerald-500',
+      percentage: 85,
+      feedback: 'Strong password. Your administrator account is well protected.',
+    };
+  } else {
+    return {
+      score: 4,
+      label: 'Strong',
+      badgeBg: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/80 dark:text-emerald-200 border border-emerald-400 dark:border-emerald-600',
+      progressBarClass: 'bg-emerald-600',
+      percentage: 100,
+      feedback: 'Maximum cryptographic strength. Excellent protection for store administration.',
+    };
+  }
+};
 
   // Handle Profile Update (Credentials: Email, Name, Phone)
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -121,26 +178,30 @@ const AdminSettings = () => {
     setIsUpdatingProfile(true);
     setProfileMessage(null);
 
+    const cleanEmail = profileData.email.trim();
+
     try {
       const response: any = await api.put('/users/profile', {
         firstName: profileData.firstName.trim(),
         lastName: profileData.lastName.trim(),
-        email: profileData.email.trim().toLowerCase(),
+        email: cleanEmail,
         phone: profileData.phone.trim(),
       });
 
       const updated = response?.data || response;
+      const finalEmail = updated.email || cleanEmail;
+
       updateUser({
         firstName: updated.firstName || profileData.firstName,
         lastName: updated.lastName || profileData.lastName,
-        email: updated.email || profileData.email,
+        email: finalEmail,
         phone: updated.phone || profileData.phone,
       });
 
-      toast.success('Admin credentials and profile updated successfully!');
+      toast.success('Admin email and profile updated successfully!');
       setProfileMessage({
         type: 'success',
-        text: 'Credentials updated. Use your new email for all future logins.',
+        text: `Administrator login email updated to "${finalEmail}". This email is now configured for your next login to access the admin dashboard.`,
       });
     } catch (err: any) {
       const errorMsg =
@@ -159,6 +220,14 @@ const AdminSettings = () => {
     e.preventDefault();
     setPasswordMessage(null);
 
+    // Accept any password as long as it is at least 8 characters
+    if (!passwordData.newPassword || passwordData.newPassword.length < 8) {
+      const msg = 'Password must be at least 8 characters long.';
+      toast.error(msg);
+      setPasswordMessage({ type: 'error', text: msg });
+      return;
+    }
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       const msg = 'New password and confirmation password do not match.';
       toast.error(msg);
@@ -166,23 +235,17 @@ const AdminSettings = () => {
       return;
     }
 
-    if (!isPasswordStrong) {
-      const msg =
-        'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character.';
-      toast.error(msg);
-      setPasswordMessage({ type: 'error', text: msg });
-      return;
-    }
-
+    const strength = evaluatePasswordStrength(passwordData.newPassword);
     setIsUpdatingPassword(true);
 
     try {
       await authService.changePassword(passwordData.currentPassword, passwordData.newPassword);
 
-      toast.success('Admin password updated successfully! Please use it for future logins.');
+      toast.success('Admin password updated successfully! Configured for your next login.');
       setPasswordMessage({
         type: 'success',
-        text: 'Password updated successfully. Your new password is now active.',
+        text: 'Admin password updated and configured successfully. You will use this new password the next time you log in to the admin dashboard.',
+        strength,
       });
       setPasswordData({
         currentPassword: '',
@@ -424,18 +487,54 @@ const AdminSettings = () => {
 
                 {passwordMessage && (
                   <div
-                    className={`mb-6 p-4 rounded-xl flex items-start gap-3 text-xs sm:text-sm ${
+                    className={`mb-6 p-4 sm:p-5 rounded-xl border text-xs sm:text-sm ${
                       passwordMessage.type === 'success'
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 border-rose-200 dark:border-rose-800'
                     }`}
                   >
-                    {passwordMessage.type === 'success' ? (
-                      <FiCheck className="w-5 h-5 shrink-0 text-emerald-500 mt-0.5" />
-                    ) : (
-                      <FiAlertCircle className="w-5 h-5 shrink-0 text-rose-500 mt-0.5" />
-                    )}
-                    <p className="font-semibold">{passwordMessage.text}</p>
+                    <div className="flex items-start gap-3">
+                      {passwordMessage.type === 'success' ? (
+                        <FiCheck className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                      ) : (
+                        <FiAlertCircle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+                      )}
+                      <div className="flex-1 space-y-2">
+                        <p className="font-bold leading-snug">{passwordMessage.text}</p>
+
+                        {/* Evaluated Password Strength Feedback after update */}
+                        {passwordMessage.type === 'success' && passwordMessage.strength && (
+                          <div className="pt-3 border-t border-emerald-200/80 dark:border-emerald-800/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs text-slate-700 dark:text-slate-300">
+                                Evaluated Password Strength:
+                              </span>
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${passwordMessage.strength.badgeBg}`}
+                              >
+                                {passwordMessage.strength.label}
+                              </span>
+                            </div>
+
+                            {/* Strength bar */}
+                            <div className="w-full bg-emerald-200/60 dark:bg-emerald-900/40 rounded-full h-2 overflow-hidden">
+                              <div
+                                className={`h-full transition-all duration-500 ${passwordMessage.strength.progressBarClass}`}
+                                style={{ width: `${passwordMessage.strength.percentage}%` }}
+                              />
+                            </div>
+
+                            <p className="text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed">
+                              {passwordMessage.strength.feedback}
+                            </p>
+
+                            <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 pt-1">
+                              ✓ Configured for all future logins at <code>/admin/login</code>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -466,9 +565,14 @@ const AdminSettings = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
-                      New Password
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                        New Password (Min. 8 characters)
+                      </label>
+                      <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                        Any combination accepted
+                      </span>
+                    </div>
                     <div className="relative">
                       <Input
                         type={showNewPassword ? 'text' : 'password'}
@@ -476,7 +580,7 @@ const AdminSettings = () => {
                         onChange={(e) =>
                           setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))
                         }
-                        placeholder="Enter your new strong password"
+                        placeholder="Enter your new password (minimum 8 characters)"
                         required
                       />
                       <button
@@ -488,6 +592,9 @@ const AdminSettings = () => {
                         {showNewPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                       </button>
                     </div>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                      Accepts any password as long as it has at least 8 characters. Password strength rating will be displayed upon save.
+                    </p>
                   </div>
 
                   <div>

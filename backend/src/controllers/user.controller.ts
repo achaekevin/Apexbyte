@@ -54,7 +54,12 @@ export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response
     const normalizedEmail = email.trim().toLowerCase();
     const currentUser = await prisma.user.findUnique({ where: { id: userId } });
     if (currentUser && currentUser.email !== normalizedEmail) {
-      const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+      const existing = await prisma.user.findFirst({
+        where: {
+          email: normalizedEmail,
+          NOT: { id: userId },
+        },
+      });
       if (existing) {
         throw new AppError('An account with this email address already exists', 409, 'DUPLICATE_ENTRY');
       }
