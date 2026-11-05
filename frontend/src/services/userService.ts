@@ -27,6 +27,43 @@ export interface CustomerListResponse {
 }
 
 export const userService = {
+  getProfile: async () => {
+    const res: any = await api.get('/users/profile');
+    return res.data || res;
+  },
+
+  updateProfile: async (data: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+  }) => {
+    const res: any = await api.put('/users/profile', data);
+    return res.data || res;
+  },
+
+  uploadAvatar: async (file: File) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    const res: any = await api.post('/users/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data || res;
+  },
+
+  updateAvatarBase64: async (avatarBase64: string) => {
+    const res: any = await api.post('/users/avatar', { avatar: avatarBase64 });
+    return res.data || res;
+  },
+
+  removeAvatar: async () => {
+    const res: any = await api.delete('/users/avatar');
+    return res.data || res;
+  },
+
   getCustomers: async (params?: {
     page?: number;
     limit?: number;

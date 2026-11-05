@@ -32,7 +32,7 @@ const menuItems = [
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const handleAdminLogout = () => {
@@ -111,7 +111,30 @@ const AdminLayout = () => {
             </nav>
           </div>
 
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-1.5">
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-2">
+            {/* Admin Mini Profile */}
+            <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.firstName}
+                  className="w-8 h-8 rounded-full object-cover border border-primary-500 shrink-0"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                  {user?.firstName?.charAt(0) || 'A'}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
+                  {user?.firstName} {user?.lastName}
+                </p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
+                  {user?.role || 'Administrator'}
+                </p>
+              </div>
+            </div>
+
             <Link
               to="/"
               target="_blank"
@@ -178,7 +201,30 @@ const AdminLayout = () => {
                   </nav>
                 </div>
 
-                <div className="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-1.5">
+                <div className="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-2">
+                  {/* Admin Mini Profile */}
+                  <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.firstName}
+                        className="w-7 h-7 rounded-full object-cover border border-primary-500 shrink-0"
+                      />
+                    ) : (
+                      <div className="w-7 h-7 rounded-full bg-primary-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                        {user?.firstName?.charAt(0) || 'A'}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
+                        {user?.firstName} {user?.lastName}
+                      </p>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
+                        {user?.role || 'Administrator'}
+                      </p>
+                    </div>
+                  </div>
+
                   <Link
                     to="/"
                     target="_blank"

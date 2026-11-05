@@ -19,6 +19,11 @@ import {
   FiAward,
   FiShare2,
   FiRefreshCw,
+  FiCamera,
+  FiUpload,
+  FiTrash2,
+  FiX,
+  FiCheckCircle,
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -29,6 +34,7 @@ import Badge from '../../components/ui/Badge';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../services/api';
 import authService from '../../services/authService';
+import userService from '../../services/userService';
 import settingService from '../../services/settingService';
 import { DEFAULT_PUBLIC_SETTINGS } from '../../hooks/useSettings';
 
@@ -57,6 +63,20 @@ const AdminSettings = () => {
   });
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [profileMessage, setProfileMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Admin Profile Picture (Avatar) State
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatar || null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarMessage, setAvatarMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Camera State & Refs
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Admin Password
   const [passwordData, setPasswordData] = useState({
@@ -103,6 +123,213 @@ const AdminSettings = () => {
       isMounted = false;
     };
   }, []);
+
+  // Sync avatar with authStore user changes
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatarPreview(user.avatar);
+    }
+  }, [user?.avatar]);
+
+  // Clean up camera stream on unmount
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [cameraStream]);
+
+  // Start Camera
+  const handleStartCamera = async () => {
+    setCameraError(null);
+    setCapturedPhoto(null);
+    setIsCameraOpen(true);
+
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera access is not supported by your current browser.');
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          width: { ideal: 640 },
+          height: { ideal: 640 },
+        },
+        audio: false,
+      });
+
+      setCameraStream(stream);
+
+      // Attach stream to video element
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play().catch(() => {});
+      }
+    } catch (err: any) {
+      const errorMsg =
+        err?.name === 'NotAllowedError'
+          ? 'Camera permission was denied. Please allow camera access in your browser settings.'
+          : err?.message || 'Unable to access camera device.';
+      setCameraError(errorMsg);
+      toast.error(errorMsg);
+    }
+  };
+
+  // Stop Camera
+  const handleStopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setIsCameraOpen(false);
+    setCapturedPhoto(null);
+    setCameraError(null);
+  };
+
+  // Capture Photo Snapshot from video feed
+  const handleCapturePhoto = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const size = Math.min(video.videoWidth || 480, video.videoHeight || 480);
+
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Center crop to 1:1 square
+    const startX = ((video.videoWidth || size) - size) / 2;
+    const startY = ((video.videoHeight || size) - size) / 2;
+    ctx.drawImage(video, startX, startY, size, size, 0, 0, size, size);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    setCapturedPhoto(dataUrl);
+
+    // Stop camera video stream once photo is snapped
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+    }
+  };
+
+  // Retake live photo
+  const handleRetakePhoto = () => {
+    setCapturedPhoto(null);
+    handleStartCamera();
+  };
+
+  // Save the captured camera photo
+  const handleSaveCapturedPhoto = async () => {
+    if (!capturedPhoto) return;
+    setIsUploadingAvatar(true);
+    setAvatarMessage(null);
+
+    try {
+      const res = await userService.updateAvatarBase64(capturedPhoto);
+      const newAvatarUrl = res.data?.avatar || res.avatar || capturedPhoto;
+
+      updateUser({ avatar: newAvatarUrl });
+      setAvatarPreview(newAvatarUrl);
+      handleStopCamera();
+
+      const successMsg =
+        'Profile picture captured and updated successfully! This picture is securely saved in your database profile and persists across logouts and page refreshes.';
+      setAvatarMessage({ type: 'success', text: successMsg });
+      toast.success('Profile picture updated successfully!');
+    } catch (err: any) {
+      const errorMsg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to save profile picture from camera. Please try again.';
+      setAvatarMessage({ type: 'error', text: errorMsg });
+      toast.error(errorMsg);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  // Handle File Upload from Device
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      const msg = 'Image size must be less than 5MB.';
+      toast.error(msg);
+      setAvatarMessage({ type: 'error', text: msg });
+      return;
+    }
+
+    // Validate type
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!allowed.includes(file.type)) {
+      const msg = 'Invalid file type. Please select a JPEG, PNG, or WebP image.';
+      toast.error(msg);
+      setAvatarMessage({ type: 'error', text: msg });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    setAvatarMessage(null);
+
+    try {
+      const res = await userService.uploadAvatar(file);
+      const newAvatarUrl = res.data?.avatar || res.avatar;
+
+      updateUser({ avatar: newAvatarUrl });
+      setAvatarPreview(newAvatarUrl);
+
+      const successMsg =
+        'Profile picture uploaded successfully! It is saved to your account in the database and will persist across logouts and page refreshes.';
+      setAvatarMessage({ type: 'success', text: successMsg });
+      toast.success('Profile picture updated!');
+    } catch (err: any) {
+      const errorMsg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to upload profile picture from device. Please try again.';
+      setAvatarMessage({ type: 'error', text: errorMsg });
+      toast.error(errorMsg);
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  // Remove Avatar
+  const handleRemoveAvatar = async () => {
+    if (!confirm('Are you sure you want to remove your profile picture?')) return;
+    setIsUploadingAvatar(true);
+    setAvatarMessage(null);
+
+    try {
+      await userService.removeAvatar();
+      updateUser({ avatar: undefined });
+      setAvatarPreview(null);
+      setAvatarMessage({
+        type: 'success',
+        text: 'Profile picture removed. Your initials will now be displayed.',
+      });
+      toast.success('Profile picture removed.');
+    } catch (err: any) {
+      const errorMsg =
+        err?.response?.data?.message || err?.message || 'Failed to remove profile picture.';
+      setAvatarMessage({ type: 'error', text: errorMsg });
+      toast.error(errorMsg);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
 
 interface PasswordStrengthInfo {
   score: number;
@@ -361,6 +588,218 @@ const evaluatePasswordStrength = (pwd: string): PasswordStrengthInfo => {
             className="grid grid-cols-1 lg:grid-cols-3 gap-6"
           >
             <div className="lg:col-span-2 space-y-6">
+              {/* Profile Picture (Live Camera + Upload from Device) */}
+              <Card className="p-4 sm:p-6 lg:p-8">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <FiCamera className="text-primary-500" />
+                      Administrator Profile Picture
+                    </h2>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Personalize your administrator profile by snapping a live camera photo or browsing an image from your device. Your photo is securely saved to the database and persists across page refreshes and logouts.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Status Message Banner (Success / Error) */}
+                {avatarMessage && (
+                  <div
+                    role="alert"
+                    className={`mb-6 p-4 rounded-xl flex items-start gap-3 text-xs sm:text-sm border ${
+                      avatarMessage.type === 'success'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 border-rose-200 dark:border-rose-800'
+                    }`}
+                  >
+                    {avatarMessage.type === 'success' ? (
+                      <FiCheckCircle className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                    ) : (
+                      <FiAlertCircle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+                    )}
+                    <div className="flex-1">
+                      <span className="font-bold block text-sm">
+                        {avatarMessage.type === 'success' ? 'Profile Picture Saved' : 'Profile Picture Update Failed'}
+                      </span>
+                      <p className="mt-0.5 leading-relaxed">{avatarMessage.text}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Main Avatar Controls */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  {/* Avatar Display */}
+                  <div className="relative group shrink-0">
+                    {avatarPreview || user?.avatar ? (
+                      <img
+                        src={avatarPreview || user?.avatar}
+                        alt="Admin Profile"
+                        className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-primary-500/80 shadow-lg"
+                      />
+                    ) : (
+                      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 text-white font-black text-3xl flex items-center justify-center border-4 border-primary-200 dark:border-primary-900 shadow-lg">
+                        {user?.firstName?.charAt(0) || 'A'}
+                        {user?.lastName?.charAt(0) || ''}
+                      </div>
+                    )}
+                    {isUploadingAvatar && (
+                      <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <FiRefreshCw className="w-6 h-6 animate-spin" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions & Buttons */}
+                  <div className="flex-1 space-y-3 text-center sm:text-left">
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                      {/* Hidden File Input */}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/jpg"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+
+                      {/* Browse Device Button */}
+                      <Button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingAvatar}
+                        className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 shadow-sm"
+                      >
+                        <FiUpload size={15} />
+                        <span>Upload from Device</span>
+                      </Button>
+
+                      {/* Live Camera Button */}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleStartCamera}
+                        disabled={isUploadingAvatar || isCameraOpen}
+                        className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 border-primary-500 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/40"
+                      >
+                        <FiCamera size={15} />
+                        <span>Take Live Photo</span>
+                      </Button>
+
+                      {/* Remove Button */}
+                      {(avatarPreview || user?.avatar) && (
+                        <button
+                          type="button"
+                          onClick={handleRemoveAvatar}
+                          disabled={isUploadingAvatar}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+                        >
+                          <FiTrash2 size={14} />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
+                      Accepts PNG, JPG, or WebP up to 5MB. You can also use your device's built-in webcam or phone camera to take an instant photo.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Live Camera Modal / Inline Preview Area */}
+                {isCameraOpen && (
+                  <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-2xl space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                      <div className="flex items-center gap-2 font-bold text-sm">
+                        <FiCamera className="text-primary-400" />
+                        <span>Live Camera Snapshot</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleStopCamera}
+                        className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                        aria-label="Close camera"
+                      >
+                        <FiX size={18} />
+                      </button>
+                    </div>
+
+                    {cameraError ? (
+                      <div className="p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-xs text-rose-200">
+                        <p className="font-bold">Camera Access Error</p>
+                        <p className="mt-1">{cameraError}</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        {/* Hidden canvas for image capture */}
+                        <canvas ref={canvasRef} className="hidden" />
+
+                        {capturedPhoto ? (
+                          <div className="space-y-4 text-center">
+                            <img
+                              src={capturedPhoto}
+                              alt="Captured snapshot"
+                              className="w-48 h-48 sm:w-56 sm:h-56 rounded-full object-cover mx-auto border-4 border-emerald-500 shadow-xl"
+                            />
+                            <p className="text-xs text-slate-300">
+                              Preview your captured snapshot above. Choose to save it or retake.
+                            </p>
+                            <div className="flex items-center justify-center gap-3">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleRetakePhoto}
+                                disabled={isUploadingAvatar}
+                                className="text-xs text-white border-slate-600 hover:bg-slate-800"
+                              >
+                                Retake Photo
+                              </Button>
+                              <Button
+                                type="button"
+                                onClick={handleSaveCapturedPhoto}
+                                isLoading={isUploadingAvatar}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md"
+                              >
+                                Save as Profile Picture
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 w-full max-w-sm mx-auto text-center">
+                            <div className="relative rounded-2xl overflow-hidden aspect-square bg-black shadow-inner border border-slate-700">
+                              <video
+                                ref={videoRef}
+                                autoPlay
+                                playsInline
+                                muted
+                                className="w-full h-full object-cover mirror scale-x-[-1]"
+                              />
+                              <div className="absolute inset-0 pointer-events-none rounded-full border-2 border-dashed border-white/40 m-6" />
+                            </div>
+                            <div className="flex items-center justify-center gap-3">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleStopCamera}
+                                className="text-xs text-white border-slate-700 hover:bg-slate-800"
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                type="button"
+                                onClick={handleCapturePhoto}
+                                className="bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-lg inline-flex items-center gap-2"
+                              >
+                                <FiCamera size={16} />
+                                <span>Capture Photo</span>
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Card>
+
               {/* Profile & Login Email */}
               <Card className="p-4 sm:p-6 lg:p-8">
                 <div className="flex items-center justify-between mb-6">
@@ -640,9 +1079,17 @@ const evaluatePasswordStrength = (pwd: string): PasswordStrengthInfo => {
             <div>
               <Card className="p-4 sm:p-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-850">
                 <div className="text-center pb-6 border-b border-gray-200 dark:border-gray-700">
-                  <div className="w-20 h-20 rounded-full bg-primary-600 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
-                    {user?.firstName?.charAt(0) || 'A'}
-                  </div>
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.firstName}
+                      className="w-20 h-20 rounded-full object-cover mx-auto mb-3 shadow-md border-2 border-primary-500"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-primary-600 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                      {user?.firstName?.charAt(0) || 'A'}
+                    </div>
+                  )}
                   <h3 className="font-bold text-base sm:text-lg text-gray-900 dark:text-white">
                     {user?.firstName} {user?.lastName}
                   </h3>
