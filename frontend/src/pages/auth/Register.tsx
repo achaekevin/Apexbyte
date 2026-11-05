@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiAlertCircle, FiShield } from 'react-icons/fi';
 import { authService } from '../../services/authService';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -20,6 +20,11 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const fromParam = (location.state as any)?.from || searchParams.get('from');
+  const isAdminTarget = typeof fromParam === 'string' && fromParam.startsWith('/admin');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +63,29 @@ const Register = () => {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-1.5 sm:mb-2">Create Account</h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">Create an account to track your orders and warranty</p>
         </div>
+
+        {isAdminTarget && (
+          <div
+            role="alert"
+            className="mb-5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-xs sm:text-sm text-amber-900 dark:text-amber-200 space-y-2"
+          >
+            <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300">
+              <FiShield className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+              <span>Administrative Accounts Notice</span>
+            </div>
+            <p className="leading-relaxed">
+              Public registration cannot be used to obtain administrator privileges. If you are an authorized staff member, an active administrator must add and configure your account inside the Store Management team settings.
+            </p>
+            <div>
+              <Link
+                to="/login?from=/admin"
+                className="inline-flex items-center font-bold text-amber-700 dark:text-amber-400 hover:underline"
+              >
+                Go to Administrator Sign In &rarr;
+              </Link>
+            </div>
+          </div>
+        )}
 
         {errorMessage && (
           <div
