@@ -107,6 +107,11 @@ const getClientIp = (req: Request): string => {
  * /resend-verification, /refresh-token, and /change-password
  */
 export const authRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
+  // In development mode, bypass the strict 5-attempt limit so local developer testing is not locked out
+  if (process.env.NODE_ENV === 'development') {
+    return next();
+  }
+
   const ip = getClientIp(req);
   const now = Date.now();
   const redisKey = `auth_limiter:ip:${ip}`;

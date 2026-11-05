@@ -15,6 +15,7 @@ async function main() {
     await prisma.user.update({
       where: { email: ownerEmail },
       data: {
+        password: hashedPassword,
         role: UserRole.SUPER_ADMIN,
         isVerified: true,
       },
@@ -41,6 +42,7 @@ async function main() {
     await prisma.user.update({
       where: { email: defaultAdmin },
       data: {
+        password: hashedPassword,
         role: UserRole.SUPER_ADMIN,
         isVerified: true,
       },
@@ -58,6 +60,33 @@ async function main() {
       },
     });
     console.log(`✅ Created ${defaultAdmin} with SUPER_ADMIN role!`);
+  }
+
+  // 3. Apexbyte Store Admin account: admin@apexbyte.co.ke
+  const apexbyteAdmin = 'admin@apexbyte.co.ke';
+  const existingApexbyte = await prisma.user.findUnique({ where: { email: apexbyteAdmin } });
+  if (existingApexbyte) {
+    await prisma.user.update({
+      where: { email: apexbyteAdmin },
+      data: {
+        password: hashedPassword,
+        role: UserRole.SUPER_ADMIN,
+        isVerified: true,
+      },
+    });
+    console.log(`✅ Confirmed ${apexbyteAdmin} as SUPER_ADMIN!`);
+  } else {
+    await prisma.user.create({
+      data: {
+        email: apexbyteAdmin,
+        password: hashedPassword,
+        firstName: 'Apexbyte',
+        lastName: 'Admin',
+        role: UserRole.SUPER_ADMIN,
+        isVerified: true,
+      },
+    });
+    console.log(`✅ Created ${apexbyteAdmin} with SUPER_ADMIN role!`);
   }
 }
 

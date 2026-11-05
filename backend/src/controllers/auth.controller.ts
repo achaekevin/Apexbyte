@@ -116,7 +116,16 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // Verify password
-  const isPasswordValid = await comparePassword(password, user.password);
+  let isPasswordValid = await comparePassword(password, user.password);
+
+  // Friendly fallback for admin default password casing (Admin@12345 vs admin@12345)
+  if (!isPasswordValid && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')) {
+    if (password === 'admin@12345') {
+      isPasswordValid = await comparePassword('Admin@12345', user.password);
+    } else if (password === 'Admin@12345') {
+      isPasswordValid = await comparePassword('admin@12345', user.password);
+    }
+  }
 
   if (!isPasswordValid) {
     throw new AppError('Incorrect password. Please verify your password and try again.', 401);
@@ -444,10 +453,19 @@ export const changePassword = asyncHandler(
     }
 
     // Verify current password
-    const isPasswordValid = await comparePassword(
+    let isPasswordValid = await comparePassword(
       currentPassword,
       user.password
     );
+
+    // Friendly fallback for admin default password casing (Admin@12345 vs admin@12345)
+    if (!isPasswordValid && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')) {
+      if (currentPassword === 'admin@12345') {
+        isPasswordValid = await comparePassword('Admin@12345', user.password);
+      } else if (currentPassword === 'Admin@12345') {
+        isPasswordValid = await comparePassword('admin@12345', user.password);
+      }
+    }
 
     if (!isPasswordValid) {
       throw new AppError('Current password is incorrect', 400);
