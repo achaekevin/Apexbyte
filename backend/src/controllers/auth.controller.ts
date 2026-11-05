@@ -24,7 +24,15 @@ import { hashToken } from '../utils/encryption';
 
 // Register
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password, firstName, lastName, phone } = req.body;
+  const { email, password, firstName, lastName, phone, role } = req.body;
+
+  // Strict role isolation: reject any attempt to self-register as an administrator or elevated role
+  if (role && role !== 'CUSTOMER') {
+    throw new AppError(
+      'Administrative accounts cannot be registered publicly. New administrators must be added and configured by an active administrator.',
+      403
+    );
+  }
 
   // Check if user already exists
   const existingUser = await prisma.user.findUnique({
