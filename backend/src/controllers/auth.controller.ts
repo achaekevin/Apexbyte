@@ -94,19 +94,15 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     throw new AppError('Password is required', 400);
   }
 
-  const normalizedEmail = String(email).trim().toLowerCase();
+  const rawEmail = String(email).trim();
 
-  // Find user (checking normalized email or trimmed exact match)
+  // Find user by email
   const user = await prisma.user.findFirst({
-    where: {
-      OR: [
-        { email: normalizedEmail },
-        { email: String(email).trim() },
-      ],
-    },
+    where: { email: rawEmail },
   });
 
-  if (!user) {
+  // Strict exact matching: MySQL collation is case-insensitive, so enforce exact case match in code
+  if (!user || user.email !== rawEmail) {
     throw new AppError('No account found with this email address. Please check your email.', 401);
   }
 
