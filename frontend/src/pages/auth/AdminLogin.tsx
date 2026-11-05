@@ -14,6 +14,8 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const { setAuth, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,6 +32,8 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    setEmailError(null);
+    setPasswordError(null);
     setIsLoading(true);
 
     try {
@@ -56,6 +60,13 @@ const AdminLogin = () => {
         'Authentication failed. Please verify your administrator credentials.';
       setErrorMessage(msg);
       toast.error(msg);
+
+      const lower = msg.toLowerCase();
+      if (lower.includes('password')) {
+        setPasswordError(msg);
+      } else if (lower.includes('email') || lower.includes('account')) {
+        setEmailError(msg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +119,12 @@ const AdminLogin = () => {
             type="email"
             placeholder="admin@apexbyte.co.ke"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) setEmailError(null);
+              if (errorMessage) setErrorMessage(null);
+            }}
+            error={emailError || undefined}
             leftIcon={<FiMail className="w-5 h-5 text-gray-400" />}
             required
             autoComplete="username"
@@ -119,7 +135,12 @@ const AdminLogin = () => {
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (passwordError) setPasswordError(null);
+              if (errorMessage) setErrorMessage(null);
+            }}
+            error={passwordError || undefined}
             leftIcon={<FiLock className="w-5 h-5 text-gray-400" />}
             rightIcon={
               <button

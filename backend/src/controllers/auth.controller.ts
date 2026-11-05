@@ -86,25 +86,44 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  // Find user
-  const user = await prisma.user.findUnique({
-    where: { email },
+  if (!email) {
+    throw new AppError('Email address is required', 400);
+  }
+
+  if (!password) {
+    throw new AppError('Password is required', 400);
+  }
+
+  const normalizedEmail = String(email).trim().toLowerCase();
+
+  // Find user (checking normalized email or trimmed exact match)
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: normalizedEmail },
+        { email: String(email).trim() },
+      ],
+    },
   });
 
-  if (!user || !user.password) {
-    throw new AppError('Invalid email or password', 401);
+  if (!user) {
+    throw new AppError('No account found with this email address. Please check your email.', 401);
+  }
+
+  if (!user.password) {
+    throw new AppError('This account does not have a password configured. Please use password reset to set one.', 401);
   }
 
   // Check if account is active
   if (!user.isActive) {
-    throw new AppError('Your account has been deactivated', 401);
+    throw new AppError('Your account has been deactivated. Please contact an administrator.', 401);
   }
 
   // Verify password
   const isPasswordValid = await comparePassword(password, user.password);
 
   if (!isPasswordValid) {
-    throw new AppError('Invalid email or password', 401);
+    throw new AppError('Incorrect password. Please verify your password and try again.', 401);
   }
 
   // Generate tokens
