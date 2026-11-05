@@ -16,6 +16,7 @@ import {
   FiEyeOff,
   FiCopy,
   FiCheckCircle,
+  FiAlertCircle,
   FiRefreshCw,
   FiClock,
 } from 'react-icons/fi';
@@ -60,6 +61,10 @@ const AdminTeam = () => {
   const [newResetPassword, setNewResetPassword] = useState('');
   const [confirmResetPassword, setConfirmResetPassword] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetStatusMessage, setResetStatusMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   // Fetch all admins
   const {
@@ -123,12 +128,24 @@ const AdminTeam = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-team'] });
       toast.success('Administrator password updated successfully!');
-      setResetTargetAdmin(null);
-      setNewResetPassword('');
-      setConfirmResetPassword('');
+      setResetStatusMessage({
+        type: 'success',
+        text: 'Administrator password reset successfully! The staff member will use this new password on their next login.',
+      });
+      setTimeout(() => {
+        setResetTargetAdmin(null);
+        setNewResetPassword('');
+        setConfirmResetPassword('');
+        setResetStatusMessage(null);
+      }, 1500);
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Failed to reset password');
+      const msg = err.response?.data?.message || 'Failed to reset password. Please check requirements and try again.';
+      toast.error(msg);
+      setResetStatusMessage({
+        type: 'error',
+        text: msg,
+      });
     },
   });
 
@@ -186,15 +203,20 @@ const AdminTeam = () => {
 
   const handleResetPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setResetStatusMessage(null);
     if (!resetTargetAdmin) return;
 
     if (newResetPassword.length < 8) {
-      toast.error('New password must be at least 8 characters long');
+      const msg = 'New password must be at least 8 characters long.';
+      toast.error(msg);
+      setResetStatusMessage({ type: 'error', text: msg });
       return;
     }
 
     if (newResetPassword !== confirmResetPassword) {
-      toast.error('Passwords do not match');
+      const msg = 'Passwords do not match. Please verify both fields.';
+      toast.error(msg);
+      setResetStatusMessage({ type: 'error', text: msg });
       return;
     }
 
@@ -730,6 +752,29 @@ const AdminTeam = () => {
                   <FiX size={18} />
                 </button>
               </div>
+
+              {resetStatusMessage && (
+                <div
+                  role="alert"
+                  className={`mb-4 p-3.5 rounded-xl flex items-start gap-2.5 text-xs border ${
+                    resetStatusMessage.type === 'success'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800'
+                      : 'bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200 border-rose-200 dark:border-rose-800'
+                  }`}
+                >
+                  {resetStatusMessage.type === 'success' ? (
+                    <FiCheckCircle className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                  ) : (
+                    <FiAlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+                  )}
+                  <div className="flex-1">
+                    <span className="font-bold block">
+                      {resetStatusMessage.type === 'success' ? 'Password Reset Complete' : 'Reset Failed'}
+                    </span>
+                    <p className="mt-0.5 leading-relaxed">{resetStatusMessage.text}</p>
+                  </div>
+                </div>
+              )}
 
               <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
                 <div>
