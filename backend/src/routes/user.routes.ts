@@ -22,8 +22,8 @@ router.use(authenticate);
 const profileValidation = [
   body('firstName').optional().trim().notEmpty().withMessage('First name cannot be empty'),
   body('lastName').optional().trim().notEmpty().withMessage('Last name cannot be empty'),
-  body('phone').optional().trim().isMobilePhone('any').withMessage('Invalid phone number'),
-  body('email').optional().isEmail().normalizeEmail().withMessage('Valid email is required'),
+  body('phone').optional({ checkFalsy: true }).trim().isMobilePhone('any').withMessage('Invalid phone number'),
+  body('email').optional({ checkFalsy: true }).isEmail().withMessage('Valid email is required'),
 ];
 
 const changePasswordValidation = [
