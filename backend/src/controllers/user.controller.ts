@@ -3,6 +3,7 @@ import prisma from '../config/database';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import { AuthRequest } from '../middleware/auth';
 import { sanitizeUser } from '../utils/helpers';
+import { uploadImage } from '../config/cloudinary';
 
 /**
  * Get current user profile
@@ -47,7 +48,35 @@ export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response
   if (typeof firstName === 'string' && firstName.trim()) safeData.firstName = firstName.trim();
   if (typeof lastName === 'string' && lastName.trim()) safeData.lastName = lastName.trim();
   if (typeof phone === 'string') safeData.phone = phone.trim();
-  if (typeof avatar === 'string') safeData.avatar = avatar.trim();
+
+  // If avatar is base64 string, convert and upload to file system / Cloudinary
+  if (typeof avatar === 'string' && avatar.trim()) {
+    const rawAvatar = avatar.trim();
+    if (rawAvatar.startsWith('data:image/')) {
+      const matches = rawAvatar.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+      if (matches) {
+        const rawExt = matches[1].toLowerCase();
+        const ext = rawExt.includes('png') ? '.png' : rawExt.includes('webp') ? '.webp' : '.jpg';
+        const buffer = Buffer.from(matches[2], 'base64');
+        const mockFile: Express.Multer.File = {
+          buffer,
+          originalname: `avatar_${userId}_${Date.now()}${ext}`,
+          mimetype: `image/${rawExt.includes('png') ? 'png' : rawExt.includes('webp') ? 'webp' : 'jpeg'}`,
+          fieldname: 'avatar',
+          size: buffer.length,
+          encoding: '7bit',
+          destination: '',
+          filename: '',
+          path: '',
+          stream: null as any,
+        };
+        const uploaded = await uploadImage(mockFile, 'avatars');
+        safeData.avatar = uploaded.url;
+      }
+    } else {
+      safeData.avatar = rawAvatar;
+    }
+  }
 
   // Allow user / admin to update their login email credentials
   if (typeof email === 'string' && email.trim()) {
@@ -308,6 +337,85 @@ export const getAllUsers = asyncHandler(async (req: AuthRequest, res: Response) 
       limit: Number(limit),
       total,
       totalPages: Math.ceil(total / Number(limit)),
+    },
+  });
+});
+
+/**
+ * Upload and update user avatar (profile picture)
+ * Accepts either multipart/form-data (req.file) or base64 / URL (req.body.avatar)
+ */
+export const updateAvatar = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user.id;
+  let avatarUrl: string | null = null;
+
+  if (req.file) {
+    const uploaded = await uploadImage(req.file, 'avatars');
+    avatarUrl = uploaded.url;
+  } else if (req.body.avatar || req.body.image) {
+    const rawData = String(req.body.avatar || req.body.image).trim();
+    if (rawData.startsWith('data:image/')) {
+      const matches = rawData.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+      if (!matches) {
+        throw new AppError('Invalid base64 image data', 400);
+      }
+      const rawExt = matches[1].toLowerCase();
+      const ext = rawExt.includes('png') ? '.png' : rawExt.includes('webp') ? '.webp' : '.jpg';
+      const buffer = Buffer.from(matches[2], 'base64');
+      const mockFile: Express.Multer.File = {
+        buffer,
+        originalname: `avatar_${userId}_${Date.now()}${ext}`,
+        mimetype: `image/${rawExt.includes('png') ? 'png' : rawExt.includes('webp') ? 'webp' : 'jpeg'}`,
+        fieldname: 'avatar',
+        size: buffer.length,
+        encoding: '7bit',
+        destination: '',
+        filename: '',
+        path: '',
+        stream: null as any,
+      };
+      const uploaded = await uploadImage(mockFile, 'avatars');
+      avatarUrl = uploaded.url;
+    } else if (rawData.startsWith('http://') || rawData.startsWith('https://') || rawData.startsWith('/uploads/')) {
+      avatarUrl = rawData;
+    }
+  }
+
+  if (!avatarUrl) {
+    throw new AppError('No image provided. Please upload an image file or capture a camera photo.', 400);
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { avatar: avatarUrl },
+  });
+
+  res.json({
+    success: true,
+    message: 'Profile picture updated successfully',
+    data: {
+      avatar: avatarUrl,
+      user: sanitizeUser(updatedUser),
+    },
+  });
+});
+
+/**
+ * Remove user avatar
+ */
+export const removeAvatar = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user.id;
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { avatar: null },
+  });
+
+  res.json({
+    success: true,
+    message: 'Profile picture removed successfully',
+    data: {
+      avatar: null,
+      user: sanitizeUser(updatedUser),
     },
   });
 });

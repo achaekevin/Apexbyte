@@ -1,10 +1,13 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate } from '../middleware/validation';
+import { upload } from '../middleware/upload';
 import {
   getProfile,
   updateProfile,
+  updateAvatar,
+  removeAvatar,
   getAddresses,
   createAddress,
   updateAddress,
@@ -14,6 +17,22 @@ import {
 import { changePassword } from '../controllers/auth.controller';
 
 const router = Router();
+
+// Middleware to capture avatar file whether field is named 'avatar' or 'image'
+const avatarUpload = (req: Request, res: Response, next: NextFunction) => {
+  upload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'image', maxCount: 1 },
+  ])(req, res, (err: any) => {
+    if (err) return next(err);
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+    if (files) {
+      if (files['avatar']?.[0]) req.file = files['avatar'][0];
+      else if (files['image']?.[0]) req.file = files['image'][0];
+    }
+    next();
+  });
+};
 
 // All user routes require authentication
 router.use(authenticate);
@@ -54,6 +73,8 @@ router.get('/', authorize('ADMIN', 'SUPER_ADMIN'), getAllUsers);
 // Profile endpoints
 router.get('/profile', getProfile);
 router.put('/profile', validate(profileValidation), updateProfile);
+router.post('/avatar', avatarUpload, updateAvatar);
+router.delete('/avatar', removeAvatar);
 router.put('/password', validate(changePasswordValidation), changePassword);
 
 // Address endpoints with strict IDOR protections
